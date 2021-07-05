@@ -7,7 +7,7 @@ type Props = {
   
 
 const AuthGuard: React.FC<Props> = ({ children, history }: Props) => {
-    return <></>
+    return <>{children}</>
 };
 
 export default AuthGuard

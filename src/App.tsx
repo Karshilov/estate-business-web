@@ -8,8 +8,8 @@ import './App.less';
 
 const App: React.FC = () => {
 
-
-  return < Provider store={store} >
+  //  return <RootRouter />;
+  return <Provider store={store} >
   <PersistGate loading={null} persistor={persistor}>
     <AuthGuard >
       <RootRouter />
