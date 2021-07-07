@@ -24,7 +24,7 @@ const actions: Actions = {
     return state
   },
   logout (state) {
-    message.warning('登录已过期～')
+    message.warning('成功退出登录')
     state.isLogin = false
     state.apiToken = undefined
     state.user = undefined

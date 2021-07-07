@@ -4,7 +4,7 @@ import { Card } from 'antd';
 
 const BasementCSS: CSSProperties = {
   width: '100%',
-  height: '100%',
+  minHeight: '100%',
   position: 'relative',
 };
 
@@ -30,6 +30,7 @@ export const Basement = (props: {
   onClick?: Function;
   style?: CSSProperties;
   className?: string;
+  hidden?: boolean;
 }) => {
   return (
     <div
@@ -38,6 +39,7 @@ export const Basement = (props: {
       }}
       style={{ ...BasementCSS, ...props.style }}
       className={props.className}
+      hidden={props.hidden ?? false}
     >
       {props.children}
     </div>
@@ -49,6 +51,7 @@ export const Layer = (props: {
   onClick?: Function;
   style?: CSSProperties;
   className?: string;
+  hidden?: boolean;
 }) => {
   return (
     <div
@@ -57,6 +60,7 @@ export const Layer = (props: {
       }}
       style={{ ...LayerCSS, ...props.style }}
       className={props.className}
+      hidden={props.hidden ?? false}
     >
       {props.children}
     </div>
@@ -107,3 +111,21 @@ export const Container = (props: {
     </Card>
   );
 };
+
+export const EInput = (props: {
+  style?: CSSProperties;
+  onChange?: Function;
+  hoverable?: boolean
+  value?: string;
+  className?: string;
+}) => {
+  const { style, onChange, hoverable, value } = props;
+  const hoverTransform = "transition duration-300 linear transform hover:scale-110 ";
+  
+  return <input
+    className={"shadow-md border-b-2 outline-none text-black cursor-auto " + hoverable ? hoverTransform : ' ' + props.className}
+    style={{ height: 32, lineHeight: 32, ...style }}
+    value={value}
+    onChange={() => { onChange === undefined ? null : onChange()}}
+  />
+}
