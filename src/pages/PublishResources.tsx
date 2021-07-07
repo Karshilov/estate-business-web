@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Basement, Layer, Container } from "../components/BasicHTMLElement";
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Tabs } from "antd";
@@ -10,18 +10,26 @@ const PublishResources = () => {
   const history = useHistory();
   const [rentOrSell, setRentOrSell] = useState('rent');
   const [mapIns, setMapIns] = useState<Object>();
+  const ref = useRef(null);
 
   const { isLogin, apiToken } = useSelector((state: StoreState) => state);
 
   useEffect(() => {
-    const tmap = new TMap.Map('tmap-container', {
-      center: new TMap.LatLng(31.883642, 118.81864),
-      zoom: 17.2,
-      pitch: 0,
-      rotation: 45,
-    })
-    setMapIns(tmap);
-  }, [])
+    if (isLogin) {
+      if (ref.current) {
+        const tmap = new TMap.Map('tmap-container', {
+          center: new TMap.LatLng(31.883642, 118.81864),
+          zoom: 17.2,
+          pitch: 0,
+          rotation: 45,
+        })
+        setMapIns(tmap)
+      }
+    }
+    return () => {
+      setMapIns(undefined)
+    };
+  }, [isLogin, ref])
 
   return <Basement style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
     <Basement style={{ width: '80%', height: '80%' }}>
@@ -44,7 +52,7 @@ const PublishResources = () => {
       </Layer>
       <Layer style={{ left: '55%' }}>
         <Container style={{ height: '90%'}} bodyStyle={{ height: '100%' }}>
-          <div id="tmap-container" style={{ height: '100%', width: '100%' }}></div>
+          <div id="tmap-container" ref={ref}></div>
         </Container>
       </Layer>
     </Basement>
