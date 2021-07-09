@@ -5,10 +5,11 @@ export interface UserInfoModel {
 }
 
 export interface SearchItemModel {
+    id: string;
     title: string;
     neighborhood: string;
     cover: string;
     area: string;
     floor: string;
-    totalFloor: string;
+    total_floor: string;
 }
