@@ -118,27 +118,37 @@ const PublishResources = () => {
                 </Form.Item>
               </Form>
             </Tabs.TabPane>
+            
             <Tabs.TabPane key="sell" tab="我要卖房">
-              <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={sellForm}>
-                <Form.Item name="neighboorhoodCity" label="小区所在城市">
-                  <Input />
-                </Form.Item>
-                <Form.Item name="neighboorhood" label="小区">
-                  <Input />
-                </Form.Item>
-                <Form.Item name="exactPosition" label="房屋地址">
-                  <InlineMultipleInput placehoderList={['楼栋号', '单元号', '门牌号']} />
-                </Form.Item>
-                <Form.Item name="targetPrice" label="期望售价">
-                  <Input placeholder="请输入阿拉伯数字，单位/元" type="number" />
-                </Form.Item>
-                <Form.Item name="appellation" label="称呼">
-                  <Input />
-                </Form.Item>
-                <Form.Item name="phone" label="手机号">
-                  <Input />
-                </Form.Item>
-              </Form>
+                <Steps current={step} size="small" style={{ margin: 20, padding: 30 }} onChange={(e) => { setStep(e) }}>
+                  <Steps.Step title="房源地址" icon={<HomeOutlined />} />
+                  <Steps.Step title="卖房者信息" icon={<UserOutlined />} />
+                  <Steps.Step title="提交审核" icon={<AuditOutlined />} />
+                </Steps>
+
+                <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={sellForm}>
+                  <Form.Item name="neighboorhoodCity" label="小区所在城市" hidden={step !== 0}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="neighboorhood" label="小区" hidden={step !== 0}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="exactPosition" label="房屋地址" hidden={step !== 0}>
+                    <InlineMultipleInput placehoderList={['楼栋号', '单元号', '门牌号']} />
+                  </Form.Item>
+                  <Form.Item name="appellation" label="称呼" hidden={step !== 1}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="phone" label="手机号" hidden={step !== 1}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item wrapperCol={{ offset: 6, span: 20 }} hidden={step !== 0}>
+                    <Button type="default" onClick={onRentPosCheck}>检查地址</Button>
+                  </Form.Item>
+                  <Form.Item name="targetPrice" label="期望售价" hidden={step !== 2}>
+                    <Input placeholder="请输入阿拉伯数字，单位/万元" type="number" />
+                  </Form.Item>
+                </Form>
             </Tabs.TabPane>
           </Tabs>
         </Container>
