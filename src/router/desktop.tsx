@@ -17,8 +17,7 @@ const DesktopRouter = withRouter(({ history }) => {
           <Route exact path="/register" component={Register} />
           <AuthGuard>
             <Route exact path="/publish-resources" component={PublishResources} />
-            <Route path="/" component={Home} />
-            </AuthGuard>
+          </AuthGuard>
         </Switch>
       </HashRouter>
     </Frame>

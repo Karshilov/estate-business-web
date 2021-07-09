@@ -51,7 +51,7 @@ const Login = (props: { isPrepared?: boolean }) => {
     }
   };
 
-  return <Basement style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+  return <Basement style={{ display: 'flex', justifyContent: 'center', paddingTop: 50 }}>
     <div style={{ width: '80%', textAlign: 'center', padding: 50 }}>
       <Carousel autoplay autoplaySpeed={4000} easing="ease-in-out">
         {banner.map((item, index) => <div key={index}>

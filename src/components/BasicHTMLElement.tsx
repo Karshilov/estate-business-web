@@ -4,8 +4,9 @@ import { Card } from 'antd';
 
 const BasementCSS: CSSProperties = {
   width: '100%',
-  minHeight: '100%',
+  minHeight: '100vh',
   position: 'relative',
+  boxSizing: 'border-box'
 };
 
 const LayerCSS: CSSProperties = {

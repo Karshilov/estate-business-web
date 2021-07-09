@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { options } from '../utils/options'
 import { StoreState } from "../store";
 import { useSelector } from 'react-redux';
-import { Avatar } from "antd";
+import { Avatar, Layout } from "antd";
 import { AntDesignOutlined, LogoutOutlined } from '@ant-design/icons'
 import { useDispatch } from 'react-redux';
 import primaryIcon from '../assets/primary-icon.png';
@@ -22,7 +22,7 @@ const Frame = ({ children, history }: Props) => {
   const route = useHistory();
 
   const logout = () => {
-    dispatch({ type: 'logout'});
+    dispatch({ type: 'logout' });
     route.push('/login');
   }
 
@@ -36,7 +36,7 @@ const Frame = ({ children, history }: Props) => {
     <Basement style={{ paddingTop: history.location.pathname === '/' ? 0 : 80 }}>
       {children}
     </Basement>
-    <Layer hidden={history.location.pathname === '/'} style={{ bottom: 'calc(100% - 90)' }}>
+    <Layer hidden={history.location.pathname === '/'} style={{ bottom: 'calc(100% - 90px)' }}>
       <div
         style={{
           position: 'relative',
@@ -49,8 +49,8 @@ const Frame = ({ children, history }: Props) => {
         }}
       >
         <div className="head-icon" style={{ marginLeft: '10%' }}>
-            <img src={primaryIcon} alt="" style={{ height: 40 }} onClick={goHome}/>
-            <label className="font-semibold" style={{ color: '#00896C', fontSize: 20 }} onClick={goHome}>檐椽网</label>
+          <img src={primaryIcon} alt="" style={{ height: 40 }} onClick={goHome} />
+          <label className="font-semibold" style={{ color: '#00896C', fontSize: 20 }} onClick={goHome}>檐椽网</label>
         </div>
         <div style={{ flexGrow: 1 }} />
         {options.map((item) =>
@@ -83,13 +83,16 @@ const Frame = ({ children, history }: Props) => {
           hidden={isLogin}
         ><Link to='/login' style={{ color: '#fff' }}>登录</Link></button>
         <div hidden={!isLogin} style={{ margin: 20 }}>
-            <Avatar size={36}
-              icon={<AntDesignOutlined />}>
-            </Avatar>
-          </div>
-          <LogoutOutlined hidden={!isLogin} style={{ marginRight: 40, fontSize: 32 }} onClick={logout}></LogoutOutlined>
+          <Avatar size={36}
+            icon={<AntDesignOutlined />}>
+          </Avatar>
+        </div>
+        <LogoutOutlined hidden={!isLogin} style={{ marginRight: 40, fontSize: 32 }} onClick={logout}></LogoutOutlined>
       </div>
     </Layer>
+    <Layout.Footer style={{ textAlign: 'center', background: '#f7f7f7' }}>
+      Copyright © 2021 All Rights Reserved | Karshilov
+    </Layout.Footer>
   </div>;
 }
 
