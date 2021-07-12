@@ -142,8 +142,10 @@ const RentSearch = (props: { match: any }) => {
     ])
   }, [])
 
-  return <Basement>
-    <VirtualList list={resourceList} />
+  return <Basement style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{ width: '65%', background: '#fff' }}>
+      <VirtualList list={resourceList} />
+    </div>
   </Basement>
 }
 

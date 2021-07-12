@@ -6,10 +6,10 @@ export interface UserInfoModel {
 
 export interface SearchItemModel {
     id: string;
-    title: string;
-    neighborhood: string;
+    title: string; // 标题
+    neighborhood: string; // 小区
     cover: string;
-    area: string;
-    floor: number;
-    total_floor: number;
+    area: string; //面积
+    floor: number; //楼层 （相对楼层）
+    total_floor: number; // 总层数
 }
