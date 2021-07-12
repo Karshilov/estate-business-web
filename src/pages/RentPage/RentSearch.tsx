@@ -5,6 +5,7 @@ import { Button, Col, Form, Input, Row, Tabs, Steps, message } from "antd";
 import { useDispatch, useSelector } from 'react-redux';
 import { tmapApi, useApi, apiKey } from "../../utils/api";
 import { SearchItemModel } from "../../utils/DataModel";
+import VirtualList from '../../components/ItemList/VirtualList'
 
 type Task<T = unknown> = () => Promise<T>
 
@@ -62,12 +63,14 @@ const RentSearch = (props: { match: any }) => {
 
 
   const getResourceList = async () => {
-    const res = await api.get('/rent/search', { params: {
-      neighborhood: searchText === '' ? routesSearchText.neighborhood : searchText,
-      city: provinceSelect === '' ? routesSearchText.city : (provinceSelect + citySelect),
-      page_num: pageAndPageSize[0],
-      page_size: pageAndPageSize[1],
-    }})
+    const res = await api.get('/rent/search', {
+      params: {
+        neighborhood: searchText === '' ? routesSearchText.neighborhood : searchText,
+        city: provinceSelect === '' ? routesSearchText.city : (provinceSelect + citySelect),
+        page_num: pageAndPageSize[0],
+        page_size: pageAndPageSize[1],
+      }
+    })
     if (res.data.success) {
       setResourceList([...resourceList, ...res.data.result.list]);
       setTotalNum(res.data.result.total);
@@ -80,10 +83,67 @@ const RentSearch = (props: { match: any }) => {
   }
 
   useEffect(() => {
-    getResourceList()
+    // getResourceList()
+    setResourceList([
+      {
+        id: '1',
+        title: '1',
+        neighborhood: '1',
+        cover: 'http://img.mp.itc.cn/upload/20170226/955e6f01cf4642e9b925f41e60b7bf07_th.jpeg',
+        area: '1',
+        floor: 1,
+        total_floor: 1,
+      },
+      {
+        id: '2',
+        title: '1',
+        neighborhood: '1',
+        cover: 'http://img.mp.itc.cn/upload/20170226/955e6f01cf4642e9b925f41e60b7bf07_th.jpeg',
+        area: '1',
+        floor: 1,
+        total_floor: 1,
+      },
+      {
+        id: '3',
+        title: '1',
+        neighborhood: '1',
+        cover: 'http://img.mp.itc.cn/upload/20170226/955e6f01cf4642e9b925f41e60b7bf07_th.jpeg',
+        area: '1',
+        floor: 1,
+        total_floor: 1,
+      },
+      {
+        id: '4',
+        title: '1',
+        neighborhood: '1',
+        cover: 'http://img.mp.itc.cn/upload/20170226/955e6f01cf4642e9b925f41e60b7bf07_th.jpeg',
+        area: '1',
+        floor: 1,
+        total_floor: 1,
+      },
+      {
+        id: '5',
+        title: '1',
+        neighborhood: '1',
+        cover: 'http://img.mp.itc.cn/upload/20170226/955e6f01cf4642e9b925f41e60b7bf07_th.jpeg',
+        area: '1',
+        floor: 1,
+        total_floor: 1,
+      },
+      {
+        id: '6',
+        title: '1',
+        neighborhood: '1',
+        cover: 'http://img.mp.itc.cn/upload/20170226/955e6f01cf4642e9b925f41e60b7bf07_th.jpeg',
+        area: '1',
+        floor: 1,
+        total_floor: 1,
+      }
+    ])
   }, [])
 
   return <Basement>
+    <VirtualList list={resourceList} />
   </Basement>
 }
 

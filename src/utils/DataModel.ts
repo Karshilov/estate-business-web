@@ -10,6 +10,6 @@ export interface SearchItemModel {
     neighborhood: string;
     cover: string;
     area: string;
-    floor: string;
-    total_floor: string;
+    floor: number;
+    total_floor: number;
 }
