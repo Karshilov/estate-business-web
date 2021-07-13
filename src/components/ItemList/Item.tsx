@@ -1,6 +1,7 @@
 import React, { useState, useEffect, CSSProperties } from 'react'
 import { SearchItemModel } from '../../utils/DataModel'
-import { Divider } from 'antd';
+import { Divider, Tag } from 'antd';
+import { ClockCircleOutlined } from '@ant-design/icons'
 
 const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
   useEffect(() => {
@@ -8,26 +9,40 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
   }, [])
 
   return (
-    <div className="item" id={props.data.id} style={{ width: '100%', display: 'flex', marginTop:'3rem'}}>
-      <div className="item-content" style={{width:'25%',marginRight:'1rem'}}>
-        <img src={props.data.cover} alt="" />
+    <div className="item" id={props.data.id} style={{ width: '100%', display: 'flex', marginTop: '20px', marginBottom: '20px' }}>
+      <div className="item-content" style={{ height: '162px', width: '200px' }}>
+        <img src={props.data.cover} alt="" style={{ width: '100%', height: '100%' }} />
       </div>
-      <div style = {{flexGrow:0}}>
-        <p className="item-title" style = {{marginBottom:'0.5rem', fontSize:'1.7rem', fontWeight: 'bold'}}>
-            {props.data.title}
+      <div style={{ marginLeft: '28px', flexGrow: 0, width:'100%' }}>
+        <p className="item-title" style={{ marginBottom: '8px', fontWeight: 'bold', display:'flex', justifyContent:'space-between'}}>
+          <span style={{fontSize:'26px'}}>{props.data.title}</span>
+          <a style={{color: 'red'}}>
+            <span style={{fontSize:'28px'}}>{props.data.price}</span>
+            <span style={{fontSize:'14px'}}>元/月</span>
+          </a>  
         </p>
-        <p className="item-info" style = {{marginBottom:'0.5rem', fontSize:'1.2rem'}}>
-           <a style={{color: '#A9A9A9'}}>{props.data.neighborhood}</a>
-           <i>/</i>
-           <a style={{color: '#A9A9A9'}}>{props.data.area}</a>
-           <i>/</i>
-           <a style={{color: '#A9A9A9'}}>{props.data.floor}楼</a>
-           <i>/</i>
-           <a style={{color: '#A9A9A9'}}>{props.data.area}层</a>
+
+        <p className="item-info" style={{ marginBottom: '8px', fontSize: '1.2rem' }}>
+          <a style={{ color: '#A9A9A9' }}>{props.data.neighborhood}</a>
+          <i style={{ marginLeft: '8px', marginRight: '8px' }}>/</i>
+          <a style={{ color: '#A9A9A9' }}>{props.data.area}㎡</a>
+          <i style={{ marginLeft: '8px', marginRight: '8px' }}>/</i>
+          <a style={{ color: '#A9A9A9' }}>{String(props.data.floor) + "楼"}</a>
+          <i style={{ marginLeft: '8px', marginRight: '8px' }}>/</i>
+          <a style={{ color: '#A9A9A9' }}>{String(props.data.area) + "层"}</a>
         </p>
-        <p className="item-price" style = {{marginBottom:'0.5rem', fontSize:'1.2rem'}}>价格：{props.data.price}</p>
-        <Divider ></Divider>
-        <p className="item-create-time" style = {{marginBottom:'0.5rem', fontSize:'1.2rem'}}>创建时间：{props.data.create_time}</p>
+
+        <Tag color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>Tag 1</Tag>
+        <Tag color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>Tag 2</Tag>
+        <Tag color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>Tag 3</Tag>
+
+        <Divider style={{ marginBottom: 0, marginTop: '24px' }}></Divider>
+        <p className="item-root" style={{ display: 'flex', justifyContent: 'space-start', color: '#c7c7c7' }}>
+          <ClockCircleOutlined style={{ display: 'flex', alignItems: 'center', marginRight: '8px' }} />
+          <span style={{ fontSize: '15px' }}>
+            {"创建时间：" + String(props.data.create_time)}
+          </span>
+        </p>
       </div>
     </div >
 
