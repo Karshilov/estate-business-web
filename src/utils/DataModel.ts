@@ -7,7 +7,7 @@ export interface UserInfoModel {
 export interface SearchItemModel {
     id: string;
     title: string; // 标题
-    neighborhood: string; // 小区
+    neighbourhood: string; // 小区
     cover: string;
     area: string; //面积
     floor: number; //楼层 （相对楼层）

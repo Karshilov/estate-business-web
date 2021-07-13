@@ -1,7 +1,9 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, CSSProperties } from 'react'
 import { SearchItemModel } from '../../utils/DataModel'
 import { Divider, Tag } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons'
+import moment from 'moment';
 
 const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
   useEffect(() => {
@@ -23,7 +25,7 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
         </p>
 
         <p className="item-info" style={{ marginBottom: '8px', fontSize: '1.2rem' }}>
-          <a style={{ color: '#A9A9A9' }}>{props.data.neighborhood}</a>
+          <a style={{ color: '#A9A9A9' }}>{props.data.title.split('·')[1].split(/\s+/)[0]}</a>
           <i style={{ marginLeft: '8px', marginRight: '8px' }}>/</i>
           <a style={{ color: '#A9A9A9' }}>{props.data.area}㎡</a>
           <i style={{ marginLeft: '8px', marginRight: '8px' }}>/</i>
@@ -40,7 +42,7 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
         <p className="item-root" style={{ display: 'flex', justifyContent: 'space-start', color: '#c7c7c7' }}>
           <ClockCircleOutlined style={{ display: 'flex', alignItems: 'center', marginRight: '8px' }} />
           <span style={{ fontSize: '15px' }}>
-            {"创建时间：" + String(props.data.create_time)}
+            {"创建时间：" + moment(props.data.create_time * 1000).format('YYYY / MM / DD')}
           </span>
         </p>
       </div>
