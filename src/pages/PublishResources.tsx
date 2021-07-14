@@ -7,7 +7,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { tmapApi, useApi, apiKey } from "../utils/api";
 import { StoreState } from "../store";
 import { HomeOutlined, FormOutlined, AuditOutlined, UploadOutlined } from '@ant-design/icons'
+import WashIcon from '../assets/equipments/wash.svg'
+import AirCondIcon from '../assets/equipments/aircond.svg'
+import BedIcon from '../assets/equipments/bed.svg'
+import GasIcon from '../assets/equipments/gas.svg'
+import RefrigeratorIcon from '../assets/equipments/refrigerator.svg'
+import TVIcon from '../assets/equipments/tv.svg'
+import WardrobeIcon from '../assets/equipments/wardrobe.svg'
+import WarmIcon from '../assets/equipments/warm.svg'
+import WaterHeaterIcon from '../assets/equipments/wheater.svg'
+import WifiIcon from '../assets/equipments/wifi.svg'
+import { count } from "yargs";
+import { transpileModule } from "typescript";
+
+
 declare let TMap: any;
+
 
 const { CheckableTag } = Tag;
 
@@ -25,8 +40,10 @@ const PublishResources = () => {
 
   const { isLogin, apiToken } = useSelector((state: StoreState) => state);
 
-  const feature = ['洗衣机', '空调', '衣柜', '电视', '冰箱', '热水器', '床', '暖气', '宽带', '天然气'];
-  const [selectedFeature, setSelectedFeature] = useState([""]);
+  const feature = ['洗衣机', '空调', '衣柜', '电视', '冰箱',
+    '热水器', '床', '暖气', '宽带', '天然气'];
+  const equipmentArr = [WashIcon, AirCondIcon, WardrobeIcon, TVIcon, RefrigeratorIcon,
+    WaterHeaterIcon, BedIcon, WarmIcon, WifiIcon, GasIcon];
   const [featureState, setFeatureState] = useState(0);
 
   const createElements = () => {
@@ -93,11 +110,28 @@ const PublishResources = () => {
     console.log(file, fileList)
   }
 
-  const handleFeatureChange = (tag: any, checked: any, id: number) => {
-    const nextSelectedTags = checked ? [...selectedFeature, tag] : selectedFeature.filter(t => t !== tag);
-    setFeatureState(featureState ^ (1 << (feature.length - id - 1)));
-    setSelectedFeature(nextSelectedTags);
+  const handleFeatureChange = (id: number) => {
+    // console.log("PreSate：", featureState);
+    const tmp = (1 << (feature.length - id - 1));
+    setFeatureState(featureState ^ tmp);
   }
+
+  const haveFeatureId = (id: number) => {
+    if (featureState & (1 << (feature.length - id - 1)))
+      return true;
+    return false;
+  }
+
+  const featureStyle1: React.CSSProperties = {
+    opacity: '20%',
+    width: '20%',
+  };
+
+  const featureStyle2: React.CSSProperties = {
+    opacity: '100%',
+    width: '20%',
+  };
+
 
   return <Basement style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
     <Basement style={{ width: '80%', minHeight: '80%' }}>
@@ -153,19 +187,14 @@ const PublishResources = () => {
                 </Form.Item>
 
                 <Form.Item name="equipments" label="配套设施" hidden={step !== 1}>
-                  <>
+                  <Row>
                     {feature.map((tag, id) => (
-                      <>
-                        <CheckableTag
-                          key={tag}
-                          checked={selectedFeature.indexOf(tag) > -1}
-                          onChange={checked => handleFeatureChange(tag, checked, id)}
-                        >
-                          {tag}
-                        </CheckableTag>
-                      </>
+                      <div style={haveFeatureId(id) ? featureStyle2 : featureStyle1}>
+                        <img src={equipmentArr[id]} style={{ height: '30px', width: '100%', marginTop:'14px' }} onClick={() => handleFeatureChange(id)} />
+                        <p style={{ textAlign: 'center', marginBottom: 0 }}>{tag}</p>
+                      </div>
                     ))}
-                  </>
+                  </Row>
                 </Form.Item>
 
                 <Form.Item name="photots" label="房屋内景" hidden={step !== 1}>
@@ -176,9 +205,6 @@ const PublishResources = () => {
 
 
                 {/*提交审核*/}
-                <Form.Item name="title" label="标题" hidden={step !== 2}>
-                  <Input />
-                </Form.Item>
 
                 <Form.Item name="features" label="添加标签" hidden={step !== 2}>
                   <Input />
