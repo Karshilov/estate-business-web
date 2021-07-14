@@ -3,25 +3,32 @@ import React, { useState, useEffect, CSSProperties } from 'react'
 import { SearchItemModel } from '../../utils/DataModel'
 import { Divider, Tag } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons'
+import { useHistory } from 'react-router-dom'
 import moment from 'moment';
 
 const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
+  const history = useHistory();
+
   useEffect(() => {
     console.log('created')
   }, [])
 
   return (
-    <div className="item" id={props.data.id} style={{ width: '100%', display: 'flex', marginTop: '20px', marginBottom: '20px' }}>
+    <div
+      className="item"
+      id={props.data.id}
+      style={{ width: '100%', display: 'flex', marginTop: '20px', marginBottom: '20px' }}
+      onClick={() => { history.push(`/rent/detail/${props.data.id}`) }}>
       <div className="item-content" style={{ height: '162px', width: '200px' }}>
         <img src={props.data.cover} alt="" style={{ width: '100%', height: '100%' }} />
       </div>
-      <div style={{ marginLeft: '28px', flexGrow: 0, width:'100%' }}>
-        <p className="item-title" style={{ marginBottom: '8px', fontWeight: 'bold', display:'flex', justifyContent:'space-between'}}>
-          <span style={{fontSize:'26px'}}>{props.data.title}</span>
-          <a style={{color: 'red'}}>
-            <span style={{fontSize:'28px'}}>{props.data.price}</span>
-            <span style={{fontSize:'14px'}}>元/月</span>
-          </a>  
+      <div style={{ marginLeft: '28px', flexGrow: 0, width: '100%' }}>
+        <p className="item-title" style={{ marginBottom: '8px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ fontSize: '26px' }}>{props.data.title}</span>
+          <a style={{ color: 'red' }}>
+            <span style={{ fontSize: '28px' }}>{props.data.price}</span>
+            <span style={{ fontSize: '14px' }}>元/月</span>
+          </a>
         </p>
 
         <p className="item-info" style={{ marginBottom: '8px', fontSize: '1.2rem' }}>
@@ -34,9 +41,7 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
           <a style={{ color: '#A9A9A9' }}>{String(props.data.area) + "层"}</a>
         </p>
 
-        <Tag color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>Tag 1</Tag>
-        <Tag color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>Tag 2</Tag>
-        <Tag color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>Tag 3</Tag>
+        {props.data.features.map((item) => <Tag color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>{item}</Tag>)}
 
         <Divider style={{ marginBottom: 0, marginTop: '24px' }}></Divider>
         <p className="item-root" style={{ display: 'flex', justifyContent: 'space-start', color: '#c7c7c7' }}>
