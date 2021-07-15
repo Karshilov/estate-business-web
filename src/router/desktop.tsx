@@ -7,6 +7,7 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import AuthGuard from '../components/AuthGuard';
 import RentSearch from '../pages/RentPage/RentSearch';
+import RentDetail from '../pages/RentPage/RentDetail';
 
 const DesktopRouter = withRouter(({ history }) => {
   return (
@@ -18,8 +19,9 @@ const DesktopRouter = withRouter(({ history }) => {
           <Route exact path="/register" component={Register} />
           <AuthGuard>
             <Route exact path="/publish-resources" component={PublishResources} />
-            <Route path="/rent/:keywords" component={RentSearch} />
-            <Route path="/rent" component={RentSearch} />
+            <Route path="/rent/detail/:id" component={RentDetail} />
+            <Route path="/rent-search/:keywords" component={RentSearch} />
+            <Route path="/rent-search" component={RentSearch} />
           </AuthGuard>
         </Switch>
       </HashRouter>
