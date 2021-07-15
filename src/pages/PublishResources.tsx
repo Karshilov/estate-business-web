@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, createElement } from "react";
 import { Basement, Layer, Container } from "../components/BasicHTMLElement";
 import InlineMultipleInput from '../components/InlineMultipleInput';
+import EditableTagGroup from '../components/EditableTagGroup';
 import { useHistory } from 'react-router-dom';
 import { Button, Col, Form, Input, Row, Tabs, Steps, Select, Upload, Radio, Tooltip, Tag } from "antd";
 import { useDispatch, useSelector } from 'react-redux';
@@ -132,6 +133,10 @@ const PublishResources = () => {
     width: '20%',
   };
 
+  const onRentSubmit = () => {
+
+  }
+
 
   return <Basement style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
     <Basement style={{ width: '80%', minHeight: '80%' }}>
@@ -145,11 +150,11 @@ const PublishResources = () => {
                 <Steps.Step title="提交审核" icon={<AuditOutlined />} />
               </Steps>
               {/*房源地址*/}
-              <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={rentForm}>
-                <Form.Item name="city" label="城市" hidden={step !== 0}>
+              <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={rentForm} onFinish={onRentSubmit}>
+                <Form.Item wrapperCol={{ span: 15 }} name="city" label="城市" hidden={step !== 0}>
                   <Input />
                 </Form.Item>
-                <Form.Item name="neighbourhood" label="小区" hidden={step !== 0}>
+                <Form.Item wrapperCol={{ span: 15 }} name="neighbourhood" label="小区" hidden={step !== 0}>
                   <Input />
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 6, span: 20 }} hidden={step !== 0}>
@@ -157,12 +162,12 @@ const PublishResources = () => {
                 </Form.Item>
 
                 {/*详细信息*/}
-                <Row wrap={false}>
-                  <Form.Item labelCol={{ offset: 9 }} wrapperCol={{ span: 12 }} name="floor" label="楼层" hidden={step !== 1}>
+                <Row wrap={false} >
+                  <Form.Item labelCol={{ offset: 11 }} wrapperCol={{ span: 18 }} name="floor" label="楼层" hidden={step !== 1}>
                     <Input />
                   </Form.Item>
 
-                  <Form.Item labelCol={{ offset: 3 }} wrapperCol={{ span: 10 }} name="totalFloor" label="总楼层" hidden={step !== 1}>
+                  <Form.Item labelCol={{ offset: 6 }} wrapperCol={{ span: 9 }} name="totalFloor" label="总楼层" hidden={step !== 1}>
                     <Input />
                   </Form.Item>
                 </Row>
@@ -190,7 +195,7 @@ const PublishResources = () => {
                   <Row>
                     {feature.map((tag, id) => (
                       <div style={haveFeatureId(id) ? featureStyle2 : featureStyle1}>
-                        <img src={equipmentArr[id]} style={{ height: '30px', width: '100%', marginTop:'14px' }} onClick={() => handleFeatureChange(id)} />
+                        <img src={equipmentArr[id]} style={{ height: '30px', width: '100%', marginTop: '14px' }} onClick={() => handleFeatureChange(id)} />
                         <p style={{ textAlign: 'center', marginBottom: 0 }}>{tag}</p>
                       </div>
                     ))}
@@ -205,12 +210,15 @@ const PublishResources = () => {
 
 
                 {/*提交审核*/}
-
-                <Form.Item name="features" label="添加标签" hidden={step !== 2}>
-                  <Input />
+                <Form.Item wrapperCol={{ span: 15 }} name="title" label="标题" hidden={step !== 2}>
+                  <Input disabled>oops</Input>
                 </Form.Item>
 
-                <Form.Item name="price" label="价格" hidden={step !== 2}>
+                <Form.Item name="features" label="添加标签" hidden={step !== 2}>
+                  <EditableTagGroup />
+                </Form.Item>
+
+                <Form.Item wrapperCol={{ span: 15 }} name="price" label="价格" hidden={step !== 2}>
                   <Input placeholder="请输入阿拉伯数字，单位：元/月" type="number" />
                 </Form.Item>
 
@@ -223,7 +231,7 @@ const PublishResources = () => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 6, span: 20 }} hidden={step !== 2}>
-                  <Button type="default" onClick={onRentPosCheck}>提交审核</Button>
+                  <Button type="default" htmlType="submit">提交审核</Button>
                 </Form.Item>
 
               </Form>
