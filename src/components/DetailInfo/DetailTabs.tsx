@@ -7,6 +7,7 @@ import ContentContainer from '../../components/DetailInfo/ContentContainer'
 import { detailOptions } from '../../utils/DetailOptions'
 import HouseInfo from './Panels/HouseInfo'
 import HouseDesc from './Panels/HouseDesc'
+import HousePay from './Panels/HousePay'
 const { Text, Title, Paragraph } = Typography;
 
 const DetailTabs = (props: { data: RentDetailModel }) => {
@@ -36,6 +37,7 @@ const DetailTabs = (props: { data: RentDetailModel }) => {
     <Divider />
     <HouseInfo data={data} />
     <HouseDesc data={data} />
+    <HousePay data={data} />
   </div>
 }
 
