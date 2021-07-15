@@ -41,7 +41,7 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
           <a style={{ color: '#A9A9A9' }}>{String(props.data.area) + "层"}</a>
         </p>
 
-        {props.data.features.map((item) => <Tag color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>{item}</Tag>)}
+        {props.data.features.map((item) => <Tag key={item} color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>{item}</Tag>)}
 
         <Divider style={{ marginBottom: 0, marginTop: '24px' }}></Divider>
         <p className="item-root" style={{ display: 'flex', justifyContent: 'space-start', color: '#c7c7c7' }}>

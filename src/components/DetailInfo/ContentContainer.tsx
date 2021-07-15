@@ -36,6 +36,7 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
             </div>
             {data.photos.map((url, index) => {
               return <img src={url}
+                key={url}
                 style={{
                   height: '100%',
                   width: '20%',
@@ -61,7 +62,7 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
               <Text style={{ color: 'red' }}>{data.rent_type}</Text>
             </div>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
-              {data.features.map((item) => <Tag color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>{item}</Tag>)}
+              {data.features.map((item) => <Tag key={item} color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>{item}</Tag>)}
             </div>
             <Divider />
             <div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
