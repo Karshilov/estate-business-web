@@ -16,12 +16,17 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
   const api = useApi();
 
   const gotoNext = () => {
+    console.log(active, data.photos.length)
     if (active < data.photos.length - 1) setActive(active + 1)
   }
 
   const gotoPre = () => {
     if (active > 0) setActive(active - 1)
   }
+
+  useEffect(() => {
+    console.log(data,)
+  }, [])
 
   return <Container style={{ width: '75%', background: '#fff', marginTop: 40 }} bodyStyle={{ display: 'flex', flexDirection: 'row' }} hoverable={false}>
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: 20 }} className="m-8">
@@ -39,12 +44,12 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
                 key={url}
                 style={{
                   height: '100%',
-                  width: '20%',
+                  width: '16%',
                   objectFit: 'cover',
                   outline: index === active ? '3px solid #00896c' : 'none',
-                  marginInline: 10
+                  marginInline: 'auto'
                 }}
-                hidden={index > active + 5 || index < active - (active + 5 - data.photos.length)}
+                hidden={index > active + 4 || index < active - Math.max((active + 5 - data.photos.length), 0)}
                 alt=""
                 onClick={() => { setActive(index) }}></img>
             })}
