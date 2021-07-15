@@ -6,7 +6,6 @@ import { useApi } from '../../utils/api'
 import ContentContainer from '../../components/DetailInfo/ContentContainer'
 const { Text, Title, Paragraph } = Typography;
 
-
 const RentDetail = (props: { match: any }) => {
   const [info, setInfo] = useState<RentDetailModel[]>([])
   const api = useApi();
