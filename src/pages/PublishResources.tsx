@@ -133,6 +133,10 @@ const PublishResources = () => {
     width: '20%',
   };
 
+  const onRentSubmit = () => {
+
+  }
+
 
   return <Basement style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
     <Basement style={{ width: '80%', minHeight: '80%' }}>
@@ -146,7 +150,7 @@ const PublishResources = () => {
                 <Steps.Step title="提交审核" icon={<AuditOutlined />} />
               </Steps>
               {/*房源地址*/}
-              <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={rentForm}>
+              <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={rentForm} onFinish={onRentSubmit}>
                 <Form.Item wrapperCol={{ span: 15 }} name="city" label="城市" hidden={step !== 0}>
                   <Input />
                 </Form.Item>
@@ -207,7 +211,7 @@ const PublishResources = () => {
 
                 {/*提交审核*/}
                 <Form.Item wrapperCol={{ span: 15 }} name="title" label="标题" hidden={step !== 2}>
-                    <Input disabled>oops</Input>
+                  <Input disabled>oops</Input>
                 </Form.Item>
 
                 <Form.Item name="features" label="添加标签" hidden={step !== 2}>
@@ -227,7 +231,7 @@ const PublishResources = () => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 6, span: 20 }} hidden={step !== 2}>
-                  <Button type="default" onClick={onRentPosCheck}>提交审核</Button>
+                  <Button type="default" htmlType="submit">提交审核</Button>
                 </Form.Item>
 
               </Form>
