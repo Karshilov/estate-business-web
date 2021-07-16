@@ -239,8 +239,7 @@ const PublishResources = () => {
     width: '20%',
   };
 
-  const beforeUpload = async (file: any) => {
-    console.log(file);
+  const beforeUpload = async (file: any, fileList: any) => {
     if (file.type !== "image/jpeg" && file.type !== "image/png") {
       message.warning("图片应为 jpeg 或 png 格式");
       return Upload.LIST_IGNORE;
@@ -252,14 +251,18 @@ const PublishResources = () => {
       }
     });
     console.log("res:", res);
+
     setRentPhotos(rentPhotos.concat(file.name));
     setRentPhotosKey(rentPhotosKey.concat(res.data.result.url.formData.key));
+
     const fd = new FormData()
-    fd.append("file", file);
     for (const r in res.data.result.url.formData) {
       fd.append(r, res.data.result.url.formData[r])
     }
+    fd.append("file", file);
     const r = await api.post(res.data.result.url.postURL, fd)
+    console.log("r: ", r);
+    return true;
   }
 
   const onRemove = async (file: any) => {
@@ -279,18 +282,53 @@ const PublishResources = () => {
   }
 
   const handleRentSubmit = async (values: any) => {
+    console.log("ph:", rentPhotos);
+    console.log("phk:", rentPhotosKey);
     console.log(values);
-    if (!values.city) message.warning("未填写城市");
-    else if (!values.neighbourhood) message.warning("未填写小区");
-    else if (!values.floor) message.warning("未填写楼层");
-    else if (!values.totalFloor) message.warning("未填写总楼层");
-    else if (!values.area) message.warning("未填写面积");
-    else if (!values.houseType) message.warning("未填写房型");
-    else if (!values.direction) message.warning("未选择朝向");
-    else if (!values.decoration) message.warning("未选择装修情况");
-    else if (!values.price) message.warning("未填写价格");
-    else if (!values.payType) message.warning("未填选择支付方式");
-    else if (!values.rentType) message.warning("未填选择租赁方式");
+    if (!values.city) {
+      message.warning("未填写城市");
+      return;
+    }
+    else if (!values.neighbourhood) {
+      message.warning("未填写小区");
+      return;
+    }
+    else if (!values.floor) {
+      message.warning("未填写楼层");
+      return;
+    }
+    else if (!values.totalFloor) {
+      message.warning("未填写总楼层");
+      return;
+    }
+    else if (!values.area) {
+      message.warning("未填写面积");
+      return;
+    }
+    else if (!values.houseType) {
+      message.warning("未填写房型");
+      return;
+    }
+    else if (!values.direction) {
+      message.warning("未选择朝向");
+      return;
+    }
+    else if (!values.decoration) {
+      message.warning("未选择装修情况");
+      return;
+    }
+    else if (!values.price) {
+      message.warning("未填写价格");
+      return;
+    }
+    else if (!values.payType) {
+      message.warning("未填选择支付方式");
+      return;
+    }
+    else if (!values.rentType) {
+      message.warning("未填选择租赁方式");
+      return;
+    }
     const res = await api.post('/rent/detail', {
       title: rentTitle,
       photos: rentPhotosKey,
@@ -417,7 +455,6 @@ const PublishResources = () => {
                     <Button icon={<UploadOutlined />}>Click to upload</Button>
                   </Upload>
                 </Form.Item>
-
 
                 {/*提交审核*/}
                 <Form.Item name="features" label="添加标签" hidden={step !== 2}>
