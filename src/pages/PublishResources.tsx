@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef, createElement } from "react";
 import { Basement, Layer, Container } from "../components/BasicHTMLElement";
 import InlineMultipleInput from '../components/InlineMultipleInput';
-import EditableTagGroup from '../components/EditableTagGroup';
 import { useHistory } from 'react-router-dom';
 import { Button, Col, Form, Input, Row, Tabs, Steps, Select, Upload, Radio, Tooltip, Tag, message } from "antd";
 import { useDispatch, useSelector } from 'react-redux';
 import { useApi, staticApi } from "../utils/api";
 import { StoreState } from "../store";
-import { HomeOutlined, FormOutlined, AuditOutlined, UploadOutlined } from '@ant-design/icons'
+import { HomeOutlined, FormOutlined, AuditOutlined, UploadOutlined, PlusOutlined } from '@ant-design/icons'
 import WashIcon from '../assets/equipments/wash.svg'
 import AirCondIcon from '../assets/equipments/aircond.svg'
 import BedIcon from '../assets/equipments/bed.svg'
@@ -45,12 +44,118 @@ const PublishResources = () => {
     '热水器', '床', '暖气', '宽带', '天然气'];
   const equipmentIconArr = [WashIcon, AirCondIcon, WardrobeIcon, TVIcon, RefrigeratorIcon,
     WaterHeaterIcon, BedIcon, WarmIcon, WifiIcon, GasIcon];
-  const [equipmentState, setEquipmentState] = useState(0);
+  const [rentEquipmentState, setRentEquipmentState] = useState(0);
 
-  const emptyStrArr: string[] = [];
-  const [rentPhotos, setRentPhotos] = useState(emptyStrArr);
-  const [rentPhotosKey, setRentPhotosKey] = useState(emptyStrArr);
-  const [rentTitle, setRentTitle] = useState("填写完毕后自动生成...");
+  const [rentPhotos, setRentPhotos] = useState<string[]>([]);
+  const [rentPhotosKey, setRentPhotosKey] = useState<string[]>([]);
+  const [rentTitle, setRentTitle] = useState("");
+
+  const [rentFeatureTags, setRentFeatureTags] = useState<string[]>([]);
+  const EditableTagGroup = () => {
+    const [inputVisible, setInputVisible] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+
+    const handleClose = (removedTag: String) => {
+      const newTags = rentFeatureTags.filter(tag => tag !== removedTag);
+      console.log(newTags);
+      setRentFeatureTags(newTags);
+    };
+
+    const showInput = () => {
+      setInputVisible(true);
+
+    };
+
+    useEffect(
+      () => {
+        const ipt = document.getElementById("ipt");
+        ipt?.focus();
+      }
+    );
+
+    const handleInputChange = (e: { target: { value: any; }; }) => {
+      setInputValue(e.target.value);
+    };
+
+    const handleInputConfirm = () => {
+      if (inputValue.length > 4)
+        message.warning("添加标签过长");
+      if (rentFeatureTags.length >= 10)
+        message.warning("添加标签数目超过上限");
+      if (rentFeatureTags.indexOf(inputValue) !== -1)
+        message.warning("标签已添加");
+      {/*有内容且和之前的内容不重复*/ }
+      var newTags;
+      if (inputValue && rentFeatureTags.indexOf(inputValue) === -1 && inputValue.length <= 4 && rentFeatureTags.length < 10)
+        newTags = [...rentFeatureTags, inputValue];
+      else
+        newTags = [...rentFeatureTags];
+      console.log(newTags);
+      setRentFeatureTags(newTags);
+      setInputVisible(false);
+      setInputValue('');
+    };
+
+    return (
+      <>
+        {/*已有标签*/}
+        {
+          rentFeatureTags.map((tag: any, index: number) => {
+            const tagElem = (
+              <Tag
+                style={{ userSelect: 'none', height: "100%" }}
+                key={tag}
+                closable={true}
+                onClose={() => handleClose(tag)}
+              >
+                <span>
+                  {tag}
+                </span>
+              </Tag>
+            );
+            return tagElem;
+          })
+        }
+        {/*添加标签*/}
+        {
+          inputVisible && (
+            <Tooltip title="不超过四字">
+              <Input
+                id="ipt"
+                type="text"
+                size="small"
+                style={{
+                  width: '78px',
+                  marginRight: '8px',
+                  height: "100%"
+                }}
+                value={inputValue}
+                onChange={handleInputChange}
+                onBlur={handleInputConfirm}
+                onPressEnter={handleInputConfirm}
+              >
+              </Input>
+            </Tooltip>
+          )
+        }
+        {
+          !inputVisible && (
+            <Tooltip title="不超过四字">
+              <Tag style={{
+                background: 'transparent',
+                borderStyle: 'dashed',
+                height: "100%"
+              }}
+                onClick={showInput}>
+                <PlusOutlined /> 添加标签
+              </Tag>
+            </Tooltip>
+          )
+        }
+      </>
+    );
+  }
+
 
   const createElements = () => {
     const tmap = new TMap.Map('tmap-container', {
@@ -113,13 +218,13 @@ const PublishResources = () => {
   }
 
   const handleFeatureChange = (id: number) => {
-    // console.log("PreSate：", equipmentState);
+    // console.log("PreSate：", rentEquipmentState);
     const tmp = (1 << (equipment.length - id - 1));
-    setEquipmentState(equipmentState ^ tmp);
+    setRentEquipmentState(rentEquipmentState ^ tmp);
   }
 
   const haveFeatureId = (id: number) => {
-    if (equipmentState & (1 << (equipment.length - id - 1)))
+    if (rentEquipmentState & (1 << (equipment.length - id - 1)))
       return true;
     return false;
   }
@@ -175,8 +280,18 @@ const PublishResources = () => {
 
   const handleRentSubmit = async (values: any) => {
     console.log(values);
-    return;
-    const res = await staticApi.post('/rent/detail', {
+    if (!values.city) message.warning("未填写城市");
+    else if (!values.neighbourhood) message.warning("未填写小区");
+    else if (!values.floor) message.warning("未填写楼层");
+    else if (!values.totalFloor) message.warning("未填写总楼层");
+    else if (!values.area) message.warning("未填写面积");
+    else if (!values.houseType) message.warning("未填写房型");
+    else if (!values.direction) message.warning("未选择朝向");
+    else if (!values.decoration) message.warning("未选择装修情况");
+    else if (!values.price) message.warning("未填写价格");
+    else if (!values.payType) message.warning("未填选择支付方式");
+    else if (!values.rentType) message.warning("未填选择租赁方式");
+    const res = await api.post('/rent/detail', {
       title: rentTitle,
       photos: rentPhotosKey,
       area: values.area,
@@ -185,12 +300,13 @@ const PublishResources = () => {
       price: values.price,
       house_type: values.houseType.a + "室" + values.houseType.b + "厅" + values.houseType.c + "卫",
       decoration: values.decoration,
-      features: ["没调好"],
+      features: rentFeatureTags,
       neighbourhood: values.neighbourhood,
       city: values.city,
       rent_type: values.payType,
-      equipements: equipmentState
+      equipments: rentEquipmentState
     });
+    console.log(res);
     if (res.data.success) {
       message.success('提交成功')
       return;
@@ -200,15 +316,24 @@ const PublishResources = () => {
     }
   }
 
-  const handleValueChange = (values: any) => {
-    console.log(values);
-    if (values.rentType && values.neighbourhood && values.houseType && values.direction) {
-      const str: string = values.rentType + "·" + values.neighbourhood + " "
-        + values.houseType.a + "室" + values.houseType.b + "厅" + values.houseType.c + "卫"
-        + " " + values.direction + "向";
-      setRentTitle(str);
+  const handleValueChange = (changedValue: any, values: any) => {
+    let title: string = "";
+    if (values.rentType)
+      title = title + values.rentType;
+    if (values.neighbourhood || values.houseType || values.direction)
+      title = title + "·";
+    if (values.neighbourhood)
+      title = title + values.neighbourhood + " ";
+    if (values.houseType) {
+      title = title + values.houseType.a + (values.houseType.a === "" ? "" : "室");
+      title = title + values.houseType.b + (values.houseType.b === "" ? "" : "厅");
+      title = title + values.houseType.c + (values.houseType.c === "" ? "" : "卫");
+      if (values.houseType.a !== "" || values.houseType.b !== "" || values.houseType.c !== "")
+        title = title + " ";
     }
-    else setRentTitle("填写完毕后自动生成...")
+    if (values.direction)
+      title = title + values.direction + "向";
+    setRentTitle(title);
   }
 
 
@@ -319,15 +444,17 @@ const PublishResources = () => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ span: 15 }} name="title" label="标题" hidden={step !== 2}>
-                  <Input disabled defaultValue={rentTitle}></Input>
+                  <Button disabled style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', color: 'rgb(38 38 38)' }} > {rentTitle}</Button>
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 6, span: 20 }} hidden={step !== 2}>
-                  <Button type="default" htmlType="submit">提交审核</Button>
+                  <Button type="default" htmlType="submit" >提交审核</Button>
                 </Form.Item>
 
               </Form>
             </Tabs.TabPane>
+
+            {/*卖房*/}
 
             <Tabs.TabPane key="sell" tab="我要卖房">
               <Steps current={step} size="small" style={{ margin: 20, padding: 30 }} onChange={(e) => { setStep(e) }}>
