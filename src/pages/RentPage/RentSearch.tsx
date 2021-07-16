@@ -5,6 +5,7 @@ import { Button, Col, Form, Input, Row, message, Select, Pagination } from "antd
 import { useDispatch, useSelector } from 'react-redux';
 import { tmapApi, useApi, apiKey } from "../../utils/api";
 import { SearchItemModel } from "../../utils/DataModel";
+import { SearchOutlined } from "@ant-design/icons";
 import VirtualList from '../../components/ItemList/VirtualList'
 import { city } from '../../utils/city'
 
@@ -44,7 +45,7 @@ const RentSearch = (props: { match: any }) => {
 
   useEffect(() => {
     getResourceList()
-  }, [pageAndPageSize, citySelect])
+  }, [pageAndPageSize, citySelect, searchText])
 
   return <Basement style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
     <div style={{ width: '65%', background: '#fff', marginBottom: 40, marginTop: 20 }} className="shadow-sm">
@@ -52,7 +53,10 @@ const RentSearch = (props: { match: any }) => {
         <Select defaultValue="南京" value={citySelect} onChange={(value, option) => { setCitySelect(value) }}>
           {city.map(item => <Select.Option value={item}>{item}</Select.Option>)}
         </Select>
-        <Input style={{ width: '50%' }} placeholder="请输入小区名称进行搜索" />
+        <Input.Search style={{ width: '50%' }} placeholder="请输入小区名称进行搜索" enterButton={<Button type="primary">点击搜索</Button>}
+          onSearch={(value: string) => {
+            setSearchText(value)
+          }} />
       </Input.Group>
     </div>
     <div style={{ width: '65%', background: '#fff' }} className="shadow-md">
