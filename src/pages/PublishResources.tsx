@@ -45,10 +45,15 @@ const PublishResources = () => {
   const equipmentIconArr = [WashIcon, AirCondIcon, WardrobeIcon, TVIcon, RefrigeratorIcon,
     WaterHeaterIcon, BedIcon, WarmIcon, WifiIcon, GasIcon];
   const [rentEquipmentState, setRentEquipmentState] = useState(0);
+  const [sellEquipmentState, setSellEquipmentState] = useState(0);
 
   const [rentPhotos, setRentPhotos] = useState<string[]>([]);
   const [rentPhotosKey, setRentPhotosKey] = useState<string[]>([]);
+  //let rentPhotos: string[] = [];
+  //let rentPhotosKey: string[] = [];
+
   const [rentTitle, setRentTitle] = useState("");
+  const [sellTitle, setSellTitle] = useState("");
 
   const [rentFeatureTags, setRentFeatureTags] = useState<string[]>([]);
   const EditableTagGroup = () => {
@@ -218,7 +223,6 @@ const PublishResources = () => {
   }
 
   const handleFeatureChange = (id: number) => {
-    // console.log("PreSate：", rentEquipmentState);
     const tmp = (1 << (equipment.length - id - 1));
     setRentEquipmentState(rentEquipmentState ^ tmp);
   }
@@ -252,8 +256,15 @@ const PublishResources = () => {
     });
     console.log("res:", res);
 
-    setRentPhotos(rentPhotos.concat(file.name));
-    setRentPhotosKey(rentPhotosKey.concat(res.data.result.url.formData.key));
+    const newPhotos = [...rentPhotos, file.name];
+    setRentPhotos(newPhotos)
+    const newPhotosKey = [...rentPhotosKey, res.data.result.url.formData.key];
+    setRentPhotosKey(newPhotosKey)
+
+    //rentPhotos = [...rentPhotos, file.name];
+    //rentPhotosKey = [...rentPhotosKey, res.data.result.url.formData.key];
+    //console.log("ph:", rentPhotos);
+    //console.log("phk:", rentPhotosKey);
 
     const fd = new FormData()
     for (const r in res.data.result.url.formData) {
@@ -265,12 +276,16 @@ const PublishResources = () => {
     return true;
   }
 
-  const onRemove = async (file: any) => {
+  const onRentRemove = async (file: any) => {
     const id = rentPhotos.indexOf(file.name);
     const delKey = rentPhotosKey[id];
 
     setRentPhotos(rentPhotos.filter((tag, _id) => _id !== id));
     setRentPhotosKey(rentPhotosKey.filter((tag, _id) => _id !== id));
+
+    //rentPhotos = rentPhotos.filter((tag, _id) => _id !== id);
+    //rentPhotosKey = rentPhotosKey.filter((tag, _id) => _id !== id);
+
     const res = await api.delete('/upload', {
       params: {
         type: "house",
@@ -282,75 +297,45 @@ const PublishResources = () => {
   }
 
   const handleRentSubmit = async (values: any) => {
-    console.log("ph:", rentPhotos);
-    console.log("phk:", rentPhotosKey);
+    // console.log("ph:", rentPhotos);
+    // console.log("phk:", rentPhotosKey);
     console.log(values);
-    if (!values.city) {
-      message.warning("未填写城市");
-      return;
-    }
-    else if (!values.neighbourhood) {
-      message.warning("未填写小区");
-      return;
-    }
-    else if (!values.floor) {
-      message.warning("未填写楼层");
-      return;
-    }
-    else if (!values.totalFloor) {
-      message.warning("未填写总楼层");
-      return;
-    }
-    else if (!values.area) {
-      message.warning("未填写面积");
-      return;
-    }
-    else if (!values.houseType) {
-      message.warning("未填写房型");
-      return;
-    }
-    else if (!values.direction) {
-      message.warning("未选择朝向");
-      return;
-    }
-    else if (!values.decoration) {
-      message.warning("未选择装修情况");
-      return;
-    }
-    else if (!values.price) {
-      message.warning("未填写价格");
-      return;
-    }
-    else if (!values.payType) {
-      message.warning("未填选择支付方式");
-      return;
-    }
-    else if (!values.rentType) {
-      message.warning("未填选择租赁方式");
-      return;
-    }
-    const res = await api.post('/rent/detail', {
-      title: rentTitle,
-      photos: rentPhotosKey,
-      area: values.area,
-      floor: values.floor,
-      total_floor: values.totalFloor,
-      price: values.price,
-      house_type: values.houseType.a + "室" + values.houseType.b + "厅" + values.houseType.c + "卫",
-      decoration: values.decoration,
-      features: rentFeatureTags,
-      neighbourhood: values.neighbourhood,
-      city: values.city,
-      rent_type: values.payType,
-      equipments: rentEquipmentState
-    });
-    console.log(res);
-    if (res.data.success) {
-      message.success('提交成功')
-      return;
-    } else {
-      message.warning(res.data.reason)
-      return;
+    if (!values.city) message.warning("未填写城市");
+    else if (!values.neighbourhood) message.warning("未填写小区");
+    else if (!values.floor) message.warning("未填写楼层");
+    else if (!values.totalFloor) message.warning("未填写总楼层");
+    else if (!values.area) message.warning("未填写面积");
+    else if (!values.houseType) message.warning("未填写房型");
+    else if (!values.direction) message.warning("未选择朝向");
+    else if (!values.decoration) message.warning("未选择装修情况");
+    else if (!rentPhotos.length) message.warning("请至少上传一张房屋内景图");
+    else if (!values.price) message.warning("未填写价格");
+    else if (!values.payType) message.warning("未填选择支付方式");
+    else if (!values.rentType) message.warning("未填选择租赁方式");
+    else {
+      const res = await api.post('/rent/detail', {
+        title: rentTitle,
+        photos: rentPhotosKey,
+        area: values.area,
+        floor: values.floor,
+        total_floor: values.totalFloor,
+        price: values.price,
+        house_type: values.houseType.a + "室" + values.houseType.b + "厅" + values.houseType.c + "卫",
+        decoration: values.decoration,
+        features: rentFeatureTags,
+        neighbourhood: values.neighbourhood,
+        city: values.city,
+        rent_type: values.payType,
+        equipments: rentEquipmentState
+      });
+      console.log(res);
+      if (res.data.success) {
+        message.success('提交成功')
+        return;
+      } else {
+        message.warning(res.data.reason)
+        return;
+      }
     }
   }
 
@@ -373,7 +358,6 @@ const PublishResources = () => {
       title = title + values.direction + "向";
     setRentTitle(title);
   }
-
 
   return <Basement style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
     <Basement style={{ width: '80%', minHeight: '80%' }}>
@@ -451,7 +435,7 @@ const PublishResources = () => {
                 </Form.Item>
 
                 <Form.Item name="photos" label="房屋内景" hidden={step !== 1}>
-                  <Upload listType="text" multiple={true} maxCount={10} beforeUpload={beforeUpload} onRemove={onRemove} >
+                  <Upload listType="text" maxCount={10} beforeUpload={beforeUpload} onRemove={onRentRemove} >
                     <Button icon={<UploadOutlined />}>Click to upload</Button>
                   </Upload>
                 </Form.Item>
@@ -481,7 +465,7 @@ const PublishResources = () => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ span: 15 }} name="title" label="标题" hidden={step !== 2}>
-                  <Button disabled style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', color: 'rgb(38 38 38)' }} > {rentTitle}</Button>
+                  <Button disabled style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', color: 'rgb(38 38 38)', backgroundColor: 'rgb(0 0 0 / 5%)' }} > {rentTitle}</Button>
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 6, span: 20 }} hidden={step !== 2}>
@@ -496,32 +480,99 @@ const PublishResources = () => {
             <Tabs.TabPane key="sell" tab="我要卖房">
               <Steps current={step} size="small" style={{ margin: 20, padding: 30 }} onChange={(e) => { setStep(e) }}>
                 <Steps.Step title="房源地址" icon={<HomeOutlined />} />
-                <Steps.Step title="卖房者信息" icon={<FormOutlined />} />
+                <Steps.Step title="详细信息" icon={<FormOutlined />} />
                 <Steps.Step title="提交审核" icon={<AuditOutlined />} />
               </Steps>
-
+              {/*房源地址*/}
               <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={sellForm}>
-                <Form.Item name="neighboorhoodCity" label="小区所在城市" hidden={step !== 0}>
+                <Form.Item wrapperCol={{ span: 15 }} name="city" label="城市" hidden={step !== 0}>
                   <Input />
                 </Form.Item>
-                <Form.Item name="neighboorhood" label="小区" hidden={step !== 0}>
-                  <Input />
-                </Form.Item>
-                <Form.Item name="exactPosition" label="房屋地址" hidden={step !== 0}>
-                  <InlineMultipleInput placehoderList={['楼栋号', '单元号', '门牌号']} />
-                </Form.Item>
-                <Form.Item name="appellation" label="称呼" hidden={step !== 1}>
-                  <Input />
-                </Form.Item>
-                <Form.Item name="phone" label="手机号" hidden={step !== 1}>
+                <Form.Item wrapperCol={{ span: 15 }} name="neighbourhood" label="小区" hidden={step !== 0}>
                   <Input />
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 6, span: 20 }} hidden={step !== 0}>
                   <Button type="default" onClick={onRentPosCheck}>检查地址</Button>
                 </Form.Item>
-                <Form.Item name="targetPrice" label="期望售价" hidden={step !== 2}>
-                  <Input placeholder="请输入阿拉伯数字，单位/万元" type="number" />
+
+                {/*详细信息*/}
+                <Row>
+                  <Col span={12}>
+                    <Form.Item labelCol={{ offset: 8 }} wrapperCol={{ span: 8 }} name="floor" label="楼层" hidden={step !== 1}>
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item labelCol={{ offset: 1 }} wrapperCol={{ span: 8 }} name="totalFloor" label="总楼层" hidden={step !== 1}>
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                <Form.Item wrapperCol={{ span: 15 }} name="area" label="面积" hidden={step !== 1}>
+                  <Input placeholder="请输入阿拉伯数字，单位/㎡" />
                 </Form.Item>
+
+                <Tooltip placement="top" title="请输入阿拉伯数字">
+                  <Form.Item name="houseType" label="房型" hidden={step !== 1}>
+                    <InlineMultipleInput placehoderList={['室', '厅', '卫']} />
+                  </Form.Item>
+                </Tooltip>
+
+                <Form.Item name="direction" label="朝向" hidden={step !== 1}>
+                  <Radio.Group>
+                    <Radio.Button value="南北">南北</Radio.Button>
+                    <Radio.Button value="东西">东西</Radio.Button>
+                  </Radio.Group>
+                </Form.Item>
+
+                <Form.Item name="decoration" label="装修情况" hidden={step !== 1}>
+                  <Radio.Group>
+                    <Radio.Button value="豪装">豪装</Radio.Button>
+                    <Radio.Button value="精装">精装</Radio.Button>
+                    <Radio.Button value="中装">中装</Radio.Button>
+                    <Radio.Button value="简装">简装</Radio.Button>
+                    <Radio.Button value="毛胚">毛胚</Radio.Button>
+                  </Radio.Group>
+                </Form.Item>
+
+                <Form.Item name="equipments" label="配套设施" hidden={step !== 1}>
+                  <Row>
+                    {equipment.map((tag, id) => (
+                      <div style={haveFeatureId(id) ? featureStyle2 : featureStyle1}>
+                        <img src={equipmentIconArr[id]} style={{ height: '30px', width: '100%', marginTop: '14px' }} onClick={() => handleFeatureChange(id)} />
+                        <p style={{ textAlign: 'center', marginBottom: 0 }}>{tag}</p>
+                      </div>
+                    ))}
+                  </Row>
+                </Form.Item>
+
+                <Form.Item name="photos" label="房屋内景" hidden={step !== 1} >
+                  <Upload listType="text" maxCount={10}>
+                    <Button >
+                      <UploadOutlined />
+                      <span>点击上传</span>
+                    </Button>
+                  </Upload>
+                </Form.Item>
+
+                {/*提交审核*/}
+                <Form.Item name="features" label="添加标签" hidden={step !== 2}>
+                  <EditableTagGroup />
+                </Form.Item>
+
+                <Form.Item wrapperCol={{ span: 15 }} name="price" label="价格" hidden={step !== 2}>
+                  <Input placeholder="请输入阿拉伯数字，单位：万元" type="number" />
+                </Form.Item>
+
+                <Form.Item wrapperCol={{ span: 15 }} name="title" label="标题" hidden={step !== 2}>
+                  <Button disabled style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', color: 'rgb(38 38 38)', backgroundColor: 'rgb(0 0 0 / 5%)' }} > {sellTitle}</Button>
+                </Form.Item>
+
+                <Form.Item wrapperCol={{ offset: 6, span: 20 }} hidden={step !== 2}>
+                  <Button type="default" htmlType="submit" >提交审核</Button>
+                </Form.Item>
+
               </Form>
             </Tabs.TabPane>
           </Tabs>
