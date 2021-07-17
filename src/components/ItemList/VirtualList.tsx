@@ -13,7 +13,7 @@ const VirtualList = (props: { list: Array<SearchItemModel> }) => {
 
   return <div style={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
     <div style={{ width: '95%' }}>
-      {columns.map(item => <Item data={item}/>)}
+      {columns.map(item => <Item data={item} key={item.id}/>)}
     </div>
     {/* 
     <div style={{ flexGrow: 1 }}></div>
