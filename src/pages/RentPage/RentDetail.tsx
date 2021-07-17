@@ -36,11 +36,11 @@ const RentDetail = (props: { match: any }) => {
       </Input.Group>
     </div>} */}
     {info[0] ? <ContentContainer data={info[0]} /> :
-      <Container style={{ width: '65%', background: '#fff' }} bodyStyle={{ display: 'flex', flexDirection: 'row' }} hoverable={false}>
+      <Container style={{ width: '75%', background: '#fff', marginTop: 40 }} bodyStyle={{ display: 'flex', flexDirection: 'row' }} hoverable={false}>
         <div style={{ width: '55%', display: 'flex', flexDirection: 'column' }} className="m-8 p-3">
           <Skeleton.Avatar size={300} shape="square" />
         </div>
-        <div style={{ width: '40%', display: 'flex', flexDirection: 'column' }} className="m-8 p-3">
+        <div style={{ width: '50%', display: 'flex', flexDirection: 'column' }} className="m-8 p-3">
           <Skeleton active />
         </div>
       </Container>}
