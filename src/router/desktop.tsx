@@ -8,6 +8,8 @@ import Register from '../pages/Register';
 import AuthGuard from '../components/AuthGuard';
 import RentSearch from '../pages/RentPage/RentSearch';
 import RentDetail from '../pages/RentPage/RentDetail';
+import SecondHandSearch from '../pages/SecondHandPage/SecondHandSearch';
+import SecondHandDetail from '../pages/SecondHandPage/SecondHandDetail';
 
 const DesktopRouter = withRouter(({ history }) => {
   return (
@@ -22,6 +24,9 @@ const DesktopRouter = withRouter(({ history }) => {
             <Route path="/rent/detail/:id" component={RentDetail} />
             <Route path="/rent-search/:keywords" component={RentSearch} />
             <Route path="/rent-search" component={RentSearch} />
+            <Route path="/second-hand/detail/:id" component={SecondHandDetail} />
+            <Route path="/second-hand-search/:keywords" component={SecondHandSearch} />
+            <Route path="/second-hand-search" component={SecondHandSearch} />
           </AuthGuard>
         </Switch>
       </HashRouter>
