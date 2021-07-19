@@ -26,11 +26,14 @@ const DesktopRouter = withRouter(({ history }) => {
             <Route path="/rent/detail/:id" component={RentDetail} />
             <Route path="/rent-search/:keywords" component={RentSearch} />
             <Route path="/rent-search" component={RentSearch} />
+            {/*
             <Route path="/second-hand/detail/:id" component={SecondHandDetail} />
             <Route path="/second-hand-search/:keywords" component={SecondHandSearch} />
             <Route path="/second-hand-search" component={SecondHandSearch} />
+            */}
             <Route path="/blog-publish" component={BlogPublish} />
-            <Route exact path="/new" component={PersonalPage} />
+            <Route exact path="/personal-page" component={PersonalPage} />
+            <Route path="/personal-page/:id" component={PersonalPage} />
           </AuthGuard>
         </Switch>
       </HashRouter>

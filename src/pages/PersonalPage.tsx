@@ -7,8 +7,8 @@ import {
 } from 'antd'
 import { useApi } from '../utils/api'
 import ContentContainer from '../components/DetailInfo/ContentContainer'
-import 'antd/dist/antd.css'
-import '../index.css'
+import { useSelector } from 'react-redux'
+import { StoreState } from '../store'
 
 import {
     AppstoreOutlined,
@@ -35,52 +35,104 @@ const { Header, Content, Sider } = Layout;
 const UnfocusStyle: React.CSSProperties = {
     display: 'none',
     position: 'absolute',
-    zIndex: 10
+    zIndex: 10,
+    fontSize: '34px'
 }
 
 const focusStyle: React.CSSProperties = {
     position: 'absolute',
-    zIndex: 10
+    zIndex: 10,
+    fontSize: '34px'
 }
 
-const PersonalPage = () => {
+const PersonalPage = (props: { match: any }) => {
     const [mouseOver, setMouseOver] = useState(false);
     const [selectedMenu, setSelectedMenu] = useState(1);
+    const [userInfo, setUserInfo] = useState({
+        username: "-",
+        avatar: "",
+        nickname: "-",
+        gender: -1,
+        email: "-",
+        phone_number: "-"
+    })
+    const api = useApi();
+    const id = props.match.params.id;
+    const { user } = useSelector((state: StoreState) => state, (left: StoreState, right: StoreState) => left.user === right.user)
+    const [isOwn, setIsOwn] = useState(false); 
 
-    const onMouseOver = () => {
+    const onMouseOverAvatar = () => {
         setMouseOver(true);
     }
 
-    const onMouseLeave = () => {
+    const onMouseLeaveAvator = () => {
         setMouseOver(false);
     }
 
-    const onSelect = (e: any) => {
+    const onSelectMenu = (e: any) => {
         setSelectedMenu(e.key);
+    }
+
+    useEffect(
+        () => {
+            getUserInfo();
+        }, [id]
+    )
+
+    const getUserInfo = async () => {
+        console.log('fetching info')
+        if (id && id !== user?.userid) {
+            const res = await api.get('/user', {
+                params: {
+                    id: id
+                }
+            })
+            if (res.data.success) {
+                setUserInfo(res.data.result);
+            } else {
+                message.error(res.data.reason)
+            }
+            setIsOwn(false);
+        } else {
+            const res = await api.get('/user')
+            console.log(res);
+            if (res.data.success) {
+                setUserInfo(res.data.result);
+            } else {
+                message.error(res.data.reason)
+            }
+            setIsOwn(true);
+        }
+    }
+
+    const upLoadAvator = async (file: any, FileList: any) => {
+
+
     }
 
     return <Basement style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Container style={{ width: '90%', marginTop: '1rem' }} hoverable={false}>
             <Row wrap={false}>
-                <div onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}
+                <div onMouseOver={onMouseOverAvatar} onMouseLeave={onMouseLeaveAvator}
                     style={{ display: 'flex', width: 'fit-content' }} className="avatar-uploader"
                 >
                     <Upload listType="picture-card"
                         showUploadList={false}
                         className="avatar-uploader"
+                        disabled = {isOwn===false}
                     >
-                        <Avatar size={84} shape='square' icon={<UserOutlined />} src="https://img2.baidu.com/it/u=3175463323,1252831295&fm=26&fmt=auto&gp=0.jpg">
+                        <Avatar size={94} shape='square' icon={<UserOutlined />} src={userInfo.avatar}>
                         </Avatar>
                         <Tooltip title="上传头像">
-                            <UploadOutlined style={mouseOver ? focusStyle : UnfocusStyle}></UploadOutlined>
+                            <UploadOutlined style={mouseOver ? focusStyle : UnfocusStyle} hidden={isOwn===false}/>
                         </Tooltip>
                     </Upload>
                 </div>
-                <Descriptions title="用户名" style={{ paddingLeft: '1rem', width: '50%' }} column={2}>
-                    <Descriptions.Item label="昵称">Karshilov</Descriptions.Item>
-                    <Descriptions.Item label="性别">女</Descriptions.Item>
-                    <Descriptions.Item label="邮箱">12345@qq.com</Descriptions.Item>
-                    <Descriptions.Item label="手机号">123456</Descriptions.Item>
+                <Descriptions title={userInfo.username} style={{ paddingLeft: '1rem', width: '40%' }} column={2}>
+                    <Descriptions.Item label="昵称">{userInfo.nickname}</Descriptions.Item>
+                    <Descriptions.Item label="性别">{userInfo.gender == -1 ? "-" : (userInfo.gender == 0 ? "男" : "女")}</Descriptions.Item>
+                    <Descriptions.Item label="邮箱">{userInfo.email}</Descriptions.Item>
+                    <Descriptions.Item label="手机号">{userInfo.phone_number}</Descriptions.Item>
                 </Descriptions>
             </Row>
         </Container>
@@ -94,7 +146,7 @@ const PersonalPage = () => {
                     }}
                     width='15%'
                 >
-                    <Menu theme="light" mode="inline" defaultSelectedKeys={['1']} onSelect={onSelect} inlineCollapsed={true}>
+                    <Menu theme="light" mode="inline" defaultSelectedKeys={['1']} onSelect={onSelectMenu} inlineCollapsed={true}>
                         <Menu.Item key="1" icon={<UserSwitchOutlined />}>
                             我的预约
                         </Menu.Item>
@@ -102,7 +154,7 @@ const PersonalPage = () => {
                             我的评分
                         </Menu.Item>
                         <SubMenu key="sub1" title="个人设置" icon={<SettingOutlined />} >
-                            <Menu.Item key="3" icon={<FormOutlined />}>个人信息</Menu.Item>
+                            <Menu.Item key="3" icon={<FormOutlined />}>修改信息</Menu.Item>
                             <Menu.Item key="4" icon={<LockOutlined />}>修改密码</Menu.Item>
                         </SubMenu>
                     </Menu>
@@ -138,7 +190,7 @@ const PersonalPage = () => {
                                     <Input />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ offset: 10 }}>
-                                    <Button type="default" htmlType="submit">修改信息</Button>
+                                    <Button type="default" htmlType="submit">修改密码</Button>
                                 </Form.Item>
                             </Form>
                         </div>
@@ -147,7 +199,7 @@ const PersonalPage = () => {
                                 <Form.Item wrapperCol={{ span: 9 }} name="newPassword" label="新密码" >
                                     <Input />
                                 </Form.Item>
-                                <Form.Item wrapperCol={{ span: 9 }} name="confirmNewPassword" label="确认密码" >
+                                <Form.Item wrapperCol={{ span: 9 }} name="confirmNewPassword" label="再次输入密码" >
                                     <Input />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 9 }} name="verify" label="验证码" >
