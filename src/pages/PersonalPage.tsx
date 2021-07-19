@@ -58,7 +58,8 @@ const PersonalPage = (props: { match: any }) => {
     })
     const api = useApi();
     const id = props.match.params.id;
-    const { apiToken } = useSelector((state: StoreState) => state, (left: StoreState, right: StoreState) => left.apiToken === right.apiToken)
+    const { user } = useSelector((state: StoreState) => state, (left: StoreState, right: StoreState) => left.user === right.user)
+    const [isOwn, setIsOwn] = useState(false); 
 
     const onMouseOverAvatar = () => {
         setMouseOver(true);
@@ -75,21 +76,23 @@ const PersonalPage = (props: { match: any }) => {
     useEffect(
         () => {
             getUserInfo();
-        }, []
+        }, [id]
     )
 
     const getUserInfo = async () => {
         console.log('fetching info')
-        if (id) {
+        if (id && id !== user?.userid) {
             const res = await api.get('/user', {
                 params: {
                     id: id
                 }
             })
             if (res.data.success) {
+                setUserInfo(res.data.result);
             } else {
                 message.error(res.data.reason)
             }
+            setIsOwn(false);
         } else {
             const res = await api.get('/user')
             console.log(res);
@@ -98,6 +101,7 @@ const PersonalPage = (props: { match: any }) => {
             } else {
                 message.error(res.data.reason)
             }
+            setIsOwn(true);
         }
     }
 
@@ -115,11 +119,12 @@ const PersonalPage = (props: { match: any }) => {
                     <Upload listType="picture-card"
                         showUploadList={false}
                         className="avatar-uploader"
+                        disabled = {isOwn===false}
                     >
                         <Avatar size={94} shape='square' icon={<UserOutlined />} src={userInfo.avatar}>
                         </Avatar>
                         <Tooltip title="上传头像">
-                            <UploadOutlined style={mouseOver ? focusStyle : UnfocusStyle} />
+                            <UploadOutlined style={mouseOver ? focusStyle : UnfocusStyle} hidden={isOwn===false}/>
                         </Tooltip>
                     </Upload>
                 </div>
@@ -149,7 +154,7 @@ const PersonalPage = (props: { match: any }) => {
                             我的评分
                         </Menu.Item>
                         <SubMenu key="sub1" title="个人设置" icon={<SettingOutlined />} >
-                            <Menu.Item key="3" icon={<FormOutlined />}>个人信息</Menu.Item>
+                            <Menu.Item key="3" icon={<FormOutlined />}>修改信息</Menu.Item>
                             <Menu.Item key="4" icon={<LockOutlined />}>修改密码</Menu.Item>
                         </SubMenu>
                     </Menu>
@@ -185,7 +190,7 @@ const PersonalPage = (props: { match: any }) => {
                                     <Input />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ offset: 10 }}>
-                                    <Button type="default" htmlType="submit">修改信息</Button>
+                                    <Button type="default" htmlType="submit">修改密码</Button>
                                 </Form.Item>
                             </Form>
                         </div>

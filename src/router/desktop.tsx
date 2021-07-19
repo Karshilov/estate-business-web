@@ -32,7 +32,7 @@ const DesktopRouter = withRouter(({ history }) => {
             <Route path="/second-hand-search" component={SecondHandSearch} />
             */}
             <Route path="/blog-publish" component={BlogPublish} />
-            <Route path="/personal-page" component={PersonalPage} />
+            <Route exact path="/personal-page" component={PersonalPage} />
             <Route path="/personal-page/:id" component={PersonalPage} />
           </AuthGuard>
         </Switch>

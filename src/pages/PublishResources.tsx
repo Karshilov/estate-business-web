@@ -364,6 +364,8 @@ const PublishResources = () => {
       <Layer style={{ right: '55%', top: 10 }}>
         <Container>
           <Tabs defaultActiveKey="rent" onChange={(key) => { setRentOrSell(key) }}>
+
+             {/*卖房*/}
             <Tabs.TabPane key="rent" tab="我要出租">
               <Steps current={step} size="small" style={{ margin: 20, padding: 30 }} onChange={(e) => { setStep(e) }}>
                 <Steps.Step title="房源地址" icon={<HomeOutlined />} />
@@ -476,7 +478,6 @@ const PublishResources = () => {
             </Tabs.TabPane>
 
             {/*卖房*/}
-
             <Tabs.TabPane key="sell" tab="我要卖房">
               <Steps current={step} size="small" style={{ margin: 20, padding: 30 }} onChange={(e) => { setStep(e) }}>
                 <Steps.Step title="房源地址" icon={<HomeOutlined />} />
