@@ -35,9 +35,21 @@ const HouseAround = (props: { data: RentDetailModel }) => {
   const ref = React.useRef<HTMLDivElement>(null)
   const api = useApi();
   const [category, setCategory] = useState('美食');
-  const [pointList, setPointList] = useState<Array<ReturnType>>([])
-  const [ctr, setCtr] = useState([0, 0]);
+  const [pointList, _setPointList] = useState<Array<ReturnType>>([])
+  const [ctr, _setCtr] = useState([0, 0]);
   const [currentSelected, setCurrentSelected] = useState('');
+  const plRef = React.useRef(pointList)
+  const ctrRef = React.useRef(ctr)
+
+  const setPointList = (data: Array<ReturnType>) => {
+    plRef.current = data;
+    _setPointList(data);
+  }
+
+  const setCtr = (data: number[]) => {
+    ctrRef.current = data;
+    _setCtr(data);
+  }
 
   const showPosition = async (addr: string) => {
     if (addr !== '') {
@@ -64,8 +76,8 @@ const HouseAround = (props: { data: RentDetailModel }) => {
   }
 
   const onClickHandler = function (evt: any) {
-    console.log(evt)
-    const point = pointList.find((item: any) => item.id === evt.geometry.id)!
+    console.log(evt, plRef.current)
+    const point = plRef.current.find((item: any) => item.id === evt.geometry.id)!
     setCurrentSelected(evt.geometry.title)
     const infowindow = new TMap.InfoWindow({
       content: evt.geometry.title === data.title ? `<span>${evt.geometry.title}</span>`
@@ -74,7 +86,7 @@ const HouseAround = (props: { data: RentDetailModel }) => {
       map: mapIns,
       offset: { x: 0, y: -10 }
     });
-    const pos = evt.geometry.title === data.title ? new TMap.LatLng(ctr[0], ctr[1]) : new TMap.LatLng(point.location.lat, point.location.lng)
+    const pos = evt.geometry.title === data.title ? new TMap.LatLng(ctrRef.current[0], ctrRef.current[1]) : new TMap.LatLng(point.location.lat, point.location.lng)
     infowindow.on('closeclick', function (e: any) {
       infowindow.destroy();
       markerLayer.updateGeometries([{
@@ -97,10 +109,8 @@ const HouseAround = (props: { data: RentDetailModel }) => {
   const createElements = async () => {
     const res = await showPosition(data.city + data.title.split('·')[1].split(/\s+/)[0])
     if (!res) return;
-    const rt = document.getElementById('house-around')!;
     setPointList(res.points);
     setCtr([res.center.lat, res.center.lng]);
-    rt.innerHTML = "";
     mapIns = new TMap.Map('house-around', {
       center: new TMap.LatLng(res.center.lat, res.center.lng),
       zoom: 16.2,
@@ -181,6 +191,10 @@ const HouseAround = (props: { data: RentDetailModel }) => {
       updateElements();
     }
   }, [category])
+
+  useEffect(() => {
+    console.log([pointList])
+  }, [pointList])
 
 
   return <div style={{ width: '100%', marginInline: '40px', marginTop: '40px' }}>

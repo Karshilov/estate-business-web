@@ -4,7 +4,7 @@ import RichTextEditor from "../../components/RichText/RichTextEditor";
 
 const BlogPublish = () => {
     return <Basement style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 40 }}>
-        <div style={{ width: '90%' }}>
+        <div style={{ width: '70%' }}>
             <RichTextEditor />
         </div>
     </Basement>
