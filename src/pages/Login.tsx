@@ -35,11 +35,7 @@ const Login = (props: { isPrepared?: boolean }) => {
       });
       if (res.data.success) {
         console.log(res.data)
-        dispatch({ type: 'user', payload: {
-          username: res.data.result.username,
-          email: res.data.result.email,
-          avatar: res.data.result.avatar
-        }})
+        dispatch({ type: 'user', payload: res.data.result})
         dispatch({ type: 'login', payload: res.data.result.token })
       } else {
         message.warning(res.data.reason)
