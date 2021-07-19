@@ -129,8 +129,3 @@ code {
   object-fit: cover;
   border-radius: 16px;
 }
-
-:global(.avatar-uploader>.ant-upload) {
-  width: 150px;
-  height: 150px;
-}
