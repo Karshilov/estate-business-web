@@ -6,6 +6,8 @@ export interface UserInfoModel {
   token: string;
   nickname: string;
   role: string;
+  gender: number;
+  phone_number: string;
 }
 
 export interface SearchItemModel {
