@@ -3,7 +3,7 @@ import { Basement, Container } from '../components/BasicHTMLElement'
 import {
     Layout, Menu, Breadcrumb, Avatar, Button, Card, Divider, Input,
     message, Pagination, Select, Skeleton, Tag, Typography, Upload, Tooltip,
-    Col, Row, Descriptions, Form, Radio
+    Col, Row, Descriptions, Form, Radio, Space
 } from 'antd'
 import { useApi } from '../utils/api'
 import ContentContainer from '../components/DetailInfo/ContentContainer'
@@ -46,6 +46,7 @@ const focusStyle: React.CSSProperties = {
 }
 
 const PersonalPage = (props: { match: any }) => {
+
     const [mouseOver, setMouseOver] = useState(false);
     const [selectedMenu, setSelectedMenu] = useState(1);
     const [userInfo, setUserInfo] = useState({
@@ -60,6 +61,7 @@ const PersonalPage = (props: { match: any }) => {
     const id = props.match.params.id;
     const { user } = useSelector((state: StoreState) => state, (left: StoreState, right: StoreState) => left.user === right.user)
     const [isOwn, setIsOwn] = useState(false);
+
 
     const onMouseOverAvatar = () => {
         setMouseOver(true);
@@ -76,8 +78,9 @@ const PersonalPage = (props: { match: any }) => {
     useEffect(
         () => {
             getUserInfo();
-        }, [id]
+        }, [id, selectedMenu]
     )
+
 
     const getUserInfo = async () => {
         console.log(user?.userid)
@@ -104,6 +107,29 @@ const PersonalPage = (props: { match: any }) => {
             setIsOwn(true);
         }
     }
+
+    const handleInfoSubmit = async (values: any) => {
+        console.log(values);
+        const checkReg = /\s+/;
+        if (values.username && values.username.search(checkReg) !== -1) message.error('请不要使用空白字符');
+        if (values.nickname && values.nickname.search(checkReg) !== -1) message.error('请不要使用空白字符');
+        if (values.email && values.email.search(checkReg) !== -1) message.error('请不要使用空白字符');
+        if (values.phone_number && values.phone_number.search(checkReg) !== -1) message.error('请不要使用空白字符');
+        const res = await api.put('/user', {
+            username: (values.username && values.username != "") ? values.username : userInfo.username,
+            nickname: (values.nickname && values.nickname != "") ? values.nickname : userInfo.nickname,
+            email: (values.email && values.email != "") ? values.email : userInfo.email,
+            phone_number: (values.phone_number && values.phone_number != "") ? values.phone_number : userInfo.phone_number,
+            gender: (values.gender == 0 || values.gender == 1) ? values.gender : userInfo.gender,
+        });
+        console.log(res);
+        if (res.data.success) {
+            message.success('提交成功')
+        } else {
+            message.warning(res.data.reason)
+        }
+    }
+
 
     const upLoadAvator = async (file: any, FileList: any) => {
 
@@ -182,45 +208,44 @@ const PersonalPage = (props: { match: any }) => {
                 <Layout style={{ margin: '0 7px' }}>
                     <Content style={{ margin: '30px 30px', overflow: 'initial' }}>
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 1}>
-                            我的预约
+                            预约
 
                         </div>
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 2}>
-                            我的评分
-
+                            评分
                         </div>
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 3 || !isOwn}>
-                            <Form labelCol={{ span: 7 }} >
+                            <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} >
                                 <Form.Item wrapperCol={{ span: 9 }} name="username" label="用户名" >
-                                    <Input />
+                                    <Input placeholder={userInfo.username} />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 9 }} name="nickname" label="昵称" >
-                                    <Input />
+                                    <Input placeholder={userInfo.nickname} />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 20 }} name="gender" label="性别" >
-                                    <Radio.Group >
+                                    <Radio.Group defaultValue={userInfo.gender}>
                                         <Radio.Button value={0} style={{ width: '64px', textAlign: 'center' }}>男</Radio.Button>
                                         <Radio.Button value={1} style={{ width: '64px', textAlign: 'center' }}>女</Radio.Button>
                                     </Radio.Group>
                                 </Form.Item>
-                                <Form.Item wrapperCol={{ span: 9 }} name="email" label="邮箱" >
-                                    <Input />
+                                <Form.Item wrapperCol={{ span: 9 }} name="email" label="邮箱">
+                                    <Input placeholder={userInfo.email} />
                                 </Form.Item>
-                                <Form.Item wrapperCol={{ span: 9 }} name="photoNumber" label="手机号" >
-                                    <Input />
+                                <Form.Item wrapperCol={{ span: 9 }} name="phone_number" label="手机号" >
+                                    <Input placeholder={userInfo.phone_number} />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ offset: 10 }}>
-                                    <Button type="default" htmlType="submit">修改密码</Button>
+                                    <Button type="default" htmlType="submit">修改信息</Button>
                                 </Form.Item>
                             </Form>
                         </div>
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 4 || !isOwn}>
-                            <Form labelCol={{ span: 7 }} >
+                            <Form labelCol={{ span: 7 }}>
                                 <Form.Item wrapperCol={{ span: 9 }} name="newPassword" label="新密码" >
-                                    <Input />
+                                    <Input.Password />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 9 }} name="confirmNewPassword" label="再次输入密码" >
-                                    <Input />
+                                    <Input.Password />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 9 }} name="verify" label="验证码" >
                                     <Row wrap={false}>
