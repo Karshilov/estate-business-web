@@ -59,7 +59,7 @@ const PersonalPage = (props: { match: any }) => {
     const api = useApi();
     const id = props.match.params.id;
     const { user } = useSelector((state: StoreState) => state, (left: StoreState, right: StoreState) => left.user === right.user)
-    const [isOwn, setIsOwn] = useState(false); 
+    const [isOwn, setIsOwn] = useState(false);
 
     const onMouseOverAvatar = () => {
         setMouseOver(true);
@@ -80,7 +80,7 @@ const PersonalPage = (props: { match: any }) => {
     )
 
     const getUserInfo = async () => {
-        console.log('fetching info')
+        console.log(user?.userid)
         if (id && id !== user?.userid) {
             const res = await api.get('/user', {
                 params: {
@@ -116,17 +116,35 @@ const PersonalPage = (props: { match: any }) => {
                 <div onMouseOver={onMouseOverAvatar} onMouseLeave={onMouseLeaveAvator}
                     style={{ display: 'flex', width: 'fit-content' }} className="avatar-uploader"
                 >
-                    <Upload listType="picture-card"
-                        showUploadList={false}
-                        className="avatar-uploader"
-                        disabled = {isOwn===false}
-                    >
-                        <Avatar size={94} shape='square' icon={<UserOutlined />} src={userInfo.avatar}>
-                        </Avatar>
-                        <Tooltip title="上传头像">
-                            <UploadOutlined style={mouseOver ? focusStyle : UnfocusStyle} hidden={isOwn===false}/>
-                        </Tooltip>
-                    </Upload>
+                    {isOwn && (
+                        <Upload listType="picture-card"
+                            showUploadList={false}
+                            className="avatar-uploader "
+                        >
+                            <Avatar size={94} shape='square' icon={<UserOutlined />} src={userInfo.avatar}>
+                            </Avatar>
+                            <Tooltip title="上传头像">
+                                <UploadOutlined style={mouseOver ? focusStyle : UnfocusStyle} />
+                            </Tooltip>
+                        </Upload>
+                    )}
+                    {!isOwn && (
+                        <span style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '110px',
+                            height: '110px',
+                            borderStyle: 'dashed',
+                            borderWidth: '1px',
+                            borderColor: 'rgb(235 235 235)',
+                            background: 'rgb(250 250 250)'
+                        }}
+                        >
+                            <Avatar size={94} shape='square' icon={<UserOutlined />} src={userInfo.avatar}>
+                            </Avatar>
+                        </span>
+                    )}
                 </div>
                 <Descriptions title={userInfo.username} style={{ paddingLeft: '1rem', width: '40%' }} column={2}>
                     <Descriptions.Item label="昵称">{userInfo.nickname}</Descriptions.Item>
@@ -148,15 +166,17 @@ const PersonalPage = (props: { match: any }) => {
                 >
                     <Menu theme="light" mode="inline" defaultSelectedKeys={['1']} onSelect={onSelectMenu} inlineCollapsed={true}>
                         <Menu.Item key="1" icon={<UserSwitchOutlined />}>
-                            我的预约
+                            {isOwn ? "我的预约" : (userInfo.gender !== 1 ? "他的预约" : "她的预约")}
                         </Menu.Item>
                         <Menu.Item key="2" icon={<StarOutlined />}>
-                            我的评分
+                            {isOwn ? "我的评分" : (userInfo.gender !== 1 ? "他的预约" : "她的预约")}
                         </Menu.Item>
-                        <SubMenu key="sub1" title="个人设置" icon={<SettingOutlined />} >
-                            <Menu.Item key="3" icon={<FormOutlined />}>修改信息</Menu.Item>
-                            <Menu.Item key="4" icon={<LockOutlined />}>修改密码</Menu.Item>
-                        </SubMenu>
+                        {isOwn && (
+                            <SubMenu key="sub1" title="个人设置" icon={<SettingOutlined />} >
+                                <Menu.Item key="3" icon={<FormOutlined />}>修改信息</Menu.Item>
+                                <Menu.Item key="4" icon={<LockOutlined />}>修改密码</Menu.Item>
+                            </SubMenu>
+                        )}
                     </Menu>
                 </Sider>
                 <Layout style={{ margin: '0 7px' }}>
@@ -169,7 +189,7 @@ const PersonalPage = (props: { match: any }) => {
                             我的评分
 
                         </div>
-                        <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 3}>
+                        <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 3 || !isOwn}>
                             <Form labelCol={{ span: 7 }} >
                                 <Form.Item wrapperCol={{ span: 9 }} name="username" label="用户名" >
                                     <Input />
@@ -194,7 +214,7 @@ const PersonalPage = (props: { match: any }) => {
                                 </Form.Item>
                             </Form>
                         </div>
-                        <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 4}>
+                        <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 4 || !isOwn}>
                             <Form labelCol={{ span: 7 }} >
                                 <Form.Item wrapperCol={{ span: 9 }} name="newPassword" label="新密码" >
                                     <Input />
