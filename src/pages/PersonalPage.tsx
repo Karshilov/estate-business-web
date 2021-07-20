@@ -5,7 +5,7 @@ import {
     message, Pagination, Select, Skeleton, Tag, Typography, Upload, Tooltip,
     Col, Row, Descriptions, Form, Radio, Space
 } from 'antd'
-import { useApi } from '../utils/api'
+import { useApi, usePostImg, staticApi } from '../utils/api'
 import ContentContainer from '../components/DetailInfo/ContentContainer'
 import { useSelector } from 'react-redux'
 import { StoreState } from '../store'
@@ -46,7 +46,6 @@ const focusStyle: React.CSSProperties = {
 }
 
 const PersonalPage = (props: { match: any }) => {
-
     const [mouseOver, setMouseOver] = useState(false);
     const [selectedMenu, setSelectedMenu] = useState(1);
     const [userInfo, setUserInfo] = useState({
@@ -58,10 +57,10 @@ const PersonalPage = (props: { match: any }) => {
         phone_number: "-"
     })
     const api = useApi();
+    const api2 = usePostImg();
     const id = props.match.params.id;
     const { user } = useSelector((state: StoreState) => state, (left: StoreState, right: StoreState) => left.user === right.user)
     const [isOwn, setIsOwn] = useState(false);
-
 
     const onMouseOverAvatar = () => {
         setMouseOver(true);
@@ -81,9 +80,8 @@ const PersonalPage = (props: { match: any }) => {
         }, [id, selectedMenu]
     )
 
-
     const getUserInfo = async () => {
-        console.log(user?.userid)
+        // console.log(user?.userid)
         if (id && id !== user?.userid) {
             const res = await api.get('/user', {
                 params: {
@@ -98,7 +96,7 @@ const PersonalPage = (props: { match: any }) => {
             setIsOwn(false);
         } else {
             const res = await api.get('/user')
-            console.log(res);
+            // console.log(res);
             if (res.data.success) {
                 setUserInfo(res.data.result);
             } else {
@@ -109,31 +107,95 @@ const PersonalPage = (props: { match: any }) => {
     }
 
     const handleInfoSubmit = async (values: any) => {
-        console.log(values);
+        // console.log(values);
         const checkReg = /\s+/;
         if (values.username && values.username.search(checkReg) !== -1) message.error('请不要使用空白字符');
-        if (values.nickname && values.nickname.search(checkReg) !== -1) message.error('请不要使用空白字符');
-        if (values.email && values.email.search(checkReg) !== -1) message.error('请不要使用空白字符');
-        if (values.phone_number && values.phone_number.search(checkReg) !== -1) message.error('请不要使用空白字符');
-        const res = await api.put('/user', {
-            username: (values.username && values.username != "") ? values.username : userInfo.username,
-            nickname: (values.nickname && values.nickname != "") ? values.nickname : userInfo.nickname,
-            email: (values.email && values.email != "") ? values.email : userInfo.email,
-            phone_number: (values.phone_number && values.phone_number != "") ? values.phone_number : userInfo.phone_number,
-            gender: (values.gender == 0 || values.gender == 1) ? values.gender : userInfo.gender,
-        });
-        console.log(res);
-        if (res.data.success) {
-            message.success('提交成功')
-        } else {
-            message.warning(res.data.reason)
+        else if (values.nickname && values.nickname.search(checkReg) !== -1) message.error('请不要使用空白字符');
+        else if (values.email && values.email.search(checkReg) !== -1) message.error('请不要使用空白字符');
+        else if (values.phone_number && values.phone_number.search(checkReg) !== -1) message.error('请不要使用空白字符');
+        else {
+            const newInfo = {
+                username: (values.username && values.username != "") ? values.username : userInfo.username,
+                nickname: (values.nickname && values.nickname != "") ? values.nickname : userInfo.nickname,
+                email: (values.email && values.email != "") ? values.email : userInfo.email,
+                phone_number: (values.phone_number && values.phone_number != "") ? values.phone_number : userInfo.phone_number,
+                gender: (values.gender == 0 || values.gender == 1) ? values.gender : userInfo.gender,
+                avatar: userInfo.avatar
+            };
+
+            const res = await api.put('/user', newInfo);
+            // console.log(res);
+            if (res.data.success) {
+                message.success('提交成功')
+            } else {
+                message.warning(res.data.reason)
+            }
+            setUserInfo(newInfo);
         }
     }
 
+    const handlePasswordSubmit = async (values: any) => {
+        console.log(values);
+        const checkReg = /\s+/;
+        if (!values.new_password || values.new_password == "") message.warning("未输入密码");
+        else if (!values.confirm_password || values.confirm_password == "") message.warning("未输入密码");
+        else if (!values.verify || values.verify == "") message.warning("未输入验证码");
+        else if (values.confirm_password !== values.new_password) message.warning("两次输入密码不一致");
+        else if (values.new_password.search(checkReg) !== -1) message.warning("请不要使用空白字符");
+        else if (values.confirm_password.search(checkReg) !== -1) message.warning("请不要使用空白字符");
+        else {
+            const res = await api.post('/user/password', {
+                verify: values.verify,
+                new_password: values.new_password
+            });
+            console.log(res);
+            if (res.data.success) {
+                message.success('提交成功')
+            } else {
+                message.warning(res.data.reason)
+            }
+        }
+    }
 
-    const upLoadAvator = async (file: any, FileList: any) => {
+    const sendPassWord = async () => {
+        //console.log("send")
+        const res = await staticApi.get('/email', {
+            params: {
+                to: userInfo.email
+            }
+        })
+        console.log(res);
+        if (res.data.success) {
+            setUserInfo(res.data.result);
+        } else {
+            message.error(res.data.reason)
+        }
+    }
 
-
+    const beforeAvatarUpLoad = async (file: any, fileList: any) => {
+        //console.log(file);
+        if (file.type !== "image/jpeg" && file.type !== "image/png") {
+            message.warning("图片应为 jpeg 或 png 格式");
+            return Upload.LIST_IGNORE;
+        }
+        const res = await api.get('/upload', {
+            params: {
+                type: "avatar",
+                file_name: file.name
+            }
+        });
+        //console.log("res:", res);
+        const fd = new FormData()
+        for (const r in res.data.result.url.formData) {
+            fd.append(r, res.data.result.url.formData[r])
+        }
+        fd.append("file", file);
+        const res2 = await api2.post(res.data.result.url.postURL, fd)
+        //console.log("res2:", res2);
+        const res3 = await api.post('/user/avatar', { avatar: res.data.result.key })
+        //console.log("res3:", res3);
+        getUserInfo();
+        return true;
     }
 
     return <Basement style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -146,6 +208,7 @@ const PersonalPage = (props: { match: any }) => {
                         <Upload listType="picture-card"
                             showUploadList={false}
                             className="avatar-uploader "
+                            beforeUpload={beforeAvatarUpLoad}
                         >
                             <Avatar size={94} shape='square' icon={<UserOutlined />} src={userInfo.avatar}>
                             </Avatar>
@@ -181,7 +244,7 @@ const PersonalPage = (props: { match: any }) => {
             </Row>
         </Container>
 
-        <Container style={{ width: '90%', marginTop: '1rem' }} hoverable={false}>
+        <Container style={{ width: '90%', marginTop: '1rem', height: '96vh' }} hoverable={false}>
             <Layout>
                 <Sider
                     style={{
@@ -189,8 +252,9 @@ const PersonalPage = (props: { match: any }) => {
                         background: '#fff',
                     }}
                     width='15%'
+                    collapsed={false}
                 >
-                    <Menu theme="light" mode="inline" defaultSelectedKeys={['1']} onSelect={onSelectMenu} inlineCollapsed={true}>
+                    <Menu theme="light" mode="inline" defaultSelectedKeys={['1']} onSelect={onSelectMenu}>
                         <Menu.Item key="1" icon={<UserSwitchOutlined />}>
                             {isOwn ? "我的预约" : (userInfo.gender !== 1 ? "他的预约" : "她的预约")}
                         </Menu.Item>
@@ -205,7 +269,7 @@ const PersonalPage = (props: { match: any }) => {
                         )}
                     </Menu>
                 </Sider>
-                <Layout style={{ margin: '0 7px' }}>
+                <Layout style={{ margin: '0 7px', height: '92vh' }}>
                     <Content style={{ margin: '30px 30px', overflow: 'initial' }}>
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 1}>
                             预约
@@ -215,7 +279,7 @@ const PersonalPage = (props: { match: any }) => {
                             评分
                         </div>
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 3 || !isOwn}>
-                            <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} >
+                            <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} initialValues={{ gender: userInfo.gender }}>
                                 <Form.Item wrapperCol={{ span: 9 }} name="username" label="用户名" >
                                     <Input placeholder={userInfo.username} />
                                 </Form.Item>
@@ -223,7 +287,7 @@ const PersonalPage = (props: { match: any }) => {
                                     <Input placeholder={userInfo.nickname} />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 20 }} name="gender" label="性别" >
-                                    <Radio.Group defaultValue={userInfo.gender}>
+                                    <Radio.Group>
                                         <Radio.Button value={0} style={{ width: '64px', textAlign: 'center' }}>男</Radio.Button>
                                         <Radio.Button value={1} style={{ width: '64px', textAlign: 'center' }}>女</Radio.Button>
                                     </Radio.Group>
@@ -240,21 +304,21 @@ const PersonalPage = (props: { match: any }) => {
                             </Form>
                         </div>
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 4 || !isOwn}>
-                            <Form labelCol={{ span: 7 }}>
-                                <Form.Item wrapperCol={{ span: 9 }} name="newPassword" label="新密码" >
+                            <Form labelCol={{ span: 7 }} onFinish={handlePasswordSubmit}>
+                                <Form.Item wrapperCol={{ span: 9 }} name="new_password" label="新密码" >
                                     <Input.Password />
                                 </Form.Item>
-                                <Form.Item wrapperCol={{ span: 9 }} name="confirmNewPassword" label="再次输入密码" >
+                                <Form.Item wrapperCol={{ span: 9 }} name="confirm_password" label="再次输入密码" >
                                     <Input.Password />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 9 }} name="verify" label="验证码" >
                                     <Row wrap={false}>
                                         <Input />
-                                        <Button type="default" htmlType="submit">获取验证码</Button>
+                                        <Button type="default" htmlType="button" onClick={sendPassWord}>获取验证码</Button>
                                     </Row>
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ offset: 10 }}>
-                                    <Button type="default" htmlType="button" onClick={() => { }}>修改密码</Button>
+                                    <Button type="default" htmlType="submit">修改密码</Button>
                                 </Form.Item>
                             </Form>
                         </div>
