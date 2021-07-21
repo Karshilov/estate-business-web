@@ -23,7 +23,8 @@ import {
     StarOutlined,
     UserSwitchOutlined,
     FormOutlined,
-    LockOutlined
+    LockOutlined,
+    HomeOutlined
 } from '@ant-design/icons';
 
 
@@ -47,7 +48,7 @@ const focusStyle: React.CSSProperties = {
 
 const PersonalPage = (props: { match: any }) => {
     const [mouseOver, setMouseOver] = useState(false);
-    const [selectedMenu, setSelectedMenu] = useState(1);
+    const [selectedMenu, setSelectedMenu] = useState(5);
     const [userInfo, setUserInfo] = useState({
         username: "-",
         avatar: "",
@@ -58,8 +59,10 @@ const PersonalPage = (props: { match: any }) => {
     })
     const api = useApi();
     const api2 = usePostImg();
-    const id = props.match.params.id;
+    const [pswForm] = Form.useForm();
+    const [infoForm] = Form.useForm();
     const { user } = useSelector((state: StoreState) => state, (left: StoreState, right: StoreState) => left.user === right.user)
+    const id = (props.match.params.id ? props.match.params.id : user?.userid);
     const [isOwn, setIsOwn] = useState(false);
 
     const onMouseOverAvatar = () => {
@@ -77,33 +80,47 @@ const PersonalPage = (props: { match: any }) => {
     useEffect(
         () => {
             getUserInfo();
+            if (selectedMenu == 1)
+                getAppointment();
+            if (selectedMenu == 2)
+                getRate();
+            if (selectedMenu == 5)
+                getHouseSource();
         }, [id, selectedMenu]
     )
 
+    const getHouseSource = async () => {
+
+
+    }
+
+    const getRate = async () => {
+
+
+    }
+
+    const getAppointment = async () => {
+
+
+    }
+
     const getUserInfo = async () => {
         // console.log(user?.userid)
-        if (id && id !== user?.userid) {
-            const res = await api.get('/user', {
-                params: {
-                    id: id
-                }
-            })
-            if (res.data.success) {
-                setUserInfo(res.data.result);
-            } else {
-                message.error(res.data.reason)
+        const res = await api.get('/user', {
+            params: {
+                id: id
             }
-            setIsOwn(false);
+        })
+        if (res.data.success) {
+            setUserInfo(res.data.result);
+            infoForm.setFieldsValue(userInfo)
         } else {
-            const res = await api.get('/user')
-            // console.log(res);
-            if (res.data.success) {
-                setUserInfo(res.data.result);
-            } else {
-                message.error(res.data.reason)
-            }
-            setIsOwn(true);
+            message.error(res.data.reason)
         }
+        if (id !== user?.userid)
+            setIsOwn(false);
+        else
+            setIsOwn(true);
     }
 
     const handleInfoSubmit = async (values: any) => {
@@ -135,7 +152,7 @@ const PersonalPage = (props: { match: any }) => {
     }
 
     const handlePasswordSubmit = async (values: any) => {
-        console.log(values);
+        // console.log(values);
         const checkReg = /\s+/;
         if (!values.new_password || values.new_password == "") message.warning("未输入密码");
         else if (!values.confirm_password || values.confirm_password == "") message.warning("未输入密码");
@@ -151,13 +168,15 @@ const PersonalPage = (props: { match: any }) => {
             console.log(res);
             if (res.data.success) {
                 message.success('提交成功')
+                pswForm.resetFields();
             } else {
                 message.warning(res.data.reason)
             }
         }
+
     }
 
-    const sendPassWord = async () => {
+    const sendVerify = async () => {
         //console.log("send")
         const res = await staticApi.get('/email', {
             params: {
@@ -170,6 +189,8 @@ const PersonalPage = (props: { match: any }) => {
         } else {
             message.error(res.data.reason)
         }
+        console.log(userInfo)
+        getUserInfo();
     }
 
     const beforeAvatarUpLoad = async (file: any, fileList: any) => {
@@ -254,7 +275,10 @@ const PersonalPage = (props: { match: any }) => {
                     width='15%'
                     collapsed={false}
                 >
-                    <Menu theme="light" mode="inline" defaultSelectedKeys={['1']} onSelect={onSelectMenu}>
+                    <Menu theme="light" mode="inline" defaultSelectedKeys={['5']} onSelect={onSelectMenu}>
+                        <Menu.Item key="5" icon={<HomeOutlined />}>
+                            {isOwn ? "我的房源" : (userInfo.gender !== 1 ? "他的房源" : "她的房源")}
+                        </Menu.Item>
                         <Menu.Item key="1" icon={<UserSwitchOutlined />}>
                             {isOwn ? "我的预约" : (userInfo.gender !== 1 ? "他的预约" : "她的预约")}
                         </Menu.Item>
@@ -270,21 +294,27 @@ const PersonalPage = (props: { match: any }) => {
                     </Menu>
                 </Sider>
                 <Layout style={{ margin: '0 7px', height: '92vh' }}>
-                    <Content style={{ margin: '30px 30px', overflow: 'initial' }}>
+                    <Content style={{ margin: '25px 25px', overflow: 'initial' }}>
+                        {/*房源*/}
+                        <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 5}>
+                            房源
+                        </div>
+                        {/*预约*/}
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 1}>
                             预约
-
                         </div>
+                        {/*评分*/}
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 2}>
                             评分
+
                         </div>
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 3 || !isOwn}>
-                            <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} initialValues={{ gender: userInfo.gender }}>
+                            <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} form = {infoForm}>
                                 <Form.Item wrapperCol={{ span: 9 }} name="username" label="用户名" >
-                                    <Input placeholder={userInfo.username} />
+                                    <Input placeholder={userInfo.username} onPressEnter={(e) => { e.preventDefault() }} />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 9 }} name="nickname" label="昵称" >
-                                    <Input placeholder={userInfo.nickname} />
+                                    <Input placeholder={userInfo.nickname} onPressEnter={(e) => { e.preventDefault() }} />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 20 }} name="gender" label="性别" >
                                     <Radio.Group>
@@ -293,10 +323,10 @@ const PersonalPage = (props: { match: any }) => {
                                     </Radio.Group>
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 9 }} name="email" label="邮箱">
-                                    <Input placeholder={userInfo.email} />
+                                    <Input placeholder={userInfo.email} onPressEnter={(e) => { e.preventDefault() }} />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 9 }} name="phone_number" label="手机号" >
-                                    <Input placeholder={userInfo.phone_number} />
+                                    <Input placeholder={userInfo.phone_number} onPressEnter={(e) => { e.preventDefault() }} />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ offset: 10 }}>
                                     <Button type="default" htmlType="submit">修改信息</Button>
@@ -304,17 +334,17 @@ const PersonalPage = (props: { match: any }) => {
                             </Form>
                         </div>
                         <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 4 || !isOwn}>
-                            <Form labelCol={{ span: 7 }} onFinish={handlePasswordSubmit}>
+                            <Form labelCol={{ span: 7 }} onFinish={handlePasswordSubmit} form={pswForm}>
                                 <Form.Item wrapperCol={{ span: 9 }} name="new_password" label="新密码" >
-                                    <Input.Password />
+                                    <Input.Password onPressEnter={(e) => { e.preventDefault() }} />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 9 }} name="confirm_password" label="再次输入密码" >
-                                    <Input.Password />
+                                    <Input.Password onPressEnter={(e) => { e.preventDefault() }} />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ span: 9 }} name="verify" label="验证码" >
                                     <Row wrap={false}>
-                                        <Input />
-                                        <Button type="default" htmlType="button" onClick={sendPassWord}>获取验证码</Button>
+                                        <Input onPressEnter={(e) => { e.preventDefault() }} />
+                                        <Button type="default" htmlType="button" onClick={sendVerify}>获取验证码</Button>
                                     </Row>
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ offset: 10 }}>
