@@ -9,6 +9,8 @@ import { useApi, usePostImg, staticApi } from '../utils/api'
 import ContentContainer from '../components/DetailInfo/ContentContainer'
 import { useSelector } from 'react-redux'
 import { StoreState } from '../store'
+import { SearchItemModel } from "../utils/DataModel"
+import VirtualList from '../components/ItemList/VirtualList'
 
 import {
     AppstoreOutlined,
@@ -65,6 +67,10 @@ const PersonalPage = (props: { match: any }) => {
     const id = (props.match.params.id ? props.match.params.id : user?.userid);
     const [isOwn, setIsOwn] = useState(false);
 
+    const [pageAndPageSize, setPageAndPageSize] = useState([1, 3]);
+    const [totalNum, setTotalNum] = useState(1);
+    const [resourceList, setResourceList] = useState<Array<SearchItemModel>>([])
+
     const onMouseOverAvatar = () => {
         setMouseOver(true);
     }
@@ -80,32 +86,74 @@ const PersonalPage = (props: { match: any }) => {
     useEffect(
         () => {
             getUserInfo();
+        }, [id, selectedMenu]
+    )
+
+    useEffect(
+        () => {
             if (selectedMenu == 1)
                 getAppointment();
             if (selectedMenu == 2)
                 getRate();
             if (selectedMenu == 5)
                 getHouseSource();
-        }, [id, selectedMenu]
+        }, [selectedMenu, pageAndPageSize]
     )
 
     const getHouseSource = async () => {
-
-
+        const res = await api.get('/user/rent', {
+            params: {
+                id: id,
+                page_size: pageAndPageSize[1],
+                page_num: pageAndPageSize[0]
+            }
+        }
+        )
+        console.log(res);
+        if (res.data.success) {
+            setResourceList(res.data.result.list)
+        } else {
+            message.error(res.data.reason)
+        }
     }
 
     const getRate = async () => {
-
+        const res = await api.get('/user/rate', {
+            params: {
+                id: id,
+                page_size: pageAndPageSize[1],
+                page_num: pageAndPageSize[0]
+            }
+        }
+        )
+        console.log(res);
+        if (res.data.success) {
+            setResourceList(res.data.result.list)
+        } else {
+            message.error(res.data.reason)
+        }
 
     }
 
     const getAppointment = async () => {
-
-
+        const res = await api.get('/user/appointment', {
+            params: {
+                id: id,
+                page_size: pageAndPageSize[1],
+                page_num: pageAndPageSize[0]
+            }
+        }
+        )
+        console.log("app:", res);
+        if (res.data.success) {
+            setResourceList(res.data.result.list)
+        } else {
+            message.error(res.data.reason)
+        }
     }
 
     const getUserInfo = async () => {
-        // console.log(user?.userid)
+        console.log(user?.userid)
         const res = await api.get('/user', {
             params: {
                 id: id
@@ -154,8 +202,8 @@ const PersonalPage = (props: { match: any }) => {
     const handlePasswordSubmit = async (values: any) => {
         // console.log(values);
         const checkReg = /\s+/;
-        if (!values.new_password || values.new_password == "") message.warning("未输入密码");
-        else if (!values.confirm_password || values.confirm_password == "") message.warning("未输入密码");
+        if (!values.new_password || values.new_password == "") message.warning("未输入新密码");
+        else if (!values.confirm_password || values.confirm_password == "") message.warning("未再次输入新密码");
         else if (!values.verify || values.verify == "") message.warning("未输入验证码");
         else if (values.confirm_password !== values.new_password) message.warning("两次输入密码不一致");
         else if (values.new_password.search(checkReg) !== -1) message.warning("请不要使用空白字符");
@@ -265,7 +313,7 @@ const PersonalPage = (props: { match: any }) => {
             </Row>
         </Container>
 
-        <Container style={{ width: '90%', marginTop: '1rem', height: '96vh' }} hoverable={false}>
+        <Container style={{ width: '90%', marginTop: '1rem' }} hoverable={false}>
             <Layout>
                 <Sider
                     style={{
@@ -293,23 +341,32 @@ const PersonalPage = (props: { match: any }) => {
                         )}
                     </Menu>
                 </Sider>
-                <Layout style={{ margin: '0 7px', height: '92vh' }}>
-                    <Content style={{ margin: '25px 25px', overflow: 'initial' }}>
+                <Layout style={{ margin: '0 0.5em' }}>
+                    <Content style={{ margin: '1.5em 1.5em', background: '#fff' }}>
                         {/*房源*/}
-                        <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 5}>
-                            房源
+                        <div hidden={selectedMenu != 5}>
+                            <VirtualList list={resourceList} />
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }}>
+                                <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
+                                    setPageAndPageSize([pg, pageAndPageSize[1]]);
+                                }} />
+                            </div>
                         </div>
                         {/*预约*/}
-                        <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 1}>
-                            预约
+                        <div hidden={selectedMenu != 1}>
+                            <VirtualList list={resourceList} />
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }}>
+                                <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
+                                    setPageAndPageSize([pg, pageAndPageSize[1]]);
+                                }} />
+                            </div>
                         </div>
                         {/*评分*/}
-                        <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 2}>
+                        <div hidden={selectedMenu != 2}>
                             评分
-
                         </div>
-                        <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 3 || !isOwn}>
-                            <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} form = {infoForm}>
+                        <div style={{ padding: '1.5em 0' }} hidden={selectedMenu != 3 || !isOwn}>
+                            <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} form={infoForm}>
                                 <Form.Item wrapperCol={{ span: 9 }} name="username" label="用户名" >
                                     <Input placeholder={userInfo.username} onPressEnter={(e) => { e.preventDefault() }} />
                                 </Form.Item>
@@ -333,7 +390,7 @@ const PersonalPage = (props: { match: any }) => {
                                 </Form.Item>
                             </Form>
                         </div>
-                        <div style={{ padding: 24, background: '#fff' }} hidden={selectedMenu != 4 || !isOwn}>
+                        <div style={{ padding: '1.5em 0' }} hidden={selectedMenu != 4 || !isOwn}>
                             <Form labelCol={{ span: 7 }} onFinish={handlePasswordSubmit} form={pswForm}>
                                 <Form.Item wrapperCol={{ span: 9 }} name="new_password" label="新密码" >
                                     <Input.Password onPressEnter={(e) => { e.preventDefault() }} />
