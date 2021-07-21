@@ -345,7 +345,7 @@ const PublishResources = () => {
     let title: string = "";
     if (values.rentType)
       title = title + values.rentType;
-    if (values.neighbourhood || values.houseType || values.direction)
+    if (values.rentType && (values.neighbourhood || values.houseType || values.direction))
       title = title + "·";
     if (values.neighbourhood)
       title = title + values.neighbourhood + " ";
@@ -469,7 +469,7 @@ const PublishResources = () => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ span: 15 }} name="title" label="标题" hidden={step !== 2}>
-                  <Button disabled style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', color: 'rgb(38 38 38)', backgroundColor: 'rgb(0 0 0 / 5%)', cursor:'default' }} > {rentTitle}</Button>
+                  <Button disabled style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', color: 'rgb(38 38 38)', backgroundColor: 'rgb(0 0 0 / 5%)', cursor: 'default' }} > {rentTitle}</Button>
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 6, span: 20 }} hidden={step !== 2}>
