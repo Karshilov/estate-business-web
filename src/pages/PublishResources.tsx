@@ -310,7 +310,6 @@ const PublishResources = () => {
     else if (!values.houseType) message.warning("未填写房型");
     else if (!values.direction) message.warning("未选择朝向");
     else if (!values.decoration) message.warning("未选择装修情况");
-    else if (!rentPhotos.length) message.warning("请至少上传一张房屋内景图");
     else if (!values.price) message.warning("未填写价格");
     else if (!values.payType) message.warning("未填选择支付方式");
     else if (!values.rentType) message.warning("未填选择租赁方式");
