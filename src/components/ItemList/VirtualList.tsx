@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import { SearchItemModel } from '../../utils/DataModel'
 import Item from './Item'
 
-const VirtualList = (props: { list: Array<SearchItemModel>, type?: string }) => {
+const VirtualList = (props: { list: Array<SearchItemModel>, type?: string, other?:boolean }) => {
   const columns: SearchItemModel[] = [];
 
   props.list.forEach((item, index) => {
@@ -13,7 +13,7 @@ const VirtualList = (props: { list: Array<SearchItemModel>, type?: string }) => 
 
   return <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
     <div style={{ width: '95%' }}>
-      {columns.map(item => <Item data={item} key={item.id} type={props.type}/>)}
+      {columns.map(item => <Item data={item} key={item.id} type={props.type} other={props.other}/>)}
     </div>
     {/* 
     <div style={{ flexGrow: 1 }}></div>

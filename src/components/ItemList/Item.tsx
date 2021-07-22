@@ -2,11 +2,11 @@
 import React, { useState, useEffect, CSSProperties } from 'react'
 import { SearchItemModel } from '../../utils/DataModel'
 import { Divider, Tag, Skeleton, Tooltip } from 'antd';
-import { ClockCircleOutlined, AuditOutlined, CheckOutlined, WarningOutlined } from '@ant-design/icons'
+import { ClockCircleOutlined, AuditOutlined, CheckOutlined, WarningOutlined, StarOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import moment from 'moment';
 
-const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: string }) => {
+const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: string, other?: boolean }) => {
   const history = useHistory();
 
   useEffect(() => {
@@ -31,22 +31,27 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: stri
             <span style={{ fontSize: '14px' }} hidden={props.type != undefined}>元/月</span>
 
             <span style={{ fontSize: '24px', color: '#35bc33', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              hidden={props.data.status != 'approve' || props.type != 'source'}>
+              hidden={props.data.status != 'approve' || props.type != 'source' || props.other}>
               审核通过<CheckOutlined />
             </span>
             <span style={{ fontSize: '24px', color: 'grey', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
               hidden={props.data.status != 'audit' || props.type != 'source'}>
               审核中<AuditOutlined />
             </span>
-            <span style={{ fontSize: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              hidden={props.data.status != 'reject' || props.type != 'source'}>
-              未通过审核
-              <Tooltip title={props.data.reason}>
-                <WarningOutlined />
-              </Tooltip>
+            <Tooltip title={props.data.reason}>
+              <span style={{ fontSize: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                hidden={props.data.status != 'reject' || props.type != 'source'}>
+                未通过审核<WarningOutlined />
+              </span>
+            </Tooltip>
+            <span style={{ fontSize: '24px', color: 'rgb(241 78 78)', display: 'flex', justifyContent: 'center', alignItems: 'center' }} 
+                  hidden={props.type != 'rate' ||  props.data.rate_score==null}>
+              评分：{props.data.rate_score}<StarOutlined />
             </span>
-            <span style={{ fontSize: '28px' }} hidden={props.type != 'rate'}>{props.data.rate_score}</span>
-            <span style={{ fontSize: '14px' }} hidden={props.type != 'rate'}>分</span>
+
+            <span style={{ fontSize: '24px', color: 'rgb(241 78 78)'}} hidden={props.type != 'appointment' || props.data.appointment_time==null}>
+              {"预约时间：" + moment(props.data.appointment_time * 1000).format('YYYY / MM / DD')}
+            </span>
           </a>
         </p>
 
