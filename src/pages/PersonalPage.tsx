@@ -109,7 +109,7 @@ const PersonalPage = (props: { match: any }) => {
             }
         }
         )
-        console.log(res);
+        // console.log("source:", res);
         if (res.data.success) {
             setResourceList(res.data.result.list)
         } else {
@@ -126,13 +126,12 @@ const PersonalPage = (props: { match: any }) => {
             }
         }
         )
-        console.log(res);
+        console.log("rate: ", res);
         if (res.data.success) {
             setResourceList(res.data.result.list)
         } else {
             message.error(res.data.reason)
         }
-
     }
 
     const getAppointment = async () => {
@@ -144,7 +143,7 @@ const PersonalPage = (props: { match: any }) => {
             }
         }
         )
-        console.log("app:", res);
+        //console.log("app:", res);
         if (res.data.success) {
             setResourceList(res.data.result.list)
         } else {
@@ -345,7 +344,7 @@ const PersonalPage = (props: { match: any }) => {
                     <Content style={{ margin: '1.5em 1.5em', background: '#fff' }}>
                         {/*房源*/}
                         <div hidden={selectedMenu != 5}>
-                            <VirtualList list={resourceList} />
+                            <VirtualList list={resourceList} type="source"/>
                             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
                                     setPageAndPageSize([pg, pageAndPageSize[1]]);
@@ -354,7 +353,7 @@ const PersonalPage = (props: { match: any }) => {
                         </div>
                         {/*预约*/}
                         <div hidden={selectedMenu != 1}>
-                            <VirtualList list={resourceList} />
+                            <VirtualList list={resourceList} type="appointment"/>
                             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
                                     setPageAndPageSize([pg, pageAndPageSize[1]]);
@@ -363,7 +362,12 @@ const PersonalPage = (props: { match: any }) => {
                         </div>
                         {/*评分*/}
                         <div hidden={selectedMenu != 2}>
-                            评分
+                            <VirtualList list={resourceList} type="rate"/>
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }}>
+                                <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
+                                    setPageAndPageSize([pg, pageAndPageSize[1]]);
+                                }} />
+                            </div>
                         </div>
                         <div style={{ padding: '1.5em 0' }} hidden={selectedMenu != 3 || !isOwn}>
                             <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} form={infoForm}>
