@@ -4,16 +4,16 @@ import ReactDOM from 'react-dom'
 import { SearchItemModel } from '../../utils/DataModel'
 import Item from './Item'
 
-const VirtualList = (props: { list: Array<SearchItemModel> }) => {
+const VirtualList = (props: { list: Array<SearchItemModel>, type?: string }) => {
   const columns: SearchItemModel[] = [];
 
   props.list.forEach((item, index) => {
     columns.push(item)
   })
 
-  return <div style={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
+  return <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
     <div style={{ width: '95%' }}>
-      {columns.map(item => <Item data={item} key={item.id}/>)}
+      {columns.map(item => <Item data={item} key={item.id} type={props.type}/>)}
     </div>
     {/* 
     <div style={{ flexGrow: 1 }}></div>
