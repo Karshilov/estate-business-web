@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, CSSProperties } from 'react'
 import { SearchItemModel } from '../../utils/DataModel'
-import { Divider, Tag } from 'antd';
-import { ClockCircleOutlined } from '@ant-design/icons'
+import { Divider, Tag, Skeleton, Tooltip } from 'antd';
+import { ClockCircleOutlined, AuditOutlined, CheckOutlined, WarningOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import moment from 'moment';
 
-const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
+const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: string }) => {
   const history = useHistory();
 
   useEffect(() => {
@@ -25,20 +25,39 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
       <div style={{ marginLeft: '28px', flexGrow: 0, width: '100%' }}>
         <p className="item-title" style={{ marginBottom: '8px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
           <span style={{ fontSize: '26px' }}>{props.data.title}</span>
-          <a style={{ color: 'red' }}>
-            <span style={{ fontSize: '28px' }}>{props.data.price}</span>
-            <span style={{ fontSize: '14px' }}>元/月</span>
+          <a style={{ color: 'red', cursor: 'default' }} >
+
+            <span style={{ fontSize: '28px' }} hidden={props.type != undefined}>{props.data.price}</span>
+            <span style={{ fontSize: '14px' }} hidden={props.type != undefined}>元/月</span>
+
+            <span style={{ fontSize: '24px', color: '#35bc33', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              hidden={props.data.status != 'approve' || props.type != 'source'}>
+              审核通过<CheckOutlined />
+            </span>
+            <span style={{ fontSize: '24px', color: 'grey', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              hidden={props.data.status != 'audit' || props.type != 'source'}>
+              审核中<AuditOutlined />
+            </span>
+            <span style={{ fontSize: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              hidden={props.data.status != 'reject' || props.type != 'source'}>
+              未通过审核
+              <Tooltip title={props.data.reason}>
+                <WarningOutlined />
+              </Tooltip>
+            </span>
+            <span style={{ fontSize: '28px' }} hidden={props.type != 'rate'}>{props.data.rate_score}</span>
+            <span style={{ fontSize: '14px' }} hidden={props.type != 'rate'}>分</span>
           </a>
         </p>
 
         <p className="item-info" style={{ marginBottom: '8px', fontSize: '1.2rem' }}>
-          <a style={{ color: '#A9A9A9' }}>{props.data.title.split('·')[1].split(/\s+/)[0]}</a>
+          <a style={{ color: '#A9A9A9', cursor: 'default' }}>{props.data.title.split('·')[1].split(/\s+/)[0]}</a>
           <i style={{ marginLeft: '8px', marginRight: '8px' }}>/</i>
-          <a style={{ color: '#A9A9A9' }}>{props.data.area}㎡</a>
+          <a style={{ color: '#A9A9A9', cursor: 'default' }}>{props.data.area}㎡</a>
           <i style={{ marginLeft: '8px', marginRight: '8px' }}>/</i>
-          <a style={{ color: '#A9A9A9' }}>{String(props.data.floor) + "楼"}</a>
+          <a style={{ color: '#A9A9A9', cursor: 'default' }}>{String(props.data.floor) + "楼"}</a>
           <i style={{ marginLeft: '8px', marginRight: '8px' }}>/</i>
-          <a style={{ color: '#A9A9A9' }}>{String(props.data.area) + "层"}</a>
+          <a style={{ color: '#A9A9A9', cursor: 'default' }}>{String(props.data.area) + "层"}</a>
         </p>
 
         {props.data.features.map((item) => <Tag key={item} color='#f2f5f7' style={{ height: '25px', borderRadius: '3px', fontSize: '16px', color: '#8aa3b8' }}>{item}</Tag>)}
@@ -51,10 +70,8 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties }) => {
           </span>
         </p>
       </div>
-    </div >
-
+    </div>
   );
-
 }
 
 export default Item;
