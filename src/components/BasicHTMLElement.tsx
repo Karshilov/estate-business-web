@@ -93,6 +93,7 @@ export const Container = (props: {
   bodyStyle?: CSSProperties;
   onClick?: Function;
   hoverable?: boolean;
+  className?: string;
 }) => {
   return (
     <Card
@@ -105,7 +106,7 @@ export const Container = (props: {
       }}
       bodyStyle={{ padding: '15px 25px', ...(props.bodyStyle ?? {}) }}
       hoverable={props.hoverable ?? true}
-      className="shadow-xl"
+      className={ props.className ?? "shadow-xl"}
       bordered={false}
     >
       {props.children}

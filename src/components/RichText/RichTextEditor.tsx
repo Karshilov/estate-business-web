@@ -1,32 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { defaultData } from '../../utils/richTextDefault';
+import { Button } from 'antd';
+import HTMLParser from '../../utils/parser';
 
 const RichTextEditor = () => {
-  useEffect(() => {
-    console.log('rich text')
-    console.log(ClassicEditor.builtinPlugins.map( (plugin: any) => plugin.pluginName ))
-  }, [])
 
-  return <div style={{ width: '100%', minHeight: '100vh' }}>
+  const [article, setArticle] = useState('')
+
+  const onPublish = () => {
+
+  }
+
+  return <div style={{ width: '100%', minHeight: '80vh' }}>
     <CKEditor
       editor={ClassicEditor}
-      data="<p></p>"
-      onReady={(editor: any) => {
-        // You can store the "editor" and use when it is needed.
-        console.log('Editor is ready to use!', editor);
-      }}
+      data={defaultData}
       onChange={(event: any, editor: any) => {
         const data = editor.getData();
-        console.log({ event, editor, data });
-      }}
-      onBlur={(event: any, editor: any) => {
-        console.log('Blur.', editor);
-      }}
-      onFocus={(event: any, editor: any) => {
-        console.log('Focus.', editor);
+        console.log(HTMLParser(data))
+        setArticle(data);
       }}
     />
+    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: 40 }}>
+      <Button type="primary" onClick={onPublish}>点击发布</Button>
+    </div>
   </div>
 }
 
