@@ -439,7 +439,7 @@ const PublishResources = () => {
 
                 <Form.Item name="photos" label="房屋内景" hidden={step !== 1}>
                   <Upload listType="text" maxCount={10} beforeUpload={beforeUpload} onRemove={onRentRemove} >
-                    <Button icon={<UploadOutlined />}>Click to upload</Button>
+                    <Button style={{display:'flex',alignItems:'center'}}><UploadOutlined />Click to upload</Button>
                   </Upload>
                 </Form.Item>
 

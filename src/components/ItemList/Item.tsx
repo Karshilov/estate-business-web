@@ -26,10 +26,8 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: stri
         <p className="item-title" style={{ marginBottom: '8px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
           <span style={{ fontSize: '26px' }}>{props.data.title}</span>
           <a style={{ color: 'red', cursor: 'default' }} >
-
             <span style={{ fontSize: '28px' }} hidden={props.type != undefined}>{props.data.price}</span>
             <span style={{ fontSize: '14px' }} hidden={props.type != undefined}>元/月</span>
-
             <span style={{ fontSize: '24px', color: '#35bc33', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
               hidden={props.data.status != 'approve' || props.type != 'source' || props.other}>
               审核通过<CheckOutlined />
@@ -44,12 +42,13 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: stri
                 未通过审核<WarningOutlined />
               </span>
             </Tooltip>
-            <span style={{ fontSize: '24px', color: 'rgb(241 78 78)', display: 'flex', justifyContent: 'center', alignItems: 'center' }} 
-                  hidden={props.type != 'rate' ||  props.data.rate_score==null}>
+            <span style={{ fontSize: '24px', color: 'rgb(241 78 78)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              hidden={props.type != 'rate' || props.data.rate_score == null}>
               评分：{props.data.rate_score}<StarOutlined />
             </span>
-
-            <span style={{ fontSize: '24px', color: 'rgb(241 78 78)'}} hidden={props.type != 'appointment' || props.data.appointment_time==null}>
+          </a>
+          <a style={{ color: 'red', cursor: 'default', display: 'flex', alignItems: 'center' }} hidden={props.type != 'appointment' || props.data.appointment_time == null}>
+            <span style={{ fontSize: '20px', color: 'rgb(241 78 78)' }} >
               {"预约时间：" + moment(props.data.appointment_time * 1000).format('YYYY / MM / DD')}
             </span>
           </a>

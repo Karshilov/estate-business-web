@@ -269,7 +269,7 @@ const PersonalPage = (props: { match: any }) => {
     }
 
     return <Basement style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Container style={{ width: '90%', marginTop: '1rem' }} hoverable={false}>
+        <Container style={{ width: '80%', marginTop: '1rem' }} hoverable={false}>
             <Row wrap={false}>
                 <div onMouseOver={onMouseOverAvatar} onMouseLeave={onMouseLeaveAvator}
                     style={{ display: 'flex', width: 'fit-content' }} className="avatar-uploader"
@@ -314,7 +314,7 @@ const PersonalPage = (props: { match: any }) => {
             </Row>
         </Container>
 
-        <Container style={{ width: '90%', marginTop: '1rem' }} hoverable={false}>
+        <Container style={{ width: '80%', marginTop: '1rem' }} hoverable={false}>
             <Layout>
                 <Sider
                     style={{
@@ -349,7 +349,7 @@ const PersonalPage = (props: { match: any }) => {
                         {/*房源*/}
                         <div hidden={selectedMenu != 5}>
                             <VirtualList list={resourceList} type="source" other={!isOwn} />
-                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }}>
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
                                     setPageAndPageSize([pg, pageAndPageSize[1]]);
                                 }} />
@@ -358,7 +358,7 @@ const PersonalPage = (props: { match: any }) => {
                         {/*预约*/}
                         <div hidden={selectedMenu != 1}>
                             <VirtualList list={resourceList} type="appointment" other={!isOwn} />
-                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }}>
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
                                     setPageAndPageSize([pg, pageAndPageSize[1]]);
                                 }} />
@@ -367,7 +367,7 @@ const PersonalPage = (props: { match: any }) => {
                         {/*评分*/}
                         <div hidden={selectedMenu != 2}>
                             <VirtualList list={resourceList} type="rate" other={!isOwn} />
-                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }}>
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
                                     setPageAndPageSize([pg, pageAndPageSize[1]]);
                                 }} />

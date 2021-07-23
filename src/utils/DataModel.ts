@@ -28,6 +28,14 @@ export interface SearchItemModel {
   reason: string // 理由
 }
 
+export interface GroupDetailModel {
+  id: string;
+  name: string;
+  member_ids: UserInfoModel[];
+  create_time: string;
+  leader: UserInfoModel;
+}
+
 export interface RentDetailModel {
   title: string;
   photos: string[];
