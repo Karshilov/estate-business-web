@@ -4,10 +4,11 @@ import { Link, useHistory } from 'react-router-dom';
 import { options } from '../utils/options'
 import { StoreState } from "../store";
 import { useSelector } from 'react-redux';
-import { Avatar, Layout } from "antd";
+import { Avatar, Layout, message } from "antd";
 import { AntDesignOutlined, LogoutOutlined } from '@ant-design/icons'
 import { useDispatch } from 'react-redux';
 import primaryIcon from '../assets/primary-icon.png';
+import { useApi } from "../utils/api";
 declare let TMap: any;
 
 type Props = {
@@ -17,9 +18,26 @@ type Props = {
 
 const Frame = ({ children, history }: Props) => {
   const hoverTransform = "transition duration-300 linear transform hover:scale-110";
-  const { isLogin, apiToken } = useSelector((state: StoreState) => state);
+  const { isLogin, user } = useSelector((state: StoreState) => state);
   const dispatch = useDispatch();
   const route = useHistory();
+  const [avatarSrc, setAvatarSrc] = useState('')
+  const api = useApi();
+
+  const getUrl = async (value: string) => {
+    const res = await api.get('/minio', { params: { type: 'avatar', name: value}})
+    if (res.data.success) {
+      setAvatarSrc(res.data.result);
+    } else {
+      message.error(res.data.reason);
+    }
+  }
+
+  useEffect(() => {
+    if (user) {
+      getUrl(user?.avatar);
+    }
+  }, [])
 
   const logout = () => {
     dispatch({ type: 'logout' });
@@ -84,7 +102,8 @@ const Frame = ({ children, history }: Props) => {
         ><Link to='/login' style={{ color: '#fff' }}>登录</Link></button>
         <div hidden={!isLogin} style={{ margin: 20 }}>
           <Avatar size={36}
-            icon={<AntDesignOutlined />}>
+            src={avatarSrc}
+          >
           </Avatar>
         </div>
         <LogoutOutlined hidden={!isLogin} style={{ marginRight: 40, fontSize: 32 }} onClick={logout}></LogoutOutlined>
