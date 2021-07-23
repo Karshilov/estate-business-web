@@ -9,7 +9,7 @@ import { useApi, usePostImg, staticApi } from '../utils/api'
 import ContentContainer from '../components/DetailInfo/ContentContainer'
 import { useSelector } from 'react-redux'
 import { StoreState } from '../store'
-import { SearchItemModel } from "../utils/DataModel"
+import { GroupDetailModel, SearchItemModel } from "../utils/DataModel"
 import VirtualList from '../components/ItemList/VirtualList'
 import GroupSearch from "./GroupPage/GroupSearch"
 
@@ -21,8 +21,11 @@ import {
     FormOutlined,
     LockOutlined,
     MenuUnfoldOutlined,
-    SendOutlined
+    SendOutlined,
+    DownOutlined,
+    UpOutlined
 } from '@ant-design/icons';
+import { setFlagsFromString } from 'v8'
 
 const { Panel } = Collapse;
 const { Text, Title, Paragraph } = Typography;
@@ -43,9 +46,38 @@ const focusStyle: React.CSSProperties = {
     fontSize: '34px'
 }
 
+const myGroup: GroupDetailModel = {
+    id: "2e0d5814-e35e-4e58-998b-bdd8b2afd703",
+    name: "给保效给保效",
+    member_ids: [
+        {
+            username: "josh00",
+            avatar: "http://106.14.118.81:9000/avatar/default.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ESTATEBUSINESSWEB%2F20210722%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210722T141438Z&X-Amz-Expires=1200&X-Amz-SignedHeaders=host&X-Amz-Signature=066ac3ddb0197dc4f19341e484a8d9763c70fe7b1d728433ba72b666052a5334",
+            nickname: "顾静",
+            gender: 0,
+            userid: "13cf0a50-ae5e-48f8-b9e1-bf8391244d6b"
+        },
+        {
+            username: "root",
+            avatar: "http://106.14.118.81:9000/avatar/1626780535123-35db9cf6974043268c61ed21f040f731-default.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ESTATEBUSINESSWEB%2F20210722%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210722T141439Z&X-Amz-Expires=1200&X-Amz-SignedHeaders=host&X-Amz-Signature=6f9beae621de5fefd3f2ee84206bc8e23615ae0ab4b1652e8ae7aee19828f42c",
+            nickname: "周洋",
+            gender: 0,
+            userid: "35db9cf6-9740-4326-8c61-ed21f040f731"
+        }
+    ],
+    create_time: 1626960268,
+    leader: {
+        username: "root",
+        avatar: "http://106.14.118.81:9000/avatar/1626780535123-35db9cf6974043268c61ed21f040f731-default.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ESTATEBUSINESSWEB%2F20210722%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210722T141438Z&X-Amz-Expires=1200&X-Amz-SignedHeaders=host&X-Amz-Signature=1dbf1e3837b2cee7154976e5861e62ab0c86f91239fedac78d36d10db9734bd4",
+        nickname: "周洋",
+        gender: 0,
+        userid: "35db9cf6-9740-4326-8c61-ed21f040f731"
+    }
+}
+
 const Broker = () => {
     const [mouseOver, setMouseOver] = useState(false);
-    const [selectedSettingMenu, setSelectedSettingMenu] = useState("1");
+    const [selectedSettingMenu, setSelectedSettingMenu] = useState("sub1");
     const [userInfo, setUserInfo] = useState({
         username: "-",
         avatar: "",
@@ -68,7 +100,6 @@ const Broker = () => {
 
     const [createVisible, setCreateVisible] = useState(false);
     const [searchVisible, setSearchVisible] = useState(false);
-
 
     const showDrawer = () => {
         setCreateVisible(true);
@@ -231,21 +262,27 @@ const Broker = () => {
                     <Descriptions.Item label="手机号">{userInfo.phone_number}</Descriptions.Item>
                 </Descriptions>
             </Row>
-            <Layout hidden={false} >
+            <Divider style={{ width: '90%', marginBottom: 0 }}></Divider>
+            <Layout style={{color:'#fff'}}>
                 <Sider
                     style={{
-                        padding: '0 10px',
+                        padding: '0 0',
                         background: '#fff',
                     }}
                     width='15%'
                     collapsed={false}
                 >
-                    <Menu theme="light" mode="inline" onSelect={onSelectSettingMenu}>
-                        <Menu.Item key="1" icon={<FormOutlined />}>修改信息</Menu.Item>
-                        <Menu.Item key="2" icon={<LockOutlined />}>修改密码</Menu.Item>
+                    <Menu theme="light" mode="inline" onSelect={onSelectSettingMenu} style={{}}>
+                        <SubMenu key="sub1" title="个人设置" icon={<SettingOutlined />}
+                            onTitleClick={(e) => { setSelectedSettingMenu(e.key) }} style={{paddingLeft:0}}>
+                            <Menu.Item key="1" icon={<FormOutlined />}>修改信息</Menu.Item>
+                            <Menu.Item key="2" icon={<LockOutlined />}>修改密码</Menu.Item>
+                        </SubMenu>
                     </Menu>
                 </Sider>
-                <Content style={{ margin: '1.5em 1.5em', background: '#fff' }}>
+                <Content style={{ margin: '0', background: '#fff' }} hidden={selectedSettingMenu!="sub1"}>
+                </Content>
+                <Content style={{ margin: '1.5em 1.5em', background: '#fff' }} hidden={selectedSettingMenu=="sub1"}>
                     <div style={{ padding: '1.5em 0' }} hidden={selectedSettingMenu != "1"}>
                         <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} form={infoForm}>
                             <Form.Item wrapperCol={{ span: 9 }} name="username" label="用户名" >
@@ -293,7 +330,6 @@ const Broker = () => {
                 </Content>
             </Layout>
         </Container>
-        <Button>23</Button>
         <Container style={{ width: '80%', marginTop: '1rem' }} hoverable={false}>
             <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: '20px' }}>
                 <TeamOutlined />我的团队

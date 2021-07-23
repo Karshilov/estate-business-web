@@ -31,9 +31,21 @@ export interface SearchItemModel {
 export interface GroupDetailModel {
   id: string;
   name: string;
-  member_ids: UserInfoModel[];
-  create_time: string;
-  leader: UserInfoModel;
+  member_ids: {
+    username: string;
+    avatar: string;
+    nickname: string;
+    gender: number;
+    userid: string;
+  }[];
+  create_time: number;
+  leader: {
+    username: string;
+    avatar: string;
+    nickname: string;
+    gender: number;
+    userid: string;
+  }
 }
 
 export interface RentDetailModel {
