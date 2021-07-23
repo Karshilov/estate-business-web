@@ -11,7 +11,8 @@ import RentDetail from '../pages/RentPage/RentDetail';
 import SecondHandSearch from '../pages/SecondHandPage/SecondHandSearch';
 import SecondHandDetail from '../pages/SecondHandPage/SecondHandDetail';
 import BlogPublish from '../pages/Blog/BlogPublish'
-import PersonalPage from '../pages/PersonalPage';
+import PersonalPage from '../pages/PersonalPage'
+import Broker from '../pages/Broker';
 
 const DesktopRouter = withRouter(({ history }) => {
   return (
@@ -34,6 +35,7 @@ const DesktopRouter = withRouter(({ history }) => {
             <Route path="/blog-publish" component={BlogPublish} />
             <Route exact path="/personal-page" component={PersonalPage} />
             <Route path="/personal-page/:id" component={PersonalPage} />
+            <Route exact path="/broker" component={Broker} />
           </AuthGuard>
         </Switch>
       </HashRouter>

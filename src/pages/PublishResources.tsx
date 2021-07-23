@@ -4,7 +4,7 @@ import InlineMultipleInput from '../components/InlineMultipleInput';
 import { useHistory } from 'react-router-dom';
 import { Button, Col, Form, Input, Row, Tabs, Steps, Select, Upload, Radio, Tooltip, Tag, message } from "antd";
 import { useDispatch, useSelector } from 'react-redux';
-import { useApi, staticApi } from "../utils/api";
+import { useApi, staticApi, usePostImg } from "../utils/api";
 import { StoreState } from "../store";
 import { HomeOutlined, FormOutlined, AuditOutlined, UploadOutlined, PlusOutlined } from '@ant-design/icons'
 import WashIcon from '../assets/equipments/wash.svg'
@@ -34,6 +34,7 @@ const PublishResources = () => {
   const [price, setPrice] = useState(0);
   const ref = useRef(null);
   const api = useApi();
+  const api2 = usePostImg();
   const [step, setStep] = useState(0);
   const [rentForm] = Form.useForm();
   const [sellForm] = Form.useForm();
@@ -244,6 +245,7 @@ const PublishResources = () => {
   };
 
   const beforeUpload = async (file: any, fileList: any) => {
+    console.log(file);
     if (file.type !== "image/jpeg" && file.type !== "image/png") {
       message.warning("图片应为 jpeg 或 png 格式");
       return Upload.LIST_IGNORE;
@@ -271,7 +273,7 @@ const PublishResources = () => {
       fd.append(r, res.data.result.url.formData[r])
     }
     fd.append("file", file);
-    const r = await api.post(res.data.result.url.postURL, fd)
+    const r = await api2.post(res.data.result.url.postURL, fd)
     console.log("r: ", r);
     return true;
   }
@@ -308,7 +310,6 @@ const PublishResources = () => {
     else if (!values.houseType) message.warning("未填写房型");
     else if (!values.direction) message.warning("未选择朝向");
     else if (!values.decoration) message.warning("未选择装修情况");
-    else if (!rentPhotos.length) message.warning("请至少上传一张房屋内景图");
     else if (!values.price) message.warning("未填写价格");
     else if (!values.payType) message.warning("未填选择支付方式");
     else if (!values.rentType) message.warning("未填选择租赁方式");
@@ -343,7 +344,7 @@ const PublishResources = () => {
     let title: string = "";
     if (values.rentType)
       title = title + values.rentType;
-    if (values.neighbourhood || values.houseType || values.direction)
+    if (values.rentType && (values.neighbourhood || values.houseType || values.direction))
       title = title + "·";
     if (values.neighbourhood)
       title = title + values.neighbourhood + " ";
@@ -365,7 +366,7 @@ const PublishResources = () => {
         <Container>
           <Tabs defaultActiveKey="rent" onChange={(key) => { setRentOrSell(key) }}>
 
-             {/*卖房*/}
+            {/*卖房*/}
             <Tabs.TabPane key="rent" tab="我要出租">
               <Steps current={step} size="small" style={{ margin: 20, padding: 30 }} onChange={(e) => { setStep(e) }}>
                 <Steps.Step title="房源地址" icon={<HomeOutlined />} />
@@ -438,7 +439,7 @@ const PublishResources = () => {
 
                 <Form.Item name="photos" label="房屋内景" hidden={step !== 1}>
                   <Upload listType="text" maxCount={10} beforeUpload={beforeUpload} onRemove={onRentRemove} >
-                    <Button icon={<UploadOutlined />}>Click to upload</Button>
+                    <Button style={{display:'flex',alignItems:'center'}}><UploadOutlined />Click to upload</Button>
                   </Upload>
                 </Form.Item>
 
@@ -467,7 +468,7 @@ const PublishResources = () => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ span: 15 }} name="title" label="标题" hidden={step !== 2}>
-                  <Button disabled style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', color: 'rgb(38 38 38)', backgroundColor: 'rgb(0 0 0 / 5%)' }} > {rentTitle}</Button>
+                  <Button disabled style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', color: 'rgb(38 38 38)', backgroundColor: 'rgb(0 0 0 / 5%)', cursor: 'default' }} > {rentTitle}</Button>
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 6, span: 20 }} hidden={step !== 2}>

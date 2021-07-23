@@ -6,6 +6,8 @@ export interface UserInfoModel {
   token: string;
   nickname: string;
   role: string;
+  gender: number;
+  phone_number: string;
 }
 
 export interface SearchItemModel {
@@ -19,6 +21,19 @@ export interface SearchItemModel {
   price: number;
   create_time: number;
   features: string[];
+  appointment_time: number; // 预约时间
+  modify_time: number // 修改时间
+  rate_score: string // 评分
+  status: string // 状态
+  reason: string // 理由
+}
+
+export interface GroupDetailModel {
+  id: string;
+  name: string;
+  member_ids: UserInfoModel[];
+  create_time: string;
+  leader: UserInfoModel;
 }
 
 export interface RentDetailModel {
