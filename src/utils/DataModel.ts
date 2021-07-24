@@ -8,6 +8,7 @@ export interface UserInfoModel {
   role: string;
   gender: number;
   phone_number: string;
+  team: GroupDetailModel;
 }
 
 export interface SearchItemModel {
@@ -29,7 +30,7 @@ export interface SearchItemModel {
 }
 
 export interface GroupDetailModel {
-  id: string;
+  teamid: string;
   name: string;
   member_ids: {
     username: string;
@@ -37,14 +38,17 @@ export interface GroupDetailModel {
     nickname: string;
     gender: number;
     userid: string;
+    phone_number: string;
+    email: string;
   }[];
-  create_time: number;
   leader: {
     username: string;
     avatar: string;
     nickname: string;
     gender: number;
     userid: string;
+    phone_number: string;
+    email: string;
   }
 }
 

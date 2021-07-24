@@ -3,15 +3,16 @@ import { Basement, Container } from '../components/BasicHTMLElement'
 import {
     Layout, Menu, Breadcrumb, Avatar, Button, Card, Divider, Input,
     message, Pagination, Select, Skeleton, Tag, Typography, Upload, Tooltip,
-    Col, Row, Descriptions, Form, Radio, Space, Modal, Collapse
+    Col, Row, Descriptions, Form, Radio, Space, Modal, Collapse, Popconfirm, Drawer
 } from 'antd'
 import { useApi, usePostImg, staticApi } from '../utils/api'
 import ContentContainer from '../components/DetailInfo/ContentContainer'
 import { useSelector } from 'react-redux'
 import { StoreState } from '../store'
-import { GroupDetailModel, SearchItemModel } from "../utils/DataModel"
+import { GroupDetailModel, SearchItemModel, UserInfoModel } from "../utils/DataModel"
 import VirtualList from '../components/ItemList/VirtualList'
 import GroupSearch from "./GroupPage/GroupSearch"
+import Member from '../components/MemberList/Member'
 
 import {
     TeamOutlined,
@@ -23,7 +24,8 @@ import {
     MenuUnfoldOutlined,
     SendOutlined,
     DownOutlined,
-    UpOutlined
+    UpOutlined,
+    SearchOutlined
 } from '@ant-design/icons';
 import { setFlagsFromString } from 'v8'
 
@@ -46,46 +48,9 @@ const focusStyle: React.CSSProperties = {
     fontSize: '34px'
 }
 
-const myGroup: GroupDetailModel = {
-    id: "2e0d5814-e35e-4e58-998b-bdd8b2afd703",
-    name: "给保效给保效",
-    member_ids: [
-        {
-            username: "josh00",
-            avatar: "http://106.14.118.81:9000/avatar/default.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ESTATEBUSINESSWEB%2F20210722%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210722T141438Z&X-Amz-Expires=1200&X-Amz-SignedHeaders=host&X-Amz-Signature=066ac3ddb0197dc4f19341e484a8d9763c70fe7b1d728433ba72b666052a5334",
-            nickname: "顾静",
-            gender: 0,
-            userid: "13cf0a50-ae5e-48f8-b9e1-bf8391244d6b"
-        },
-        {
-            username: "root",
-            avatar: "http://106.14.118.81:9000/avatar/1626780535123-35db9cf6974043268c61ed21f040f731-default.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ESTATEBUSINESSWEB%2F20210722%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210722T141439Z&X-Amz-Expires=1200&X-Amz-SignedHeaders=host&X-Amz-Signature=6f9beae621de5fefd3f2ee84206bc8e23615ae0ab4b1652e8ae7aee19828f42c",
-            nickname: "周洋",
-            gender: 0,
-            userid: "35db9cf6-9740-4326-8c61-ed21f040f731"
-        }
-    ],
-    create_time: 1626960268,
-    leader: {
-        username: "root",
-        avatar: "http://106.14.118.81:9000/avatar/1626780535123-35db9cf6974043268c61ed21f040f731-default.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ESTATEBUSINESSWEB%2F20210722%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210722T141438Z&X-Amz-Expires=1200&X-Amz-SignedHeaders=host&X-Amz-Signature=1dbf1e3837b2cee7154976e5861e62ab0c86f91239fedac78d36d10db9734bd4",
-        nickname: "周洋",
-        gender: 0,
-        userid: "35db9cf6-9740-4326-8c61-ed21f040f731"
-    }
-}
-
 const Broker = () => {
     const [mouseOver, setMouseOver] = useState(false);
     const [selectedSettingMenu, setSelectedSettingMenu] = useState("sub1");
-    const [userInfo, setUserInfo] = useState({
-        username: "-",
-        avatar: "",
-        nickname: "-",
-        gender: -1,
-        email: "-",
-        phone_number: "-"
-    })
     const api = useApi();
     const api2 = usePostImg();
     const [pswForm] = Form.useForm();
@@ -93,6 +58,17 @@ const Broker = () => {
     const [createForm] = Form.useForm();
 
     const { user } = useSelector((state: StoreState) => state, (left: StoreState, right: StoreState) => left.user === right.user)
+    const [userInfo, setUserInfo] = useState({
+        username: "-",
+        avatar: "",
+        nickname: "-",
+        gender: -1,
+        email: "-",
+        phone_number: "-",
+    })
+    const [teamInfo, setTeamInfo] = useState<GroupDetailModel>()
+    const [applyInfo, setApplyInfo] = useState<{ id: string, create_date: number, user: { username: string, avatar: string, nickname: string }[] }>()
+    const [drawerVisible, setDrawerVisible] = useState(false)
 
     const [pageAndPageSize, setPageAndPageSize] = useState([1, 3]);
     const [totalNum, setTotalNum] = useState(1);
@@ -100,13 +76,8 @@ const Broker = () => {
 
     const [createVisible, setCreateVisible] = useState(false);
     const [searchVisible, setSearchVisible] = useState(false);
-
-    const showDrawer = () => {
-        setCreateVisible(true);
-    };
-    const onClose = () => {
-        setCreateVisible(false);
-    };
+    const [myRequestVisible, setMyRequestVisible] = useState(false);
+    const [groupRequestVisible, setGroupRequestVisible] = useState(false);
 
     const onMouseOverAvatar = () => {
         setMouseOver(true);
@@ -126,20 +97,30 @@ const Broker = () => {
         }, [selectedSettingMenu]
     )
 
-
     const getUserInfo = async () => {
-        console.log(user?.userid)
         const res = await api.get('/user', {
             params: {
                 id: user?.userid
             }
         })
+        console.log(res)
         if (res.data.success) {
             setUserInfo(res.data.result);
+            setTeamInfo(res.data.result.team);
             infoForm.setFieldsValue(userInfo)
         } else {
             message.error(res.data.reason)
         }
+    }
+
+    const getApply = async () => {
+        const res = await api.get('/team/apply', {
+            params: {
+                teamid: teamInfo?.teamid
+            }
+        })
+        console.log("apply:", res)
+
     }
 
     const handleInfoSubmit = async (values: any) => {
@@ -237,8 +218,38 @@ const Broker = () => {
         return true;
     }
 
+    const createTeam = async (values: any) => {
+        // console.log(values)
+        if (!values.teamname) message.warning("未填写团队名")
+        else {
+            const res = await api.post('/team', { params: { name: values.teamname } })
+            console.log("create res: ", res)
+            if (res.data.success) {
+                message.success("创建成功")
+            } else {
+                message.error(res.data.reason)
+            }
+            setCreateVisible(false)
+        }
+    }
+
+    const deleteTeam = async () => {
+        // console.log("team:", teamInfo)
+        const res = await api.delete('/team', { params: { id: teamInfo?.teamid } })
+        console.log("del:", res)
+        if (res.data.success) {
+            message.success("团队已成功解散")
+        } else {
+            message.error(res.data.reason)
+        }
+    }
+
     return <Basement style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Container style={{ width: '80%', marginTop: '1rem' }} hoverable={false}>
+
+            <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: '20px' }}>
+                <UserOutlined />个人信息
+            </p>
             <Row wrap={false}>
                 <div onMouseOver={onMouseOverAvatar} onMouseLeave={onMouseLeaveAvator}
                     style={{ display: 'flex', width: 'fit-content' }} className="avatar-uploader"
@@ -255,7 +266,7 @@ const Broker = () => {
                         </Tooltip>
                     </Upload>
                 </div>
-                <Descriptions title={userInfo.username} style={{ paddingLeft: '1rem', width: '40%' }} column={2}>
+                <Descriptions title={userInfo.username} style={{ paddingLeft: '1rem', width: '50%' }} column={2}>
                     <Descriptions.Item label="昵称">{userInfo.nickname}</Descriptions.Item>
                     <Descriptions.Item label="性别">{userInfo.gender == -1 ? "-" : (userInfo.gender == 0 ? "男" : "女")}</Descriptions.Item>
                     <Descriptions.Item label="邮箱">{userInfo.email}</Descriptions.Item>
@@ -263,7 +274,7 @@ const Broker = () => {
                 </Descriptions>
             </Row>
             <Divider style={{ width: '90%', marginBottom: 0 }}></Divider>
-            <Layout style={{color:'#fff'}}>
+            <Layout style={{ color: '#fff' }}>
                 <Sider
                     style={{
                         padding: '0 0',
@@ -274,15 +285,15 @@ const Broker = () => {
                 >
                     <Menu theme="light" mode="inline" onSelect={onSelectSettingMenu} style={{}}>
                         <SubMenu key="sub1" title="个人设置" icon={<SettingOutlined />}
-                            onTitleClick={(e) => { setSelectedSettingMenu(e.key) }} style={{paddingLeft:0}}>
+                            onTitleClick={(e) => { setSelectedSettingMenu(e.key) }} style={{ paddingLeft: 0 }}>
                             <Menu.Item key="1" icon={<FormOutlined />}>修改信息</Menu.Item>
                             <Menu.Item key="2" icon={<LockOutlined />}>修改密码</Menu.Item>
                         </SubMenu>
                     </Menu>
                 </Sider>
-                <Content style={{ margin: '0', background: '#fff' }} hidden={selectedSettingMenu!="sub1"}>
+                <Content style={{ margin: '0', background: '#fff' }} hidden={selectedSettingMenu != "sub1"}>
                 </Content>
-                <Content style={{ margin: '1.5em 1.5em', background: '#fff' }} hidden={selectedSettingMenu=="sub1"}>
+                <Content style={{ margin: '1.5em 1.5em', background: '#fff' }} hidden={selectedSettingMenu == "sub1"}>
                     <div style={{ padding: '1.5em 0' }} hidden={selectedSettingMenu != "1"}>
                         <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} form={infoForm}>
                             <Form.Item wrapperCol={{ span: 9 }} name="username" label="用户名" >
@@ -333,42 +344,129 @@ const Broker = () => {
         <Container style={{ width: '80%', marginTop: '1rem' }} hoverable={false}>
             <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: '20px' }}>
                 <TeamOutlined />我的团队
+                <div style={{ display: 'flex', alignItems: 'center' }}
+                    hidden={teamInfo == undefined || teamInfo?.leader.userid !== user?.userid}>
+                    <a style={{ fontSize: '14px', marginLeft: '1em' }}
+                        onClick={() => { getApply(); setDrawerVisible(true) }}>
+                        查看申请
+                    </a>
+                    <Drawer
+                        title="申请列表"
+                        placement='right'
+                        closable={true}
+                        onClose={() => { setDrawerVisible(false) }}
+                        visible={drawerVisible}
+                        width='40%'
+                    >
+                    </Drawer>
+
+                    <Popconfirm
+                        title="您确认要解散团队吗"
+                        onConfirm={deleteTeam}
+                        okText="是"
+                        cancelText="否"
+                    >
+                        <a style={{ fontSize: '14px', marginLeft: '1em' }}>
+                            解散团队
+                        </a>
+                    </Popconfirm>
+                </div>
             </p>
-
-            <Button type="primary" onClick={() => setCreateVisible(true)}>
-                创建团队
-            </Button>
-            <Button type="primary" style={{ marginLeft: '14px' }} onClick={() => setSearchVisible(true)}>
-                加入团队
-            </Button>
+            <div hidden={teamInfo != undefined}>
+                <p style={{
+                    marginLeft: '21px', display: 'flex', alignItems: 'center',
+                    justifyContent: 'flex-start', fontSize: '20px', color: 'grey'
+                }} hidden={false}>
+                    您还未加入任何团队
+                </p>
+                <Button type="primary" onClick={() => setCreateVisible(true)} hidden={false}>
+                    创建团队
+                </Button>
+                <Button type="primary" style={{ marginLeft: '14px' }}
+                    onClick={() => setSearchVisible(true)} hidden={false}>
+                    加入团队
+                </Button>
+                <Button type="primary" style={{ marginLeft: '14px' }}
+                    onClick={() => setMyRequestVisible(true)} hidden={false}>
+                    我的申请
+                </Button>
+            </div>
+            <Divider style={{ marginTop: '10px', marginBottom: 0 }}></Divider>
+            <Row wrap={false} style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1em' }}>
+                <Container style={{
+                    marginTop: '20px', width: '30%', border: 'solid',
+                    borderWidth: '0.5px', borderColor: 'grey', height: 'fit-content'
+                }}>
+                    <p style={{ fontSize: '18px', marginBottom: 0, display: 'flex', alignItems: 'center' }}>
+                        <SearchOutlined />团队概览
+                    </p>
+                    <Divider style={{ marginTop: '14px' }}></Divider>
+                    <p style={{ fontSize: '18px' }}>
+                        <span>团队名：</span>
+                        <span style={{ float: 'right' }}>{teamInfo?.name}</span>
+                    </p>
+                    <p>
+                        <Row style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}>
+                            <span>创建者：</span>
+                            <div style={{ flexGrow: 1 }}></div>
+                            <img style={{ height: '15%', width: '15%' }} src={teamInfo?.leader.avatar}></img>
+                            <span style={{ marginLeft: '7px' }}>{teamInfo?.leader.username}</span>
+                        </Row>
+                    </p>
+                    <p style={{ fontSize: '18px' }}>
+                        团队规模：
+                        <span style={{ float: 'right' }}>{teamInfo?.member_ids.length}人</span>
+                    </p>
+                </Container>
+                <Container style={{
+                    marginTop: '20px', width: '65%', height: 'fit-content',
+                    border: 'solid', borderWidth: '1px', borderColor: 'grey'
+                }}>
+                    <p style={{ fontSize: '18px', marginBottom: 0, display: 'flex', alignItems: 'center' }}>
+                        <MenuUnfoldOutlined />成员列表
+                    </p>
+                    <Divider style={{ marginTop: '14px' }}></Divider>
+                    {
+                        teamInfo?.member_ids.map((item) => {
+                            const res = <Member userInfo={item}
+                                isCreater={item.userid === teamInfo?.leader.userid}
+                                canOperate={teamInfo?.leader.userid === user?.userid && item.userid !== teamInfo?.leader.userid}
+                                teamid={teamInfo?.teamid}
+                                userid={item.userid}
+                            />
+                            return res
+                        })
+                    }
+                </Container>
+            </Row>
         </Container>
-
+        {/*创建*/}
         <Modal
             title="创建团队"
             centered
             visible={createVisible}
-            onOk={() => { setCreateVisible(false) }}
-            onCancel={() => setCreateVisible(false)}
+            onOk={() => { createForm.submit() }}
+            onCancel={() => { setCreateVisible(false); createForm.resetFields() }}
             width={800}
             maskClosable={false}
             okText="创建"
             cancelText="取消"
         >
-            <Form labelCol={{ span: 8 }} onFinish={() => { }} form={createForm} style={{ marginTop: '24px' }}>
-                <Form.Item wrapperCol={{ span: 9 }} name="verify" label="团队名" >
+            <Form labelCol={{ span: 8 }} onFinish={createTeam} form={createForm} style={{ marginTop: '24px' }}>
+                <Form.Item wrapperCol={{ span: 9 }} name="teamname" label="团队名" >
                     <Row wrap={false}>
                         <Input onPressEnter={(e) => { e.preventDefault() }} />
                     </Row>
                 </Form.Item>
             </Form>
         </Modal>
-
+        {/*加入*/}
         <Modal
-            title="加入团队"
+            title="团队列表"
             centered
             visible={searchVisible}
             onCancel={() => setSearchVisible(false)}
-            width='70%'
+            width='90%'
             maskClosable={false}
             footer={null}
             bodyStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 0', width: '100%' }}
@@ -377,6 +475,17 @@ const Broker = () => {
             <div style={{ background: 'rgb(247 247 247)', width: '100%' }}>
                 <GroupSearch />
             </div>
+        </Modal>
+        {/*我的申请*/}
+        <Modal
+            title="我的申请"
+            centered
+            visible={myRequestVisible}
+            onCancel={() => { setMyRequestVisible(false); }}
+            width={800}
+            maskClosable={false}
+            footer={null}
+        >
         </Modal>
     </Basement >
 }
