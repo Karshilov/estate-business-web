@@ -26,24 +26,24 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: stri
         <p className="item-title" style={{ marginBottom: '8px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
           <span style={{ fontSize: '26px' }}>{props.data.title}</span>
           <a style={{ color: 'red', cursor: 'default' }} >
-            <span style={{ fontSize: '28px' }} hidden={props.type != undefined}>{props.data.price}</span>
-            <span style={{ fontSize: '14px' }} hidden={props.type != undefined}>元/月</span>
+            <span style={{ fontSize: '28px' }} hidden={props.type !== undefined}>{props.data.price}</span>
+            <span style={{ fontSize: '14px' }} hidden={props.type !== undefined}>元/月</span>
             <span style={{ fontSize: '24px', color: '#35bc33', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              hidden={props.data.status != 'approve' || props.type != 'source' || props.other}>
+              hidden={props.data.status !== 'approve' || props.type !== 'source' || props.other}>
               审核通过<CheckOutlined />
             </span>
             <span style={{ fontSize: '24px', color: 'grey', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              hidden={props.data.status != 'audit' || props.type != 'source'}>
+              hidden={props.data.status !== 'audit' || props.type !== 'source'}>
               审核中<AuditOutlined />
             </span>
             <Tooltip title={props.data.reason}>
               <span style={{ fontSize: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                hidden={props.data.status != 'reject' || props.type != 'source'}>
+                hidden={props.data.status !== 'reject' || props.type !== 'source'}>
                 未通过审核<WarningOutlined />
               </span>
             </Tooltip>
             <span style={{ fontSize: '24px', color: 'rgb(241 78 78)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              hidden={props.type != 'rate' || props.data.rate_score == null}>
+              hidden={props.type !== 'rate' || props.data.rate_score == null}>
               评分：{props.data.rate_score}<StarOutlined />
             </span>
           </a>

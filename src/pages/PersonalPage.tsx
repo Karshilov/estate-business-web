@@ -186,10 +186,10 @@ const PersonalPage = (props: { match: any }) => {
         else if (values.phone_number && values.phone_number.search(checkReg) !== -1) message.error('请不要使用空白字符');
         else {
             const newInfo = {
-                username: (values.username && values.username != "") ? values.username : userInfo.username,
-                nickname: (values.nickname && values.nickname != "") ? values.nickname : userInfo.nickname,
-                email: (values.email && values.email != "") ? values.email : userInfo.email,
-                phone_number: (values.phone_number && values.phone_number != "") ? values.phone_number : userInfo.phone_number,
+                username: (values.username && values.username !== "") ? values.username : userInfo.username,
+                nickname: (values.nickname && values.nickname !== "") ? values.nickname : userInfo.nickname,
+                email: (values.email && values.email !== "") ? values.email : userInfo.email,
+                phone_number: (values.phone_number && values.phone_number !== "") ? values.phone_number : userInfo.phone_number,
                 gender: (values.gender == 0 || values.gender == 1) ? values.gender : userInfo.gender,
                 avatar: userInfo.avatar
             };
@@ -352,7 +352,7 @@ const PersonalPage = (props: { match: any }) => {
                 <Layout style={{ margin: '0 0.5em' }}>
                     <Content style={{ margin: '1.5em 1.5em', background: '#fff' }}>
                         {/*房源*/}
-                        <div hidden={selectedMenu != 5}>
+                        <div hidden={selectedMenu !== 5}>
                             <VirtualList list={resourceList} type="source" other={!isOwn} />
                             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
@@ -361,7 +361,7 @@ const PersonalPage = (props: { match: any }) => {
                             </div>
                         </div>
                         {/*预约*/}
-                        <div hidden={selectedMenu != 1}>
+                        <div hidden={selectedMenu !== 1}>
                             <VirtualList list={resourceList} type="appointment" other={!isOwn} />
                             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize2[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
@@ -370,7 +370,7 @@ const PersonalPage = (props: { match: any }) => {
                             </div>
                         </div>
                         {/*评分*/}
-                        <div hidden={selectedMenu != 2}>
+                        <div hidden={selectedMenu !== 2}>
                             <VirtualList list={resourceList} type="rate" other={!isOwn} />
                             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize3[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
@@ -378,7 +378,7 @@ const PersonalPage = (props: { match: any }) => {
                                 }} />
                             </div>
                         </div>
-                        <div style={{ padding: '1.5em 0' }} hidden={selectedMenu != 3 || !isOwn}>
+                        <div style={{ padding: '1.5em 0' }} hidden={selectedMenu !== 3 || !isOwn}>
                             <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} form={infoForm}>
                                 <Form.Item wrapperCol={{ span: 9 }} name="username" label="用户名" >
                                     <Input placeholder={userInfo.username} onPressEnter={(e) => { e.preventDefault() }} />
@@ -403,7 +403,7 @@ const PersonalPage = (props: { match: any }) => {
                                 </Form.Item>
                             </Form>
                         </div>
-                        <div style={{ padding: '1.5em 0' }} hidden={selectedMenu != 4 || !isOwn}>
+                        <div style={{ padding: '1.5em 0' }} hidden={selectedMenu !== 4 || !isOwn}>
                             <Form labelCol={{ span: 7 }} onFinish={handlePasswordSubmit} form={pswForm}>
                                 <Form.Item wrapperCol={{ span: 9 }} name="new_password" label="新密码" >
                                     <Input.Password onPressEnter={(e) => { e.preventDefault() }} />
