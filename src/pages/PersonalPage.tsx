@@ -165,7 +165,7 @@ const PersonalPage = (props: { match: any }) => {
         })
         if (res.data.success) {
             setUserInfo(res.data.result);
-            infoForm.setFieldsValue(userInfo)
+            infoForm.setFieldsValue(res.data.result)
         } else {
             message.error(res.data.reason)
         }
@@ -310,11 +310,11 @@ const PersonalPage = (props: { match: any }) => {
                         </span>
                     )}
                 </div>
-                <Descriptions title={userInfo.username} style={{ paddingLeft: '1rem', width: '50%' }} column={2}>
-                    <Descriptions.Item label="昵称">{userInfo.nickname}</Descriptions.Item>
-                    <Descriptions.Item label="性别">{userInfo.gender == -1 ? "-" : (userInfo.gender == 0 ? "男" : "女")}</Descriptions.Item>
-                    <Descriptions.Item label="邮箱">{userInfo.email}</Descriptions.Item>
-                    <Descriptions.Item label="手机号">{userInfo.phone_number}</Descriptions.Item>
+                <Descriptions title={userInfo.username?userInfo.username:'-'} style={{ paddingLeft: '1rem', width: '50%' }} column={2}>
+                    <Descriptions.Item label="昵称">{userInfo.nickname? userInfo.nickname:'-'}</Descriptions.Item>
+                    <Descriptions.Item label="性别">{userInfo.gender === undefined ? "-" : (userInfo.gender == 0 ? "男" : "女")}</Descriptions.Item>
+                    <Descriptions.Item label="邮箱">{userInfo.email?userInfo.email:'-'}</Descriptions.Item>
+                    <Descriptions.Item label="手机号">{userInfo.phone_number?userInfo.phone_number:'-'}</Descriptions.Item>
                 </Descriptions>
             </Row>
         </Container>

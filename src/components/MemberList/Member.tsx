@@ -98,17 +98,19 @@ const Broker = (props: {
                 <Descriptions.Item label="邮箱">{userInfo?.email ? userInfo?.email : '-'}</Descriptions.Item>
                 <Descriptions.Item label="手机号">{userInfo?.phone_number ? userInfo?.phone_number : '-'}</Descriptions.Item>
             </Descriptions>
-            <div style={{ display: 'flex', alignItems: 'center' }} hidden={!props.canOperate}>
+            <div style={{ display: 'flex', alignItems: 'center' }} hidden={true || !props.canOperate}>
                 <Popconfirm
                     title="您确认要移除该成员吗"
                     onConfirm={remove}
                     okText="是"
                     cancelText="否"
                 >
-                    <a style={{ fontSize: '20px', marginLeft: '1em', fontWeight: 'normal' }}
-                        hidden={!props.canOperate}>
-                        <ExportOutlined />
-                    </a>
+                    <Tooltip title="移除该成员">
+                        <a style={{ fontSize: '20px', marginLeft: '1em', fontWeight: 'normal' }}
+                            hidden={!props.canOperate}>
+                            <ExportOutlined />
+                        </a>
+                    </Tooltip>
                 </Popconfirm>
             </div>
         </Row>

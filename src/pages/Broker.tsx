@@ -13,6 +13,7 @@ import { GroupDetailModel, SearchItemModel, UserInfoModel } from "../utils/DataM
 import VirtualList from '../components/ItemList/VirtualList'
 import GroupSearch from "./GroupPage/GroupSearch"
 import Member from '../components/MemberList/Member'
+import moment from 'moment';
 
 import {
     TeamOutlined,
@@ -50,7 +51,7 @@ const focusStyle: React.CSSProperties = {
 
 const Broker = () => {
     const [mouseOver, setMouseOver] = useState(false);
-    const [selectedSettingMenu, setSelectedSettingMenu] = useState("sub1");
+    const [selectedSettingMenu, setSelectedSettingMenu] = useState("1");
     const api = useApi();
     const api2 = usePostImg();
     const [pswForm] = Form.useForm();
@@ -77,6 +78,7 @@ const Broker = () => {
     const [createVisible, setCreateVisible] = useState(false);
     const [searchVisible, setSearchVisible] = useState(false);
     const [myRequestVisible, setMyRequestVisible] = useState(false);
+    const [settingVisible, setSettingVisible] = useState(false)
     const [groupRequestVisible, setGroupRequestVisible] = useState(false);
 
     const onMouseOverAvatar = () => {
@@ -107,7 +109,7 @@ const Broker = () => {
         if (res.data.success) {
             setUserInfo(res.data.result);
             setTeamInfo(res.data.result.team);
-            infoForm.setFieldsValue(userInfo)
+            infoForm.setFieldsValue(res.data.result)
         } else {
             message.error(res.data.reason)
         }
@@ -120,7 +122,6 @@ const Broker = () => {
             }
         })
         console.log("apply:", res)
-
     }
 
     const handleInfoSubmit = async (values: any) => {
@@ -219,13 +220,15 @@ const Broker = () => {
     }
 
     const createTeam = async (values: any) => {
-        // console.log(values)
+        const checkReg = /\s+/;
         if (!values.teamname) message.warning("未填写团队名")
+        else if (values.teamname.search(checkReg) != -1) message.warning("团队名不要有空字符")
         else {
-            const res = await api.post('/team', { params: { name: values.teamname } })
+            console.log(values.teamname)
+            const res = await api.post('/team', { "name": values.teamname })
             console.log("create res: ", res)
             if (res.data.success) {
-                message.success("创建成功")
+                message.success("已提交审核")
             } else {
                 message.error(res.data.reason)
             }
@@ -239,6 +242,7 @@ const Broker = () => {
         console.log("del:", res)
         if (res.data.success) {
             message.success("团队已成功解散")
+            setTeamInfo(undefined)
         } else {
             message.error(res.data.reason)
         }
@@ -249,6 +253,12 @@ const Broker = () => {
 
             <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: '20px' }}>
                 <UserOutlined />个人信息
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <a style={{ fontSize: '14px', marginLeft: '1em' }}
+                        onClick={() => { setSettingVisible(true) }}>
+                        个人设置
+                    </a>
+                </div>
             </p>
             <Row wrap={false}>
                 <div onMouseOver={onMouseOverAvatar} onMouseLeave={onMouseLeaveAvator}
@@ -266,14 +276,179 @@ const Broker = () => {
                         </Tooltip>
                     </Upload>
                 </div>
-                <Descriptions title={userInfo.username} style={{ paddingLeft: '1rem', width: '50%' }} column={2}>
-                    <Descriptions.Item label="昵称">{userInfo.nickname}</Descriptions.Item>
-                    <Descriptions.Item label="性别">{userInfo.gender == -1 ? "-" : (userInfo.gender == 0 ? "男" : "女")}</Descriptions.Item>
-                    <Descriptions.Item label="邮箱">{userInfo.email}</Descriptions.Item>
-                    <Descriptions.Item label="手机号">{userInfo.phone_number}</Descriptions.Item>
+                <Descriptions title={userInfo.username ? userInfo.username : '-'} style={{ paddingLeft: '1rem', width: '50%' }} column={2}>
+                    <Descriptions.Item label="昵称">{userInfo.nickname ? userInfo.nickname : '-'}</Descriptions.Item>
+                    <Descriptions.Item label="性别">{userInfo.gender === undefined ? "-" : (userInfo.gender == 0 ? "男" : "女")}</Descriptions.Item>
+                    <Descriptions.Item label="邮箱">{userInfo.email ? userInfo.email : '-'}</Descriptions.Item>
+                    <Descriptions.Item label="手机号">{userInfo.phone_number ? userInfo.phone_number : '-'}</Descriptions.Item>
                 </Descriptions>
             </Row>
-            <Divider style={{ width: '90%', marginBottom: 0 }}></Divider>
+        </Container>
+        <Container style={{ width: '80%', marginTop: '1rem' }} hoverable={false}>
+            <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: '20px' }}>
+                <TeamOutlined />我的团队
+                <div style={{ display: 'flex', alignItems: 'center' }}
+                    hidden={teamInfo == undefined || teamInfo?.leader.userid !== user?.userid}>
+                    <a style={{ fontSize: '14px', marginLeft: '1em' }}
+                        onClick={() => { getApply(); setDrawerVisible(true) }}>
+                        查看申请
+                    </a>
+                    <Drawer
+                        title="申请列表"
+                        placement='right'
+                        closable={true}
+                        onClose={() => { setDrawerVisible(false) }}
+                        visible={drawerVisible}
+                        width='40%'
+                    >
+                    </Drawer>
+
+                    <Popconfirm
+                        title="您确认要解散团队吗"
+                        onConfirm={deleteTeam}
+                        okText="是"
+                        cancelText="否"
+                    >
+                        <a style={{ fontSize: '14px', marginLeft: '1em' }}>
+                            解散团队
+                        </a>
+                    </Popconfirm>
+                </div>
+            </p>
+            <div hidden={false && teamInfo != undefined}>
+                <p style={{
+                    marginLeft: '21px', display: 'flex', alignItems: 'center',
+                    justifyContent: 'flex-start', fontSize: '20px', color: 'grey'
+                }} hidden={false}>
+                    您还未加入任何团队
+                </p>
+                <Button type="primary" onClick={() => setCreateVisible(true)}
+                    hidden={false} style={{ marginLeft: '10px' }}>
+                    创建团队
+                </Button>
+                <Button type="primary" style={{ marginLeft: '30px' }}
+                    onClick={() => setSearchVisible(true)} hidden={false}>
+                    加入团队
+                </Button>
+                {/*
+                <Button type="primary" style={{ marginLeft: '14px' }}
+                    onClick={() => setMyRequestVisible(true)} hidden={false}>
+                    我的申请
+                </Button>*/}
+            </div>
+            <div hidden={teamInfo == undefined}>
+                <Divider style={{ marginTop: '10px', marginBottom: 0 }}></Divider>
+            </div>
+            <Row wrap={false} style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1em' }} hidden={teamInfo == undefined}>
+                <Container style={{
+                    marginTop: '20px', width: '30%', border: 'solid',
+                    borderWidth: '0.5px', borderColor: 'grey', height: 'fit-content'
+                }}>
+                    <p style={{ fontSize: '18px', marginBottom: 0, display: 'flex', alignItems: 'center' }}>
+                        <SearchOutlined />团队概览
+                    </p>
+                    <Divider style={{ marginTop: '14px' }}></Divider>
+                    <p style={{ fontSize: '18px' }}>
+                        <span>团队名：</span>
+                        <span style={{ float: 'right' }}>{teamInfo?.name}</span>
+                    </p>
+                    <p>
+                        <Row style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}>
+                            <span>创建者：</span>
+                            <div style={{ flexGrow: 1 }}></div>
+                            <img style={{ height: '15%', width: '15%' }} src={teamInfo?.leader.avatar}></img>
+                            <span style={{ marginLeft: '7px' }}>{teamInfo?.leader.username}</span>
+                        </Row>
+                    </p>
+                    <p style={{ fontSize: '18px' }}>
+                        团队规模：
+                        <span style={{ float: 'right' }}>{teamInfo?.member_ids.length}人</span>
+                    </p>
+                    <p style={{ fontSize: '18px' }}>
+                        创建时间：
+                        <span style={{ float: 'right' }}> {moment(teamInfo?.create_time ? teamInfo?.create_time * 1000 : 0).format('YYYY / MM / DD')}</span>
+                    </p>
+                </Container>
+                <Container style={{
+                    marginTop: '20px', width: '65%', height: 'fit-content',
+                    border: 'solid', borderWidth: '1px', borderColor: 'grey'
+                }}>
+                    <p style={{ fontSize: '18px', marginBottom: 0, display: 'flex', alignItems: 'center' }}>
+                        <MenuUnfoldOutlined />成员列表
+                    </p>
+                    <Divider style={{ marginTop: '14px' }}></Divider>
+                    {
+                        teamInfo?.member_ids.map((item) => {
+                            const res = <Member userInfo={item}
+                                isCreater={item.userid === teamInfo?.leader.userid}
+                                canOperate={teamInfo?.leader.userid === user?.userid && item.userid !== teamInfo?.leader.userid}
+                                teamid={teamInfo?.teamid}
+                                userid={item.userid}
+                            />
+                            return res
+                        })
+                    }
+                </Container>
+            </Row>
+        </Container>
+        {/*创建*/}
+        <Modal
+            title="创建团队"
+            centered
+            visible={createVisible}
+            onOk={() => { createForm.submit() }}
+            onCancel={() => { setCreateVisible(false); createForm.resetFields() }}
+            width={600}
+            maskClosable={false}
+            okText="创建"
+            cancelText="取消"
+            bodyStyle={{ padding: '0 24px' }}
+        >
+            <Form labelCol={{ span: 8 }} onFinish={createTeam} form={createForm} style={{ marginTop: '24px' }}>
+                <Form.Item wrapperCol={{ span: 10 }} name="teamname" label="团队名" >
+                    <Row wrap={false}>
+                        <Input onPressEnter={(e) => { e.preventDefault() }} />
+                    </Row>
+                </Form.Item>
+            </Form>
+        </Modal>
+        {/*加入*/}
+        <Modal
+            title="团队列表"
+            centered
+            visible={searchVisible}
+            onCancel={() => setSearchVisible(false)}
+            destroyOnClose={true}
+            width='90%'
+            maskClosable={false}
+            footer={null}
+            bodyStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 0', width: '100%' }}
+            style={{ marginTop: '1.5em' }}
+        >
+            <div style={{ background: 'rgb(247 247 247)', width: '100%' }}>
+                <GroupSearch/>
+            </div>
+        </Modal>
+        {/*我的申请*/}
+        <Modal
+            title="我的申请"
+            centered
+            visible={myRequestVisible}
+            onCancel={() => { setMyRequestVisible(false); }}
+            width={800}
+            maskClosable={false}
+            footer={null}
+        >
+        </Modal>
+        <Modal
+            title="个人设置"
+            centered
+            visible={settingVisible}
+            onCancel={() => { setSettingVisible(false); }}
+            width={1000}
+            maskClosable={false}
+            footer={null}
+        >
             <Layout style={{ color: '#fff' }}>
                 <Sider
                     style={{
@@ -284,15 +459,10 @@ const Broker = () => {
                     collapsed={false}
                 >
                     <Menu theme="light" mode="inline" onSelect={onSelectSettingMenu} style={{}}>
-                        <SubMenu key="sub1" title="个人设置" icon={<SettingOutlined />}
-                            onTitleClick={(e) => { setSelectedSettingMenu(e.key) }} style={{ paddingLeft: 0 }}>
-                            <Menu.Item key="1" icon={<FormOutlined />}>修改信息</Menu.Item>
-                            <Menu.Item key="2" icon={<LockOutlined />}>修改密码</Menu.Item>
-                        </SubMenu>
+                        <Menu.Item key="1" icon={<FormOutlined />}>修改信息</Menu.Item>
+                        <Menu.Item key="2" icon={<LockOutlined />}>修改密码</Menu.Item>
                     </Menu>
                 </Sider>
-                <Content style={{ margin: '0', background: '#fff' }} hidden={selectedSettingMenu != "sub1"}>
-                </Content>
                 <Content style={{ margin: '1.5em 1.5em', background: '#fff' }} hidden={selectedSettingMenu == "sub1"}>
                     <div style={{ padding: '1.5em 0' }} hidden={selectedSettingMenu != "1"}>
                         <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} form={infoForm}>
@@ -340,152 +510,6 @@ const Broker = () => {
                     </div>
                 </Content>
             </Layout>
-        </Container>
-        <Container style={{ width: '80%', marginTop: '1rem' }} hoverable={false}>
-            <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: '20px' }}>
-                <TeamOutlined />我的团队
-                <div style={{ display: 'flex', alignItems: 'center' }}
-                    hidden={teamInfo == undefined || teamInfo?.leader.userid !== user?.userid}>
-                    <a style={{ fontSize: '14px', marginLeft: '1em' }}
-                        onClick={() => { getApply(); setDrawerVisible(true) }}>
-                        查看申请
-                    </a>
-                    <Drawer
-                        title="申请列表"
-                        placement='right'
-                        closable={true}
-                        onClose={() => { setDrawerVisible(false) }}
-                        visible={drawerVisible}
-                        width='40%'
-                    >
-                    </Drawer>
-
-                    <Popconfirm
-                        title="您确认要解散团队吗"
-                        onConfirm={deleteTeam}
-                        okText="是"
-                        cancelText="否"
-                    >
-                        <a style={{ fontSize: '14px', marginLeft: '1em' }}>
-                            解散团队
-                        </a>
-                    </Popconfirm>
-                </div>
-            </p>
-            <div hidden={teamInfo != undefined}>
-                <p style={{
-                    marginLeft: '21px', display: 'flex', alignItems: 'center',
-                    justifyContent: 'flex-start', fontSize: '20px', color: 'grey'
-                }} hidden={false}>
-                    您还未加入任何团队
-                </p>
-                <Button type="primary" onClick={() => setCreateVisible(true)} hidden={false}>
-                    创建团队
-                </Button>
-                <Button type="primary" style={{ marginLeft: '14px' }}
-                    onClick={() => setSearchVisible(true)} hidden={false}>
-                    加入团队
-                </Button>
-                <Button type="primary" style={{ marginLeft: '14px' }}
-                    onClick={() => setMyRequestVisible(true)} hidden={false}>
-                    我的申请
-                </Button>
-            </div>
-            <Divider style={{ marginTop: '10px', marginBottom: 0 }}></Divider>
-            <Row wrap={false} style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1em' }}>
-                <Container style={{
-                    marginTop: '20px', width: '30%', border: 'solid',
-                    borderWidth: '0.5px', borderColor: 'grey', height: 'fit-content'
-                }}>
-                    <p style={{ fontSize: '18px', marginBottom: 0, display: 'flex', alignItems: 'center' }}>
-                        <SearchOutlined />团队概览
-                    </p>
-                    <Divider style={{ marginTop: '14px' }}></Divider>
-                    <p style={{ fontSize: '18px' }}>
-                        <span>团队名：</span>
-                        <span style={{ float: 'right' }}>{teamInfo?.name}</span>
-                    </p>
-                    <p>
-                        <Row style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}>
-                            <span>创建者：</span>
-                            <div style={{ flexGrow: 1 }}></div>
-                            <img style={{ height: '15%', width: '15%' }} src={teamInfo?.leader.avatar}></img>
-                            <span style={{ marginLeft: '7px' }}>{teamInfo?.leader.username}</span>
-                        </Row>
-                    </p>
-                    <p style={{ fontSize: '18px' }}>
-                        团队规模：
-                        <span style={{ float: 'right' }}>{teamInfo?.member_ids.length}人</span>
-                    </p>
-                </Container>
-                <Container style={{
-                    marginTop: '20px', width: '65%', height: 'fit-content',
-                    border: 'solid', borderWidth: '1px', borderColor: 'grey'
-                }}>
-                    <p style={{ fontSize: '18px', marginBottom: 0, display: 'flex', alignItems: 'center' }}>
-                        <MenuUnfoldOutlined />成员列表
-                    </p>
-                    <Divider style={{ marginTop: '14px' }}></Divider>
-                    {
-                        teamInfo?.member_ids.map((item) => {
-                            const res = <Member userInfo={item}
-                                isCreater={item.userid === teamInfo?.leader.userid}
-                                canOperate={teamInfo?.leader.userid === user?.userid && item.userid !== teamInfo?.leader.userid}
-                                teamid={teamInfo?.teamid}
-                                userid={item.userid}
-                            />
-                            return res
-                        })
-                    }
-                </Container>
-            </Row>
-        </Container>
-        {/*创建*/}
-        <Modal
-            title="创建团队"
-            centered
-            visible={createVisible}
-            onOk={() => { createForm.submit() }}
-            onCancel={() => { setCreateVisible(false); createForm.resetFields() }}
-            width={800}
-            maskClosable={false}
-            okText="创建"
-            cancelText="取消"
-        >
-            <Form labelCol={{ span: 8 }} onFinish={createTeam} form={createForm} style={{ marginTop: '24px' }}>
-                <Form.Item wrapperCol={{ span: 9 }} name="teamname" label="团队名" >
-                    <Row wrap={false}>
-                        <Input onPressEnter={(e) => { e.preventDefault() }} />
-                    </Row>
-                </Form.Item>
-            </Form>
-        </Modal>
-        {/*加入*/}
-        <Modal
-            title="团队列表"
-            centered
-            visible={searchVisible}
-            onCancel={() => setSearchVisible(false)}
-            width='90%'
-            maskClosable={false}
-            footer={null}
-            bodyStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 0', width: '100%' }}
-            style={{ marginTop: '1.5em' }}
-        >
-            <div style={{ background: 'rgb(247 247 247)', width: '100%' }}>
-                <GroupSearch />
-            </div>
-        </Modal>
-        {/*我的申请*/}
-        <Modal
-            title="我的申请"
-            centered
-            visible={myRequestVisible}
-            onCancel={() => { setMyRequestVisible(false); }}
-            width={800}
-            maskClosable={false}
-            footer={null}
-        >
         </Modal>
     </Basement >
 }

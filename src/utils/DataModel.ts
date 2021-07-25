@@ -32,6 +32,7 @@ export interface SearchItemModel {
 export interface GroupDetailModel {
   teamid: string;
   name: string;
+  create_time: number
   member_ids: {
     username: string;
     avatar: string;
