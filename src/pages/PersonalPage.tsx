@@ -68,6 +68,8 @@ const PersonalPage = (props: { match: any }) => {
     const [isOwn, setIsOwn] = useState(false);
 
     const [pageAndPageSize, setPageAndPageSize] = useState([1, 3]);
+    const [pageAndPageSize2, setPageAndPageSize2] = useState([1, 3]);
+    const [pageAndPageSize3, setPageAndPageSize3] = useState([1, 3]);
     const [totalNum, setTotalNum] = useState(1);
     const [resourceList, setResourceList] = useState<Array<SearchItemModel>>([])
 
@@ -97,7 +99,7 @@ const PersonalPage = (props: { match: any }) => {
                 getRate();
             if (selectedMenu == 5)
                 getHouseSource();
-        }, [selectedMenu, pageAndPageSize]
+        }, [selectedMenu, pageAndPageSize,pageAndPageSize2,pageAndPageSize3]
     )
 
     const getHouseSource = async () => {
@@ -112,6 +114,7 @@ const PersonalPage = (props: { match: any }) => {
         console.log("source:", res);
         if (res.data.success) {
             setResourceList(res.data.result.list)
+            setTotalNum(res.data.result.total)
         } else {
             message.error(res.data.reason)
         }
@@ -121,14 +124,15 @@ const PersonalPage = (props: { match: any }) => {
         const res = await api.get('/user/rate', {
             params: {
                 id: id,
-                page_size: pageAndPageSize[1],
-                page_num: pageAndPageSize[0]
+                page_size: pageAndPageSize3[1],
+                page_num: pageAndPageSize3[0]
             }
         }
         )
         console.log("rate: ", res);
         if (res.data.success) {
             setResourceList(res.data.result.list)
+            setTotalNum(res.data.result.total)
         } else {
             message.error(res.data.reason)
         }
@@ -138,14 +142,15 @@ const PersonalPage = (props: { match: any }) => {
         const res = await api.get('/user/appointment', {
             params: {
                 id: id,
-                page_size: pageAndPageSize[1],
-                page_num: pageAndPageSize[0]
+                page_size: pageAndPageSize2[1],
+                page_num: pageAndPageSize2[0]
             }
         }
         )
         //console.log("app:", res);
         if (res.data.success) {
             setResourceList(res.data.result.list)
+            setTotalNum(res.data.result.total)
         } else {
             message.error(res.data.reason)
         }
@@ -160,7 +165,7 @@ const PersonalPage = (props: { match: any }) => {
         })
         if (res.data.success) {
             setUserInfo(res.data.result);
-            infoForm.setFieldsValue(userInfo)
+            infoForm.setFieldsValue(res.data.result)
         } else {
             message.error(res.data.reason)
         }
@@ -305,11 +310,11 @@ const PersonalPage = (props: { match: any }) => {
                         </span>
                     )}
                 </div>
-                <Descriptions title={userInfo.username} style={{ paddingLeft: '1rem', width: '40%' }} column={2}>
-                    <Descriptions.Item label="昵称">{userInfo.nickname}</Descriptions.Item>
-                    <Descriptions.Item label="性别">{userInfo.gender == -1 ? "-" : (userInfo.gender == 0 ? "男" : "女")}</Descriptions.Item>
-                    <Descriptions.Item label="邮箱">{userInfo.email}</Descriptions.Item>
-                    <Descriptions.Item label="手机号">{userInfo.phone_number}</Descriptions.Item>
+                <Descriptions title={userInfo.username?userInfo.username:'-'} style={{ paddingLeft: '1rem', width: '50%' }} column={2}>
+                    <Descriptions.Item label="昵称">{userInfo.nickname? userInfo.nickname:'-'}</Descriptions.Item>
+                    <Descriptions.Item label="性别">{userInfo.gender === undefined ? "-" : (userInfo.gender == 0 ? "男" : "女")}</Descriptions.Item>
+                    <Descriptions.Item label="邮箱">{userInfo.email?userInfo.email:'-'}</Descriptions.Item>
+                    <Descriptions.Item label="手机号">{userInfo.phone_number?userInfo.phone_number:'-'}</Descriptions.Item>
                 </Descriptions>
             </Row>
         </Container>
@@ -359,8 +364,8 @@ const PersonalPage = (props: { match: any }) => {
                         <div hidden={selectedMenu != 1}>
                             <VirtualList list={resourceList} type="appointment" other={!isOwn} />
                             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
-                                <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
-                                    setPageAndPageSize([pg, pageAndPageSize[1]]);
+                                <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize2[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
+                                    setPageAndPageSize2([pg, pageAndPageSize2[1]]);
                                 }} />
                             </div>
                         </div>
@@ -368,8 +373,8 @@ const PersonalPage = (props: { match: any }) => {
                         <div hidden={selectedMenu != 2}>
                             <VirtualList list={resourceList} type="rate" other={!isOwn} />
                             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
-                                <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
-                                    setPageAndPageSize([pg, pageAndPageSize[1]]);
+                                <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize3[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
+                                    setPageAndPageSize3([pg, pageAndPageSize3[1]]);
                                 }} />
                             </div>
                         </div>
