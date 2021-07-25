@@ -26,9 +26,10 @@ import {
     SendOutlined,
     DownOutlined,
     UpOutlined,
-    SearchOutlined
+    SearchOutlined,
 } from '@ant-design/icons';
 import { setFlagsFromString } from 'v8'
+import { UserInfo } from 'os'
 
 const { Panel } = Collapse;
 const { Text, Title, Paragraph } = Typography;
@@ -68,7 +69,18 @@ const Broker = () => {
         phone_number: "-",
     })
     const [teamInfo, setTeamInfo] = useState<GroupDetailModel>()
-    const [applyInfo, setApplyInfo] = useState<{ id: string, create_date: number, user: { username: string, avatar: string, nickname: string }[] }>()
+    const [applyInfo, setApplyInfo] = useState<{
+        id: string,
+        create_date: number,
+        user: {
+            username: string,
+            avatar: string,
+            nickname: string,
+            gender: number | undefined,
+            email: string | undefined,
+            phone_number: string | undefined
+        }
+    }[]>()
     const [drawerVisible, setDrawerVisible] = useState(false)
 
     const [pageAndPageSize, setPageAndPageSize] = useState([1, 3]);
@@ -79,7 +91,6 @@ const Broker = () => {
     const [searchVisible, setSearchVisible] = useState(false);
     const [myRequestVisible, setMyRequestVisible] = useState(false);
     const [settingVisible, setSettingVisible] = useState(false)
-    const [groupRequestVisible, setGroupRequestVisible] = useState(false);
 
     const onMouseOverAvatar = () => {
         setMouseOver(true);
@@ -116,12 +127,16 @@ const Broker = () => {
     }
 
     const getApply = async () => {
+        console.log(teamInfo?.teamid)
         const res = await api.get('/team/apply', {
             params: {
-                teamid: teamInfo?.teamid
+                team_id: teamInfo?.teamid
             }
         })
         console.log("apply:", res)
+        if (res.data.success) {
+            setApplyInfo(res.data.result)
+        }
     }
 
     const handleInfoSubmit = async (values: any) => {
@@ -250,7 +265,6 @@ const Broker = () => {
 
     return <Basement style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Container style={{ width: '80%', marginTop: '1rem' }} hoverable={false}>
-
             <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: '20px' }}>
                 <UserOutlined />个人信息
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -294,15 +308,27 @@ const Broker = () => {
                         查看申请
                     </a>
                     <Drawer
-                        title="申请列表"
+                        title="申请人列表"
                         placement='right'
                         closable={true}
                         onClose={() => { setDrawerVisible(false) }}
                         visible={drawerVisible}
                         width='40%'
                     >
-                    </Drawer>
+                        {
+                            applyInfo?.map((item) => {
+                                //console.log(item)
+                                const res = <Container style={{
+                                    display: 'flex', justifyContent: 'center', alignItems: 'center',
+                                    marginBottom: '20px', border: 'solid',
+                                    borderWidth: '0.5px', borderColor: 'grey'
+                                }} hoverable={false}>
+                                    <Member userInfo={item.user} applyid={item.id} />
+                                </Container>
+                                return res
+                            })}
 
+                    </Drawer>
                     <Popconfirm
                         title="您确认要解散团队吗"
                         onConfirm={deleteTeam}
@@ -315,7 +341,7 @@ const Broker = () => {
                     </Popconfirm>
                 </div>
             </p>
-            <div hidden={false && teamInfo != undefined}>
+            <div hidden={teamInfo != undefined}>
                 <p style={{
                     marginLeft: '21px', display: 'flex', alignItems: 'center',
                     justifyContent: 'flex-start', fontSize: '20px', color: 'grey'
@@ -343,7 +369,7 @@ const Broker = () => {
                 <Container style={{
                     marginTop: '20px', width: '30%', border: 'solid',
                     borderWidth: '0.5px', borderColor: 'grey', height: 'fit-content'
-                }}>
+                }} hoverable={false}>
                     <p style={{ fontSize: '18px', marginBottom: 0, display: 'flex', alignItems: 'center' }}>
                         <SearchOutlined />团队概览
                     </p>
@@ -372,19 +398,20 @@ const Broker = () => {
                 <Container style={{
                     marginTop: '20px', width: '65%', height: 'fit-content',
                     border: 'solid', borderWidth: '1px', borderColor: 'grey'
-                }}>
+                }} hoverable={false}>
                     <p style={{ fontSize: '18px', marginBottom: 0, display: 'flex', alignItems: 'center' }}>
                         <MenuUnfoldOutlined />成员列表
                     </p>
                     <Divider style={{ marginTop: '14px' }}></Divider>
                     {
                         teamInfo?.member_ids.map((item) => {
-                            const res = <Member userInfo={item}
-                                isCreater={item.userid === teamInfo?.leader.userid}
-                                canOperate={teamInfo?.leader.userid === user?.userid && item.userid !== teamInfo?.leader.userid}
-                                teamid={teamInfo?.teamid}
-                                userid={item.userid}
-                            />
+                            const res = <div style={{ marginBottom: '1em' }}>
+                                <Member userInfo={item}
+                                    isCreater={item.userid === teamInfo?.leader.userid}
+                                    canOperate={teamInfo?.leader.userid === user?.userid && item.userid !== teamInfo?.leader.userid}
+                                    teamid={teamInfo?.teamid}
+                                    userid={item.userid}
+                                /></div>
                             return res
                         })
                     }
@@ -426,7 +453,7 @@ const Broker = () => {
             style={{ marginTop: '1.5em' }}
         >
             <div style={{ background: 'rgb(247 247 247)', width: '100%' }}>
-                <GroupSearch/>
+                <GroupSearch />
             </div>
         </Modal>
         {/*我的申请*/}
