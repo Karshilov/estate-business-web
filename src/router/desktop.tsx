@@ -13,6 +13,7 @@ import SecondHandDetail from '../pages/SecondHandPage/SecondHandDetail';
 import BlogPublish from '../pages/Blog/BlogPublish'
 import PersonalPage from '../pages/PersonalPage'
 import Broker from '../pages/Broker';
+import BlogList from '../pages/Blog/BlogList';
 
 const DesktopRouter = withRouter(({ history }) => {
   return (
@@ -32,7 +33,9 @@ const DesktopRouter = withRouter(({ history }) => {
             <Route path="/second-hand-search/:keywords" component={SecondHandSearch} />
             <Route path="/second-hand-search" component={SecondHandSearch} />
             */}
-            <Route path="/blog-publish" component={BlogPublish} />
+            <Route path="/blog-publish/:id" component={BlogPublish} />
+            <Route exact path="/blog-publish" component={BlogPublish} />
+            <Route exact path="/blog-list" component={BlogList} />
             <Route exact path="/personal-page" component={PersonalPage} />
             <Route path="/personal-page/:id" component={PersonalPage} />
             <Route exact path="/broker" component={Broker} />

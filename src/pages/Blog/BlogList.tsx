@@ -11,6 +11,8 @@ import { EditOutlined, FireOutlined, FireTwoTone, MoreOutlined } from '@ant-desi
 import InfiniteScroll from 'react-infinite-scroller';
 import { useApi } from '../../utils/api';
 import moment from 'moment';
+import { Container } from '../../components/BasicHTMLElement';
+import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 
 const { Title, Paragraph, Text } = Typography;
 const { Header, Footer, Sider, Content } = Layout;
@@ -98,14 +100,23 @@ const BlogList = ((props: { match: any }) => {
     const hasMore = () => questionList.length <= totalNumber;
 
     return (
-        <>
-            <Spin tip="小猴正在全力加载中～" spinning={dataLoading}>
+        <Container style={{ width: '70%', marginTop: 50, marginLeft: '15%', marginRight: '15%' }} bodyStyle={{ width: '100%', paddingBlock: 35 }}>
+            <Spin tip="正在全力加载中～" spinning={dataLoading}>
                 <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column' }}>
                     <div style={{ maxWidth: '800px', minWidth: '800px' }}>
                         <Input.Group compact>
                             <Search style={{ width: '100%' }} placeholder="请输入搜索关键词" onSearch={(value: string) => {
                                 setSearchText(value);
                             }} enterButton></Search></Input.Group>
+                        <div style={{ width: '100%', display: 'flex', marginTop: 10, paddingBlock: 5, marginBottom: 10 }}>
+                            <Text style={{ fontSize: '1rem', marginRight: 30 }} strong>排序方式</Text>
+                            <Text style={{ fontSize: '1rem', color: '#00896c', marginRight: 20, cursor: 'pointer' }}
+                                strong>
+                                按发布时间 {desc ?
+                                    <CaretUpOutlined onClick={() => { setDesc(!desc) }} /> :
+                                    <CaretDownOutlined />}
+                            </Text>
+                        </div>
                         <Divider></Divider>
                         <div style={{ width: '100%' }}>
                             <InfiniteScroll
@@ -124,8 +135,11 @@ const BlogList = ((props: { match: any }) => {
                                     <div style={{ lineHeight: 1.618033, width: '100%', paddingBlock: 7, paddingInline: 20, boxSizing: 'border-box', display: 'flex' }}>
                                         <div style={{ fontSize: '1rem', fontWeight: 550 }}>{item.title}</div>
                                         <div style={{ flexGrow: 1 }}></div>
-                                        <div style={{ fontSize: '1rem', color: '#333' }}>{moment(item.create_time).format('YYYY/MM/DD')}</div>
+                                        <div style={{ fontSize: '1rem', color: '#333' }}>{moment(item.create_time * 1000).format('YYYY/MM/DD')}</div>
                                     </div>
+                                    <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: 'more' }} style={{ paddingInline: 20, color: '#333' }}>
+                                        {item.abstract}
+                                    </Paragraph>
                                     <Divider />
                                 </div>)}
                             </InfiniteScroll>
@@ -133,7 +147,7 @@ const BlogList = ((props: { match: any }) => {
                     </div>
                 </div>
             </Spin>
-        </>
+        </Container >
     );
 });
 
