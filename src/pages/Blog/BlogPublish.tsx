@@ -4,8 +4,9 @@ import { Basement, Container } from "../../components/BasicHTMLElement";
 import RichTextEditor from "../../components/RichText/RichTextEditor";
 import { StoreState } from "../../store";
 
-const BlogPublish = () => {
+const BlogPublish = (props: { match: any }) => {
   const { user } = useSelector((state: StoreState) => state, (left: StoreState, right: StoreState) => left.user?.username === right.user?.username)
+  const id = props.match.params.id;
 
   return <Basement style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
     <div style={{ width: '60%' }}>
@@ -16,7 +17,7 @@ const BlogPublish = () => {
           ，{user?.username}，在这里开始你的创作之旅吧
         </span>
       </Container>
-      <RichTextEditor />
+      <RichTextEditor id={id}/>
     </div>
   </Basement>
 }
