@@ -31,8 +31,8 @@ const { Text, Title, Paragraph } = Typography;
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
-const Broker = (props: {
-    userInfo?: {
+const Member = (props: {
+    userInfo: {
         username: string,
         avatar: string,
         nickname: string,
@@ -44,6 +44,7 @@ const Broker = (props: {
     canOperate?: boolean, // 可操作
     teamid?: string
     userid?: string
+    applyid?: string
 }) => {
     const api = useApi();
     const userInfo = props.userInfo;
@@ -72,7 +73,37 @@ const Broker = (props: {
         }
     }
 
-    return <div style={{ width: '100%', marginTop: '1rem', display: 'flex', alignItems: 'center' }} hidden={!visible}>
+    const sendConfirm = async () => {
+        const res = await api.post('/team/apply', {
+            params: {
+                application_id: props.applyid,
+                approve: true,
+                reason: "审核通过"
+            }
+        })
+        console.log(res)
+        if (res.data.success) {
+            message.success("操作成功")
+            setTimeout(() => { setVisible(false) }, 1000);
+        }
+    }
+
+    const sendDely = async () => {
+        const res = await api.post('/team/apply', {
+            params: {
+                application_id: props.applyid,
+                approve: false,
+                reason: "申请被拒绝"
+            }
+        })
+        if (res.data.success) {
+            message.success("操作成功")
+            setTimeout(() => { setVisible(false) }, 1000);
+        }
+    }
+
+
+    return <div style={{ width: '100%', display: 'flex', alignItems: 'center' }} hidden={!visible}>
         <Row wrap={false}>
             <div style={{ display: 'flex', width: 'fit-content', alignItems: 'center' }} >
                 <span style={{
@@ -113,8 +144,23 @@ const Broker = (props: {
                     </Tooltip>
                 </Popconfirm>
             </div>
+            <div hidden={props.applyid == undefined}>
+                <Popconfirm
+                    title={null}
+                    icon={null}
+                    onConfirm={sendConfirm}
+                    onCancel={sendDely}
+                    okText="同意申请"
+                    cancelText="拒绝申请"
+                >
+                    <a style={{ fontSize: '20px', fontWeight: 'normal' }}>
+                        <FormOutlined />
+                    </a>
+                </Popconfirm>
+            </div>
+
         </Row>
     </div >
 }
 
-export default Broker;
+export default Member;

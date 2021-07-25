@@ -8,14 +8,14 @@ import { GroupDetailModel, SearchItemModel, } from "../../utils/DataModel";
 import { SearchOutlined } from "@ant-design/icons";
 import { city } from '../../utils/city'
 import { CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons'
-
+import GroupList from "../../components/MemberList/GroupList"
 const { Text, Title } = Typography;
 
 
 const GroupSearch = () => {
     const [searchText, setSearchText] = useState("");
     const [totalNum, setTotalNum] = useState(0);
-    const [pageAndPageSize, setPageAndPageSize] = useState([1, 10]);
+    const [pageAndPageSize, setPageAndPageSize] = useState([1, 20]);
     const [resourceList, setResourceList] = useState<Array<GroupDetailModel>>([])
     const api = useApi();
 
@@ -28,11 +28,17 @@ const GroupSearch = () => {
             }
         })
         console.log("list", res)
+        if (res.data.success) {
+            setResourceList(res.data.result.list)
+            setTotalNum(res.data.result.total)
+        } else {
+            message.error(res.data.reason)
+        }
     }
 
     useEffect(() => {
         getResourceList()
-       
+
     }, [pageAndPageSize, searchText])
 
     return <Basement style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -45,6 +51,7 @@ const GroupSearch = () => {
             </Input.Group>
         </div>
         <div style={{ width: '65%', background: '#fff' }} className="shadow-md">
+            <GroupList list={resourceList}></GroupList>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }} className="m-8">
                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
                     setPageAndPageSize([pg, pageAndPageSize[1]]);
