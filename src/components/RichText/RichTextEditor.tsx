@@ -14,11 +14,12 @@ const RichTextEditor = (props: { id?: string }) => {
   const api = useApi()
 
   const onPublish = async () => {
+    const abst = HTMLParser(article);
     if (!props.id) {
       const res = await api.post('/blog/detail', {
         title,
         body: article,
-        abstract: HTMLParser(article)
+        abstract: abst.slice(0, Math.min(abst.length, 100)) + '...'
       })
       if (res.data.success) {
         message.success('发布成功')
@@ -30,7 +31,7 @@ const RichTextEditor = (props: { id?: string }) => {
         id: props.id,
         title,
         body: article,
-        abstract: HTMLParser(article)
+        abstract: abst.slice(0, Math.min(abst.length, 100)) + '...'
       })
       if (res.data.success) {
         message.success('修改成功')
