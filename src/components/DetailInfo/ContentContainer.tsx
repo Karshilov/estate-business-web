@@ -6,6 +6,7 @@ import { useApi } from '../../utils/api'
 import DetailTabs from '../../components/DetailInfo/DetailTabs'
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons'
 import moment from 'moment'
+import RichAvatar from '../RichAvatar'
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -93,13 +94,13 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
                 <Divider />
                 <Card>
                   <Card.Meta
-                    avatar={<Avatar src="https://git.karshilov.com/avatars/cf963f3dc28db7361bdd68426e4ca5b4?size=580" size={50} />}
+                    avatar={<RichAvatar src={data.owner.avatar} id={data.owner.userid} size={50} />}
                     title={data.owner.username}
-                    description="找不到工作的人"
+                    description={(data.owner.team !== undefined && data.owner.team !== null) ? data.owner.team.name : '暂无团队'}
                   />
                   <div style={{ marginTop: 20 }}>
                     <Button type="primary" style={{ marginRight: 20 }}>邮件联系</Button>
-                    <Button>在线咨询</Button>
+                    <Button>预约看房</Button>
                   </div>
                 </Card>
               </div>

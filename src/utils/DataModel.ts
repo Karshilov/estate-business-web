@@ -67,6 +67,11 @@ export interface RentDetailModel {
     username: string;
     nickname: string;
     avatar: string;
+    userid: string;
+    team: {
+      teamid: string;
+      name: string;
+    }
   }
   decoration: string;
   features: string[];
@@ -91,6 +96,11 @@ export interface SecondHandDetailModel {
     username: string;
     nickname: string;
     avatar: string;
+    userid: string;
+    team: {
+      teamid: string;
+      name: string;
+    }
   }
   decoration: string;
   features: string[];
