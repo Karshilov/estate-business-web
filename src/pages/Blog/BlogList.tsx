@@ -101,7 +101,7 @@ const BlogList = ((props: { match: any }) => {
 
     return (
         <Container style={{ width: '70%', marginTop: 50, marginLeft: '15%', marginRight: '15%' }} bodyStyle={{ width: '100%', paddingBlock: 35 }}>
-            <Spin tip="小猴正在全力加载中～" spinning={dataLoading}>
+            <Spin tip="正在全力加载中～" spinning={dataLoading}>
                 <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column' }}>
                     <div style={{ maxWidth: '800px', minWidth: '800px' }}>
                         <Input.Group compact>
