@@ -92,6 +92,7 @@ const BlogList = ((props: { match: any }) => {
         setPageAndPageSize([1, 10]);
         loadQuestionList();
     }, []);
+    
     useEffect(() => {
         setPageAndPageSize([1, 10]);
         loadQuestionList();
