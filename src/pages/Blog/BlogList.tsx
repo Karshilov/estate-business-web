@@ -92,7 +92,7 @@ const BlogList = ((props: { match: any }) => {
         setPageAndPageSize([1, 10]);
         loadQuestionList();
     }, []);
-    
+
     useEffect(() => {
         setPageAndPageSize([1, 10]);
         loadQuestionList();
@@ -103,6 +103,9 @@ const BlogList = ((props: { match: any }) => {
     return (
         <Container style={{ width: '70%', marginTop: 50, marginLeft: '15%', marginRight: '15%' }} bodyStyle={{ width: '100%', paddingBlock: 35 }}>
             <Spin tip="正在全力加载中～" spinning={dataLoading}>
+                <Button style={{ marginBottom: '20px', marginLeft: 'calc((100% - 800px) / 2)'}} type="primary" onClick={() => {
+                    history.push('/blog-publish')
+                }}>新增博客</Button>
                 <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column' }}>
                     <div style={{ maxWidth: '800px', minWidth: '800px' }}>
                         <Input.Group compact>
