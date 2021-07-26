@@ -47,7 +47,7 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: stri
               评分：{props.data.rate_score}<StarOutlined />
             </span>
           </a>
-          <a style={{ color: 'red', cursor: 'default', display: 'flex', alignItems: 'center' }} hidden={props.type != 'appointment' || props.data.appointment_time === undefined}>
+          <a style={{ color: 'red', cursor: 'default', display: 'flex', alignItems: 'center' }} hidden={props.type !== 'appointment' || props.data.appointment_time === undefined}>
             <span style={{ fontSize: '20px', color: 'rgb(241 78 78)' }} >
               {"预约时间：" + moment(props.data.appointment_time * 1000).format('YYYY / MM / DD')}
             </span>
