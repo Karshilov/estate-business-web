@@ -327,7 +327,6 @@ const Broker = () => {
                                 </Container>
                                 return res
                             })}
-
                     </Drawer>
                     <Popconfirm
                         title="您确认要解散团队吗"
@@ -397,7 +396,7 @@ const Broker = () => {
                 </Container>
                 <Container style={{
                     marginTop: '20px', width: '65%', height: 'fit-content',
-                    border: 'solid', borderWidth: '1px', borderColor: 'grey'
+                    border: 'solid', borderWidth: '1px', borderColor: 'grey',
                 }} hoverable={false}>
                     <p style={{ fontSize: '18px', marginBottom: 0, display: 'flex', alignItems: 'center' }}>
                         <MenuUnfoldOutlined />成员列表
@@ -446,7 +445,7 @@ const Broker = () => {
             visible={searchVisible}
             onCancel={() => setSearchVisible(false)}
             destroyOnClose={true}
-            width='90%'
+            width='80%'
             maskClosable={false}
             footer={null}
             bodyStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 0', width: '100%' }}

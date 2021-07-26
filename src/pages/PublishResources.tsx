@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, createElement } from "react";
 import { Basement, Layer, Container } from "../components/BasicHTMLElement";
 import InlineMultipleInput from '../components/InlineMultipleInput';
 import { useHistory } from 'react-router-dom';
-import { Button, Col, Form, Input, Row, Tabs, Steps, Select, Upload, Radio, Tooltip, Tag, message } from "antd";
+import { Button, Col, Form, Input, Row, Tabs, Steps, Space, Upload, Radio, Tooltip, Tag, message } from "antd";
 import { useDispatch, useSelector } from 'react-redux';
 import { useApi, staticApi, usePostImg } from "../utils/api";
 import { StoreState } from "../store";
@@ -103,18 +103,18 @@ const PublishResources = () => {
     };
 
     return (
-      <>
+      <Space wrap={true}>
         {/*已有标签*/}
         {
           rentFeatureTags.map((tag: any, index: number) => {
             const tagElem = (
               <Tag
-                style={{ userSelect: 'none', height: "100%" }}
+                style={{ userSelect: 'none', height: "28px",display:'flex',alignItems:'center'}}
                 key={tag}
                 closable={true}
                 onClose={() => handleClose(tag)}
               >
-                <span>
+                <span style={{width:'fit-content',height:'80%',fontSize:'15px'}}>
                   {tag}
                 </span>
               </Tag>
@@ -133,7 +133,7 @@ const PublishResources = () => {
                 style={{
                   width: '78px',
                   marginRight: '8px',
-                  height: "100%"
+                  height: "28px",
                 }}
                 value={inputValue}
                 onChange={handleInputChange}
@@ -150,7 +150,9 @@ const PublishResources = () => {
               <Tag style={{
                 background: 'transparent',
                 borderStyle: 'dashed',
-                height: "100%"
+                height: "28px",
+                display: 'flex',
+                alignItems: 'center'
               }}
                 onClick={showInput}>
                 <PlusOutlined /> 添加标签
@@ -158,7 +160,7 @@ const PublishResources = () => {
             </Tooltip>
           )
         }
-      </>
+      </Space>
     );
   }
 
@@ -439,7 +441,7 @@ const PublishResources = () => {
 
                 <Form.Item name="photos" label="房屋内景" hidden={step !== 1}>
                   <Upload listType="text" maxCount={10} beforeUpload={beforeUpload} onRemove={onRentRemove} >
-                    <Button style={{display:'flex',alignItems:'center'}}><UploadOutlined />Click to upload</Button>
+                    <Button style={{ display: 'flex', alignItems: 'center' }}><UploadOutlined />Click to upload</Button>
                   </Upload>
                 </Form.Item>
 

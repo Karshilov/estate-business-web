@@ -44,9 +44,9 @@ const GroupItem = (props: {
         console.log(teamInfo)
         const res = await api.post('/team/join', { "team_id": teamInfo.teamid })
         console.log(res)
-        if(res.data.success) {
+        if (res.data.success) {
             message.success("已提交申请")
-        }else{
+        } else {
             message.error(res.data.reason)
         }
     }
@@ -66,7 +66,9 @@ const GroupItem = (props: {
                     cancelText="否"
                 >
                     <Tooltip title="申请加入" placement='right'>
-                        <PlusOutlined />
+                        <a style={{ display: 'flex', alignItems: 'centers' }}>
+                            <PlusOutlined />
+                        </a>
                     </Tooltip>
                 </Popconfirm>
             </Row>

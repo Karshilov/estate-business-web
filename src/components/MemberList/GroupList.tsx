@@ -46,11 +46,11 @@ const GroupList = (props: {
 
     return <div style={{ width: '100%', marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '90%',display:'flex' }}>
-            <div style={{ width: '35%' }}>
+            <div style={{ width: '40%' }}>
                 {columns[0].map(item => <GroupItem teamInfo={item} />)}
             </div>
             <div style={{ flexGrow: 1 }}></div>
-            <div style={{ width: '35%' }}>
+            <div style={{ width: '40%' }}>
                 {columns[1].map(item => <GroupItem teamInfo={item} />)}
             </div>
         </div>

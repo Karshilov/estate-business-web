@@ -75,92 +75,170 @@ const Member = (props: {
 
     const sendConfirm = async () => {
         const res = await api.post('/team/apply', {
-            params: {
-                application_id: props.applyid,
-                approve: true,
-                reason: "审核通过"
-            }
+
+            "application_id": props.applyid,
+            "approve": true,
+            "reason": "审核通过"
+
         })
         console.log(res)
         if (res.data.success) {
             message.success("操作成功")
-            setTimeout(() => { setVisible(false) }, 1000);
         }
+        setTimeout(() => { setVisible(false) }, 500);
     }
 
     const sendDely = async () => {
         const res = await api.post('/team/apply', {
-            params: {
-                application_id: props.applyid,
-                approve: false,
-                reason: "申请被拒绝"
-            }
+            "application_id": props.applyid,
+            "approve": false,
+            "reason": "申请被拒绝"
         })
+        console.log(res)
         if (res.data.success) {
             message.success("操作成功")
-            setTimeout(() => { setVisible(false) }, 1000);
         }
+        setTimeout(() => { setVisible(false) }, 500);
     }
 
 
-    return <div style={{ width: '100%', display: 'flex', alignItems: 'center' }} hidden={!visible}>
-        <Row wrap={false}>
-            <div style={{ display: 'flex', width: 'fit-content', alignItems: 'center' }} >
-                <span style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '110px',
-                    height: '90%',
-                    borderStyle: 'dashed',
-                    borderWidth: '1px',
-                    borderColor: 'rgb(235 235 235)',
-                    background: 'rgb(250 250 250)'
-                }}
-                >
-                    <Avatar size={94} shape='square' icon={<UserOutlined />} src={userInfo?.avatar}>
-                    </Avatar>
-                </span>
-            </div>
-            <Descriptions title={title} style={{ paddingLeft: '1rem', width: '70%' }} column={2}>
-                <Descriptions.Item label="昵称">{userInfo?.nickname ? userInfo?.nickname : '-'}</Descriptions.Item>
-                <Descriptions.Item label="性别">{userInfo?.gender === undefined ? "-" : (userInfo?.gender == 0 ? "男" : "女")}</Descriptions.Item>
+    return (
+        <>
+            {
+                props.applyid === undefined && (
+                    <div style={{ width: '100%', display: 'flex', alignItems: 'center' }} hidden={!visible}>
+                        <Row wrap={false}>
+                            <div style={{ display: 'flex', width: 'fit-content', alignItems: 'center' }} >
+                                <span style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    width: '110px',
+                                    height: '90%',
+                                    borderStyle: 'dashed',
+                                    borderWidth: '1px',
+                                    borderColor: 'rgb(235 235 235)',
+                                    background: 'rgb(250 250 250)'
+                                }}
+                                >
+                                    <Avatar size={94} shape='square' icon={<UserOutlined />} src={userInfo?.avatar}>
+                                    </Avatar>
+                                </span>
+                            </div>
+                            <Descriptions title={title} style={{ paddingLeft: '1rem', width: 'fit-content' }} column={2}>
+                                <Descriptions.Item label="昵称">{userInfo?.nickname ? userInfo?.nickname : '-'}</Descriptions.Item>
+                                <Descriptions.Item label="性别">{userInfo?.gender === undefined ? "-" : (userInfo?.gender == 0 ? "男" : "女")}</Descriptions.Item>
 
-                <Descriptions.Item label="邮箱">{userInfo?.email ? userInfo?.email : '-'}</Descriptions.Item>
-                <Descriptions.Item label="手机号">{userInfo?.phone_number ? userInfo?.phone_number : '-'}</Descriptions.Item>
-            </Descriptions>
-            <div style={{ display: 'flex', alignItems: 'center' }} hidden={true || !props.canOperate}>
-                <Popconfirm
-                    title="您确认要移除该成员吗"
-                    onConfirm={remove}
-                    okText="是"
-                    cancelText="否"
-                >
-                    <Tooltip title="移除该成员">
-                        <a style={{ fontSize: '20px', marginLeft: '1em', fontWeight: 'normal' }}
-                            hidden={!props.canOperate}>
-                            <ExportOutlined />
-                        </a>
-                    </Tooltip>
-                </Popconfirm>
-            </div>
-            <div hidden={props.applyid == undefined}>
-                <Popconfirm
-                    title={null}
-                    icon={null}
-                    onConfirm={sendConfirm}
-                    onCancel={sendDely}
-                    okText="同意申请"
-                    cancelText="拒绝申请"
-                >
-                    <a style={{ fontSize: '20px', fontWeight: 'normal' }}>
-                        <FormOutlined />
-                    </a>
-                </Popconfirm>
-            </div>
+                                <Descriptions.Item label="邮箱">{userInfo?.email ? userInfo?.email : '-'}</Descriptions.Item>
+                                <Descriptions.Item label="手机号">{userInfo?.phone_number ? userInfo?.phone_number : '-'}</Descriptions.Item>
+                            </Descriptions>
+                            <div style={{ display: 'flex', alignItems: 'center' }} hidden={true || !props.canOperate}>
+                                <Popconfirm
+                                    title="您确认要移除该成员吗"
+                                    onConfirm={remove}
+                                    okText="是"
+                                    cancelText="否"
+                                >
+                                    <Tooltip title="移除该成员">
+                                        <a style={{ fontSize: '20px', marginLeft: '1em', fontWeight: 'normal' }}
+                                            hidden={!props.canOperate}>
+                                            <ExportOutlined />
+                                        </a>
+                                    </Tooltip>
+                                </Popconfirm>
+                            </div>
+                            <div hidden={props.applyid == undefined}>
+                                <Popconfirm
+                                    title={null}
+                                    icon={null}
+                                    onConfirm={sendConfirm}
+                                    onCancel={sendDely}
+                                    okText="同意申请"
+                                    cancelText="拒绝申请"
+                                >
+                                    <a style={{ fontSize: '20px', fontWeight: 'normal' }}>
+                                        <FormOutlined />
+                                    </a>
+                                </Popconfirm>
+                            </div>
 
-        </Row>
-    </div >
+                        </Row>
+                    </div >
+                )}
+            {
+                props.applyid !== undefined && (
+
+                    <div style={{ width: '100%', display: 'flex', alignItems: 'center' }} hidden={!visible}>
+                        <Container style={{
+                            display: 'flex', justifyContent: 'center', alignItems: 'center',
+                            marginBottom: '20px', border: 'solid',
+                            borderWidth: '0.5px', borderColor: 'grey'
+                        }} hoverable={false}>
+                            <Row wrap={false}>
+                                <div style={{ display: 'flex', width: 'fit-content', alignItems: 'center' }} >
+                                    <span style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        width: '110px',
+                                        height: '90%',
+                                        borderStyle: 'dashed',
+                                        borderWidth: '1px',
+                                        borderColor: 'rgb(235 235 235)',
+                                        background: 'rgb(250 250 250)'
+                                    }}
+                                    >
+                                        <Avatar size={94} shape='square' icon={<UserOutlined />} src={userInfo?.avatar}>
+                                        </Avatar>
+                                    </span>
+                                </div>
+                                <Descriptions title={title} style={{ paddingLeft: '1rem', width: 'fit-content' }} column={2}>
+                                    <Descriptions.Item label="昵称">{userInfo?.nickname ? userInfo?.nickname : '-'}</Descriptions.Item>
+                                    <Descriptions.Item label="性别">{userInfo?.gender === undefined ? "-" : (userInfo?.gender == 0 ? "男" : "女")}</Descriptions.Item>
+
+                                    <Descriptions.Item label="邮箱">{userInfo?.email ? userInfo?.email : '-'}</Descriptions.Item>
+                                    <Descriptions.Item label="手机号">{userInfo?.phone_number ? userInfo?.phone_number : '-'}</Descriptions.Item>
+                                </Descriptions>
+                                <div style={{ display: 'flex', alignItems: 'center' }} hidden={true || !props.canOperate}>
+                                    <Popconfirm
+                                        title="您确认要移除该成员吗"
+                                        onConfirm={remove}
+                                        okText="是"
+                                        cancelText="否"
+                                    >
+                                        <Tooltip title="移除该成员">
+                                            <a style={{ fontSize: '20px', marginLeft: '1em', fontWeight: 'normal' }}
+                                                hidden={!props.canOperate}>
+                                                <ExportOutlined />
+                                            </a>
+                                        </Tooltip>
+                                    </Popconfirm>
+                                </div>
+                                <div hidden={props.applyid == undefined}>
+                                    <Popconfirm
+                                        title="您可以进行以下操作"
+                                        icon={null}
+                                        onConfirm={sendConfirm}
+                                        onCancel={sendDely}
+                                        okText="同意申请"
+                                        cancelText="拒绝申请"
+                                        overlayInnerStyle={{ display: 'flex',flexGrow:2 }}
+                                    >
+                                        <a style={{ fontSize: '20px', fontWeight: 'normal' }}>
+                                            <FormOutlined />
+                                        </a>
+                                    </Popconfirm>
+                                </div>
+
+                            </Row>
+                        </Container>
+                    </div >
+
+                )}
+        </>
+
+
+    )
 }
 
 export default Member;

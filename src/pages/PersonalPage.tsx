@@ -50,7 +50,7 @@ const focusStyle: React.CSSProperties = {
 
 const PersonalPage = (props: { match: any }) => {
     const [mouseOver, setMouseOver] = useState(false);
-    const [selectedMenu, setSelectedMenu] = useState(5);
+    const [selectedMenu, setSelectedMenu] = useState("5");
     const [userInfo, setUserInfo] = useState({
         username: "-",
         avatar: "",
@@ -93,13 +93,13 @@ const PersonalPage = (props: { match: any }) => {
 
     useEffect(
         () => {
-            if (selectedMenu == 1)
+            if (selectedMenu === "1")
                 getAppointment();
-            if (selectedMenu == 2)
+            if (selectedMenu === "2")
                 getRate();
-            if (selectedMenu == 5)
+            if (selectedMenu === "5")
                 getHouseSource();
-        }, [selectedMenu, pageAndPageSize,pageAndPageSize2,pageAndPageSize3]
+        }, [selectedMenu, pageAndPageSize, pageAndPageSize2, pageAndPageSize3]
     )
 
     const getHouseSource = async () => {
@@ -170,8 +170,7 @@ const PersonalPage = (props: { match: any }) => {
             message.error(res.data.reason)
         }
         if (id !== user?.userid) {
-            setIsOwn(false)
-            setResourceList(resourceList.filter((item) => item.status === "approve"))
+            setIsOwn(false);
         }
         else
             setIsOwn(true);
@@ -310,11 +309,11 @@ const PersonalPage = (props: { match: any }) => {
                         </span>
                     )}
                 </div>
-                <Descriptions title={userInfo.username?userInfo.username:'-'} style={{ paddingLeft: '1rem', width: '50%' }} column={2}>
-                    <Descriptions.Item label="昵称">{userInfo.nickname? userInfo.nickname:'-'}</Descriptions.Item>
-                    <Descriptions.Item label="性别">{userInfo.gender === undefined ? "-" : (userInfo.gender == 0 ? "男" : "女")}</Descriptions.Item>
-                    <Descriptions.Item label="邮箱">{userInfo.email?userInfo.email:'-'}</Descriptions.Item>
-                    <Descriptions.Item label="手机号">{userInfo.phone_number?userInfo.phone_number:'-'}</Descriptions.Item>
+                <Descriptions title={userInfo.username ? userInfo.username : '-'} style={{ paddingLeft: '1rem', width: '50%' }} column={2}>
+                    <Descriptions.Item label="昵称">{userInfo.nickname ? userInfo.nickname : '-'}</Descriptions.Item>
+                    <Descriptions.Item label="性别">{userInfo.gender === undefined || userInfo.gender === -1 ? "-" : (userInfo.gender == 0 ? "男" : "女")}</Descriptions.Item>
+                    <Descriptions.Item label="邮箱">{userInfo.email ? userInfo.email : '-'}</Descriptions.Item>
+                    <Descriptions.Item label="手机号">{userInfo.phone_number ? userInfo.phone_number : '-'}</Descriptions.Item>
                 </Descriptions>
             </Row>
         </Container>
@@ -339,7 +338,7 @@ const PersonalPage = (props: { match: any }) => {
                             </Menu.Item>
                         }
                         <Menu.Item key="2" icon={<StarOutlined />}>
-                            {isOwn ? "我的评分" : (userInfo.gender !== 1 ? "他的预约" : "她的预约")}
+                            {isOwn ? "我的评分" : (userInfo.gender !== 1 ? "他的评分" : "她的评分")}
                         </Menu.Item>
                         {isOwn && (
                             <SubMenu key="sub1" title="个人设置" icon={<SettingOutlined />} >
@@ -352,25 +351,25 @@ const PersonalPage = (props: { match: any }) => {
                 <Layout style={{ margin: '0 0.5em' }}>
                     <Content style={{ margin: '1.5em 1.5em', background: '#fff' }}>
                         {/*房源*/}
-                        <div hidden={selectedMenu !== 5}>
+                        <div hidden={selectedMenu !== "5"}>
                             <VirtualList list={resourceList} type="source" other={!isOwn} />
-                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length === 0}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
                                     setPageAndPageSize([pg, pageAndPageSize[1]]);
                                 }} />
                             </div>
                         </div>
                         {/*预约*/}
-                        <div hidden={selectedMenu !== 1}>
+                        <div hidden={selectedMenu !== "1"}>
                             <VirtualList list={resourceList} type="appointment" other={!isOwn} />
-                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length === 0}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize2[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
                                     setPageAndPageSize2([pg, pageAndPageSize2[1]]);
                                 }} />
                             </div>
                         </div>
                         {/*评分*/}
-                        <div hidden={selectedMenu !== 2}>
+                        <div hidden={selectedMenu !== "2"}>
                             <VirtualList list={resourceList} type="rate" other={!isOwn} />
                             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '1em' }} hidden={resourceList.length == 0}>
                                 <Pagination {...{ defaultCurrent: 1, pageSize: pageAndPageSize3[1], total: totalNum, showSizeChanger: false }} responsive onChange={(pg, pgsz) => {
@@ -378,7 +377,7 @@ const PersonalPage = (props: { match: any }) => {
                                 }} />
                             </div>
                         </div>
-                        <div style={{ padding: '1.5em 0' }} hidden={selectedMenu !== 3 || !isOwn}>
+                        <div style={{ padding: '1.5em 0' }} hidden={selectedMenu !== "3" || !isOwn}>
                             <Form labelCol={{ span: 7 }} onFinish={handleInfoSubmit} form={infoForm}>
                                 <Form.Item wrapperCol={{ span: 9 }} name="username" label="用户名" >
                                     <Input placeholder={userInfo.username} onPressEnter={(e) => { e.preventDefault() }} />
@@ -403,7 +402,7 @@ const PersonalPage = (props: { match: any }) => {
                                 </Form.Item>
                             </Form>
                         </div>
-                        <div style={{ padding: '1.5em 0' }} hidden={selectedMenu !== 4 || !isOwn}>
+                        <div style={{ padding: '1.5em 0' }} hidden={selectedMenu !== "4" || !isOwn}>
                             <Form labelCol={{ span: 7 }} onFinish={handlePasswordSubmit} form={pswForm}>
                                 <Form.Item wrapperCol={{ span: 9 }} name="new_password" label="新密码" >
                                     <Input.Password onPressEnter={(e) => { e.preventDefault() }} />
