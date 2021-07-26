@@ -8,7 +8,7 @@ const { Text } = Typography;
 interface RecommendDetailModel {
   id: string;
   title: string;
-  photos: string[];
+  cover: string;
   area: number;
   create_time: number;
   floor: number;
@@ -24,6 +24,7 @@ const HouseReco = () => {
 
   const getRecoList = async () => {
     const res = await api.get('/rent/recommend', { params: { n: 8 } })
+    console.log(res.data)
     if (res.data.success) {
       setRecoList(res.data.result);
     } else {
@@ -35,9 +36,9 @@ const HouseReco = () => {
     getRecoList();
   }, [])
 
-  return <div style={{ width: '100%', marginInline: '40px' }} id="house-reco">
+  return <div style={{ width: '100%', marginInline: '40px', marginTop: 40 }} id="house-reco">
     <Text style={{ fontSize: '1.5rem' }} strong>推荐房源</Text>
-    <div style={{ width: '100%', display: 'flex' }}>
+    <div style={{ width: '100%', marginTop: 20 }}>
       <Row>
         <Col span={6} style={{ padding: 10 }}>{recoList[0] ? <RecommendItem data={recoList[0]} /> : null}</Col>
         <Col span={6} style={{ padding: 10 }}>{recoList[1] ? <RecommendItem data={recoList[1]} /> : null}</Col>

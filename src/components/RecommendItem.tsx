@@ -8,7 +8,7 @@ const { Text } = Typography;
 interface RecommendDetailModel {
   id: string;
   title: string;
-  photos: string[];
+  cover: string;
   area: number;
   create_time: number;
   floor: number;
@@ -22,7 +22,7 @@ const RecommendItem = (props: { data: RecommendDetailModel }) => {
   const history = useHistory();
 
   return <div style={{ width: '100%', flexDirection: 'column', display: 'flex', padding: 10 }} onClick={() => { history.push(`/rent/detail/${data.id}`) }}>
-    <img src={data.photos[0]} alt="" style={{ width: '100%' }} />
+    <img src={data.cover} alt="" style={{ width: '100%' }} />
     <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
       <Text style={{ fontSize: '1rem', fontWeight: 'bold', width: '60%' }} ellipsis>{data.title}</Text>
       <div style={{ flexGrow: 1 }}></div>
