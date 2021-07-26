@@ -197,7 +197,7 @@ const HouseAround = (props: { data: RentDetailModel }) => {
   }, [pointList])
 
 
-  return <div style={{ width: '100%', marginInline: '40px', marginTop: '40px' }}>
+  return <div style={{ width: '100%', marginInline: '40px', marginTop: '40px' }} id="around">
     <Text style={{ fontSize: '1.5rem' }} strong>位置周边</Text>
     <div style={{ position: 'relative', width: '100%', height: '70vh', marginTop: 30 }}>
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} ref={ref} id="house-around"></div>

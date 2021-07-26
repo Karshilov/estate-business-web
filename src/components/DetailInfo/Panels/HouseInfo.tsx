@@ -26,7 +26,7 @@ const HouseInfo = (props: { data: RentDetailModel }) => {
   const equipmentArr = [WashIcon, AirCondIcon, WardrobeIcon, TVIcon, RefrigeratorIcon,
     WaterHeaterIcon, BedIcon, WarmIcon, WifiIcon, GasIcon];
 
-  return <div style={{ width: '100%', marginInline: '40px' }}>
+  return <div style={{ width: '100%', marginInline: '40px' }} id="house-info">
     <Text style={{ fontSize: '1.5rem' }} strong>房屋信息</Text>
     <div style={{ width: '100%', display: 'flex', marginTop: 40 }}>
       <div style={{ width: '20%', fontSize: '1.1rem', color: '#9CA3AF' }}>基本信息</div>

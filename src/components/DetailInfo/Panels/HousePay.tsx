@@ -10,7 +10,7 @@ const { Text, Title, Paragraph } = Typography;
 const HousePay = (props: { data: RentDetailModel }) => {
   const { data } = props;
 
-  return <div style={{ width: '100%', marginInline: '40px' }}>
+  return <div style={{ width: '100%', marginInline: '40px' }} id="house-pay">
     <Text style={{ fontSize: '1.5rem' }} strong>费用详情</Text>
     <div style={{ width: '100%', display: 'flex', marginTop: 20 }}>
       <Text strong style={{ fontSize: '1rem' }}>年租价 当租期不足1年时租金可能会上浮，详询管家</Text>

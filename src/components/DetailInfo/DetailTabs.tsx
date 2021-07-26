@@ -16,21 +16,21 @@ const DetailTabs = (props: { data: RentDetailModel }) => {
   const [currentKey, setCurrentKey] = useState('house-info')
   const ref = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const container = ref.current;
-    if (container) {
-      // setInterval(() => {
-      //   console.log(container.scrollHeight, container.scrollTop, container.clientHeight)
-      // }, 10)
+  const scrollToGenerator = (id: string) => {
+    return () => {
+      setCurrentKey(id)
+      const rt = document.getElementById(id === 'house-around' ? 'around' : id)!;
+      console.log(rt, rt.offsetTop)
+      window.scrollTo(0, rt.offsetTop);
     }
-  }, [])
+  }
 
   return <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 40 }}>
     <div style={{ background: '#F3F4F6', display: 'flex', flexDirection: 'row', width: '100%', marginInline: '40px' }} ref={ref}>
       {detailOptions.map((item) => <div
         key={item.key}
         style={{ display: 'flex', flexDirection: 'column' }}
-        className="p-1 m-3" onClick={() => { setCurrentKey(item.key) }}>
+        className="p-1 m-3" onClick={scrollToGenerator(item.key)}>
         <label style={{ fontSize: '1.1rem', fontWeight: 600 }}>{item.label}</label>
         <div style={{ height: 3, width: '100%', background: '#00896c', borderRadius: 1, marginTop: 10 }} hidden={item.key !== currentKey}></div>
       </div>)}
