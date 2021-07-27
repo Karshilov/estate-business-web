@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Basement, Container } from '../../components/BasicHTMLElement'
 import { RentDetailModel } from '../../utils/DataModel'
-import { Avatar, Button, Card, Divider, Input, message, Pagination, Select, Skeleton, Tag, Typography } from 'antd'
+import { message, Button, Card, Divider, DatePicker, Tag, Typography, Modal } from 'antd'
 import { useApi } from '../../utils/api'
 import DetailTabs from '../../components/DetailInfo/DetailTabs'
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons'
@@ -13,6 +13,8 @@ const { Text, Title, Paragraph } = Typography;
 
 const ContentContainer = (props: { data: RentDetailModel }) => {
   const [active, setActive] = useState(0)
+  const [appointmentTime, setAppointmentTime] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const { data } = props;
   const api = useApi();
 
@@ -24,6 +26,20 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
   const gotoPre = () => {
     if (active > 0) setActive(active - 1)
   }
+
+  const handleOk = async () => {
+    const res = await api.post('/rent/appointment', { house_id: props.data.id, appointment_time: Math.floor(appointmentTime / 1000) })
+    if (res.data.success) {
+      message.success('预约成功')
+    } else {
+      message.error(res.data.reason)
+    }
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   useEffect(() => {
     console.log(data,)
@@ -100,7 +116,21 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
                   />
                   <div style={{ marginTop: 20 }}>
                     <Button type="primary" style={{ marginRight: 20 }}>邮件联系</Button>
-                    <Button>预约看房</Button>
+                    <Button onClick={() => { setIsModalVisible(true) }}>预约看房</Button>
+                    <Modal title="预约看房" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} okText="确定" cancelText="取消">
+                      <div>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 550, marginBottom: 25 }}>
+                          请选择预约看房的时间
+                        </div>
+                        <DatePicker
+                          format="YYYY-MM-DD HH:mm:ss"
+                          showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+                          onChange={(value) => {
+                            setAppointmentTime(+(value!))
+                          }}
+                        />
+                      </div>
+                    </Modal>
                   </div>
                 </Card>
               </div>
@@ -111,7 +141,7 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
           </Card>
         </div>
       </div>
-      <DetailTabs data={data}/>
+      <DetailTabs data={data} />
     </div>
   </Container>;
 }

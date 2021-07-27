@@ -54,6 +54,7 @@ export interface GroupDetailModel {
 }
 
 export interface RentDetailModel {
+  id: string;
   title: string;
   photos: string[];
   house_type: string;
@@ -83,6 +84,7 @@ export interface RentDetailModel {
 
 
 export interface SecondHandDetailModel {
+  id: string;
   title: string;
   photos: string[];
   house_type: string;
