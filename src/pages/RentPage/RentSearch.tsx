@@ -74,7 +74,9 @@ const RentSearch = (props: { match: any }) => {
         <Input.Search style={{ width: '50%' }} placeholder="请输入小区名称进行搜索" enterButton={<Button type="primary">点击搜索</Button>}
           onSearch={(value: string) => {
             setSearchText(value)
-          }} />
+          }} 
+          defaultValue={searchText}
+          />
       </Input.Group>
       <div style={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: 40, marginInline: 40 }}>
         <Text style={{ fontSize: '1.2rem' }} strong>设置筛选条件</Text>
