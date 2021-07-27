@@ -4,9 +4,6 @@ import { useHistory } from 'react-router-dom';
 import { Input, Button, Avatar, message, Select, Layout } from 'antd'
 import homeIcon from '../assets/home/header-icon.svg';
 import titleImg from '../assets/home/title.svg';
-import numIcon from '../assets/home/num-icon.svg';
-import userIcon from '../assets/home/user-icon.svg';
-import cooperationIcon from '../assets/home/cooperation-icon.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreState } from "../store";
 import { options } from '../utils/options'

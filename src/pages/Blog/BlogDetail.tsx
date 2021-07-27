@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import moment from 'moment';
-import { message, Skeleton } from "antd";
+import { Button, message, Skeleton } from "antd";
 import { Container } from "../../components/BasicHTMLElement";
 import { useApi } from "../../utils/api";
+import { useDispatch, useSelector } from 'react-redux';
+import { StoreState } from "../../store";
 import RichAvatar from "../../components/RichAvatar";
 import ReactHtmlParser from 'react-html-parser';
 
@@ -24,6 +26,7 @@ interface BlogDetailModel {
 
 const BlogDetail = (props: { match: any }) => {
     const id = props.match.params.id;
+    const { isLogin, user } = useSelector((state: StoreState) => state);
     const [detail, setDetail] = useState<BlogDetailModel | undefined>(undefined)
     const api = useApi();
 
@@ -56,6 +59,11 @@ const BlogDetail = (props: { match: any }) => {
                 <div id="user" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                     <span style={{ fontSize: '1rem', fontWeight: 'bold' }}>{detail.user.nickname}</span>
                     <span style={{ color: '#333' }}>{moment(detail.create_time * 1000).format('YYYY/MM/DD')}</span>
+                </div>
+                <div style={{ flexGrow: 1 }}></div>
+                <div>
+                    <Button style={{ marginRight: 20}}>修改博客</Button>
+                    <Button style={{ marginRight: 20}}>删除博客</Button>
                 </div>
             </div>
             <div style={{ marginTop: 25 }} className="ck-blurred ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline">{ReactHtmlParser(detail.body, { transform })}</div>
