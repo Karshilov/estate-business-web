@@ -217,7 +217,7 @@ const PublishResources = () => {
   const onRentPosCheck = () => {
     console.log('here')
     const allValues = rentForm.getFieldsValue(true);
-    console.log('got')
+    console.log('got', allValues)
     let baseString = '';
     if (allValues['neighboorhoodCity']) baseString += allValues['neighboorhoodCity'];
     if (allValues['neighboorhood']) baseString += allValues['neighboorhood'];
