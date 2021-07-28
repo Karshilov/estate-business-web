@@ -25,7 +25,7 @@ const HouseDesc = (props: { data: RentDetailModel }) => {
       <Button type="primary" style={{ marginRight: 20, marginTop: 30 }}>邮件联系</Button>
     </div>
     <div style={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}>
-      {data.photos.map((url) => <img key={url} src={url} alt="" style={{ width: '26%', objectFit: 'cover', margin: '3%' }} />)}
+      {data.photos.map((url) => <img key={url} src={url} alt="" style={{ width: '26%', height: '20vh', objectFit: 'contain', margin: '3%' }} />)}
     </div>
   </div>
 }
