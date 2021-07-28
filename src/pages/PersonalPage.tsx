@@ -13,14 +13,8 @@ import { SearchItemModel } from "../utils/DataModel"
 import VirtualList from '../components/ItemList/VirtualList'
 
 import {
-    AppstoreOutlined,
-    BarChartOutlined,
-    CloudOutlined,
-    ShopOutlined,
-    TeamOutlined,
     UserOutlined,
     UploadOutlined,
-    VideoCameraOutlined,
     SettingOutlined,
     StarOutlined,
     UserSwitchOutlined,

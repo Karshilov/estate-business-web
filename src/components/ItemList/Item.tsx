@@ -1,17 +1,27 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, CSSProperties } from 'react'
 import { SearchItemModel } from '../../utils/DataModel'
-import { Divider, Tag, Skeleton, Tooltip } from 'antd';
-import { ClockCircleOutlined, AuditOutlined, CheckOutlined, WarningOutlined, StarOutlined } from '@ant-design/icons'
+import { Divider, Tag, Skeleton, Tooltip, message } from 'antd';
+import { ClockCircleOutlined, AuditOutlined, CheckOutlined, WarningOutlined, StarOutlined, VideoCameraOutlined} from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import moment from 'moment';
+import { useApi } from '../../utils/api';
 
 const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: string, other?: boolean }) => {
   const history = useHistory();
+  const api = useApi();
 
-  useEffect(() => {
-    console.log('created')
-  }, [])
+  const onSubmitGenerator = (value: string) => {
+    return async (e: any) => {
+      e.stopPropagation();
+      const res = await api.post('/rent/realsee', { house_id: value })
+      if (res.data.success) {
+        message.success('申请成功')
+      } else {
+        message.error(res.data.reason)
+      }
+    }
+  }
 
   return (
     <div
@@ -72,6 +82,11 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: stri
           <span style={{ fontSize: '15px' }}>
             {"创建时间：" + moment(props.data.create_time * 1000).format('YYYY / MM / DD')}
           </span>
+          <div style={{ flexGrow: 1}}></div>
+          <div style={{ fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', color: '#333', fontWeight: 550 }} 
+            hidden={props.data.realsee !== null}
+            onClick={onSubmitGenerator(props.data.id)}
+            >申请VR扫描<VideoCameraOutlined /></div>
         </p>
       </div>
     </div>

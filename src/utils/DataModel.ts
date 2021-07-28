@@ -27,6 +27,7 @@ export interface SearchItemModel {
   rate_score: string // 评分
   status: string // 状态
   reason: string // 理由
+  realsee: string;
 }
 
 export interface GroupDetailModel {
@@ -80,6 +81,7 @@ export interface RentDetailModel {
   city: string;
   rent_type: string;
   equipments: number;
+  realsee: string;
 }
 
 
@@ -110,4 +112,5 @@ export interface SecondHandDetailModel {
   city: string;
   rent_type: string;
   equipments: number;
+  realsee: string;
 }

@@ -108,6 +108,10 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
                   <Text style={{ color: 'grey' }}>风险提示：</Text>
                   <a href="https://m.ke.com/text/disclaimer">用户风险提示</a>
                 </div>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} hidden={data.realsee === null}>
+                  <Text style={{ color: 'grey' }}>VR看房：</Text>
+                  <a href={data.realsee}>点击前往</a>
+                </div>
                 <Divider />
                 <Card>
                   <Card.Meta
