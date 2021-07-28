@@ -22,7 +22,7 @@ const HouseDesc = (props: { data: RentDetailModel }) => {
         description={(data.owner.team !== undefined && data.owner.team !== null) ? data.owner.team.name : '暂无团队'}
       />
       <div style={{ flexGrow: 1 }}></div>
-      <Button type="primary" style={{ marginRight: 20, marginTop: 50 }}>邮件联系</Button>
+      <Button type="primary" style={{ marginRight: 20, marginTop: 30 }}>邮件联系</Button>
     </div>
     <div style={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}>
       {data.photos.map((url) => <img key={url} src={url} alt="" style={{ width: '26%', objectFit: 'cover', margin: '3%' }} />)}
