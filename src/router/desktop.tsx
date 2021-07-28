@@ -26,15 +26,15 @@ const DesktopRouter = withRouter(({ history }) => {
           <Route exact path="/register" component={Register} />
           <AuthGuard>
             <Route exact path="/publish-resources" component={PublishResources} />
-            <Route path="/rent/detail/:id" component={RentDetail} />
+            <Route exact path="/rent/detail/:id" component={RentDetail} />
             <Route path="/rent-search/:keywords" component={RentSearch} />
-            <Route path="/rent-search" component={RentSearch} />
+            <Route exact path="/rent-search" component={RentSearch} />
             {/*
             <Route path="/second-hand/detail/:id" component={SecondHandDetail} />
             <Route path="/second-hand-search/:keywords" component={SecondHandSearch} />
             <Route path="/second-hand-search" component={SecondHandSearch} />
             */}
-            <Route path="/blog-detail/:id" component={BlogDetail} />
+            <Route exact path="/blog-detail/:id" component={BlogDetail} />
             <Route path="/blog-publish/:id" component={BlogPublish} />
             <Route exact path="/blog-publish" component={BlogPublish} />
             <Route exact path="/blog-list" component={BlogList} />
