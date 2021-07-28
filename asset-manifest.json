@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.7cc82cc0.chunk.css",
-    "main.js": "/static/js/main.675bc406.chunk.js",
-    "main.js.map": "/static/js/main.675bc406.chunk.js.map",
+    "main.js": "/static/js/main.6aa7c5c3.chunk.js",
+    "main.js.map": "/static/js/main.6aa7c5c3.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.9b588c3a.js",
     "runtime-main.js.map": "/static/js/runtime-main.9b588c3a.js.map",
     "static/js/2.3fd89df3.chunk.js": "/static/js/2.3fd89df3.chunk.js",
@@ -18,7 +18,9 @@
     "static/media/broker-default.1b9af2ed.svg": "/static/media/broker-default.1b9af2ed.svg",
     "static/media/gas.0026ab4a.svg": "/static/media/gas.0026ab4a.svg",
     "static/media/header-icon.4768f243.svg": "/static/media/header-icon.4768f243.svg",
+    "static/media/qrcode.a8675ce5.png": "/static/media/qrcode.a8675ce5.png",
     "static/media/refrigerator.533c420c.svg": "/static/media/refrigerator.533c420c.svg",
+    "static/media/rightPic.d0f598cb.png": "/static/media/rightPic.d0f598cb.png",
     "static/media/title.847aea5d.svg": "/static/media/title.847aea5d.svg",
     "static/media/tv.373788e4.svg": "/static/media/tv.373788e4.svg",
     "static/media/user-default.cba3326b.svg": "/static/media/user-default.cba3326b.svg",
@@ -32,6 +34,6 @@
     "static/js/runtime-main.9b588c3a.js",
     "static/js/2.3fd89df3.chunk.js",
     "static/css/main.7cc82cc0.chunk.css",
-    "static/js/main.675bc406.chunk.js"
+    "static/js/main.6aa7c5c3.chunk.js"
   ]
 }
