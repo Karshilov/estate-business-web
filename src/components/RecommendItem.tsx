@@ -22,7 +22,7 @@ const RecommendItem = (props: { data: RecommendDetailModel }) => {
   const history = useHistory();
 
   return <div style={{ width: '100%', flexDirection: 'column', display: 'flex', padding: 10 }} onClick={() => { history.push(`/rent/detail/${data.id}`) }}>
-    <img src={data.cover} alt="" style={{ width: '100%', objectFit: 'cover' }} />
+    <img src={data.cover} alt="" style={{ width: '100%', objectFit: 'cover', height: '20vh' }} />
     <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
       <Text style={{ fontSize: '1rem', fontWeight: 'bold', width: '60%' }} ellipsis>{data.title}</Text>
       <div style={{ flexGrow: 1 }}></div>
