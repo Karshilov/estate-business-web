@@ -204,10 +204,10 @@ const HouseAround = (props: { data: RentDetailModel }) => {
       <div style={{ 
         position: 'absolute', top: 20, left: 20, padding: 4, background: '#fff', zIndex: 2000, opacity: 0.85,
       }}>
-        <div style={{ display: 'flex', width: '100%', paddingInline: 25 }}>
+        <div style={{ display: 'flex', width: '100%', paddingLeft: 25, paddingRight: 25 }}>
           {poi.map((item) => <div
             key={item}
-            style={{ display: 'flex', flexDirection: 'column', paddingBlock: '0.25rem', marginLeft: 10, marginRight: 10 }}
+            style={{ display: 'flex', flexDirection: 'column', paddingTop: '0.25rem', paddingBottom: '0.25rem', marginLeft: 10, marginRight: 10 }}
             className="m-1" onClick={() => { setCategory(item) }}>
             <label style={{ fontSize: '0.9rem', fontWeight: 600 }}>{item}</label>
             <div style={{ height: 3, width: 'auto', background: '#00896c', borderRadius: 1, marginTop: 5 }} hidden={item !== category}></div>
@@ -215,7 +215,7 @@ const HouseAround = (props: { data: RentDetailModel }) => {
         </div>
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', maxHeight: '50vh', overflow: 'scroll' }}>
           {pointList === [] ? null : pointList.map((item) => <div style={{ width: '90%' }} className="p-1" key={item.id} onClick={transformer(item)}>
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', paddingInline: 25 }}>
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', paddingLeft: 25, paddingRight: 25 }}>
               <div style={{ width: '100%', display: 'flex', marginTop: 5, marginBottom: 5 }}>
                 <span style={{ fontSize: '0.9rem', fontWeight: 500, color: item.title === currentSelected ? 'blue' : 'black' }}>{item.title}</span>
                 <div style={{ width: '30px'}}></div>
