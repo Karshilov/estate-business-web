@@ -4,7 +4,7 @@ import { StoreState } from '../store'
 
 // 无需token
 export const staticApi = axios.create({
-  baseURL: 'http://api.karshilov.com/',
+  baseURL: 'https://api.karshilov.com/',
   transformResponse(data: any) {
     // 对 data 进行任意转换处理
     const parsedData = JSON.parse(data)
@@ -17,7 +17,7 @@ export const staticApi = axios.create({
 export const useApi = () => {
   const { apiToken } = useSelector((state: StoreState) => state, (left: StoreState, right: StoreState) => left.apiToken === right.apiToken)
   return axios.create({
-    baseURL: 'http://api.karshilov.com/',
+    baseURL: 'https://api.karshilov.com/',
     headers: {
       'x-api-token': apiToken
     },
