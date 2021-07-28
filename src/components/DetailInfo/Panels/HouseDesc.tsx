@@ -6,6 +6,7 @@ import { useApi } from '../../../utils/api'
 import ContentContainer from '../../../components/DetailInfo/ContentContainer'
 import { detailOptions } from '../../../utils/DetailOptions'
 import moment from 'moment'
+import RichAvatar from '../../RichAvatar'
 const { Text, Title, Paragraph } = Typography;
 
 
@@ -16,16 +17,15 @@ const HouseDesc = (props: { data: RentDetailModel }) => {
     <Text style={{ fontSize: '1.5rem' }} strong>房屋介绍</Text>
     <div style={{ width: '100%', display: 'flex' }}>
       <Card.Meta
-        avatar={<Avatar src="https://git.karshilov.com/avatars/cf963f3dc28db7361bdd68426e4ca5b4?size=580" size={50} />}
+        avatar={<RichAvatar src={data.owner.avatar} id={data.owner.userid} size={50} />}
         title={data.owner.username}
-        description="找不到工作的人"
-        style={{ marginTop: 40 }}
+        description={(data.owner.team !== undefined && data.owner.team !== null) ? data.owner.team.name : '暂无团队'}
       />
       <div style={{ flexGrow: 1 }}></div>
       <Button type="primary" style={{ marginRight: 20, marginTop: 50 }}>邮件联系</Button>
     </div>
     <div style={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}>
-      {data.photos.map((url) => <img key={url} src={url} alt="" style={{ width: '26%', margin: '3%' }} />)}
+      {data.photos.map((url) => <img key={url} src={url} alt="" style={{ width: '26%', objectFit: 'cover', margin: '3%' }} />)}
     </div>
   </div>
 }

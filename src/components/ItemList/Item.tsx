@@ -20,7 +20,7 @@ const Item = (props: { data: SearchItemModel, style?: CSSProperties, type?: stri
       style={{ width: '100%', display: 'flex', marginTop: '20px', marginBottom: '20px' }}
       onClick={() => { history.push(`/rent/detail/${props.data.id}`) }}>
       <div className="item-content" style={{ height: '162px', width: '200px' }}>
-        <img src={props.data.cover} alt="" style={{ width: '100%', height: '100%' }} />
+        <img src={props.data.cover} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
       <div style={{ marginLeft: '28px', flexGrow: 0, width: '100%' }}>
         <p className="item-title" style={{ marginBottom: '8px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>

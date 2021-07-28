@@ -385,7 +385,7 @@ const Broker = () => {
                         <Row style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}>
                             <span>创建者：</span>
                             <div style={{ flexGrow: 1 }}></div>
-                            <img style={{ height: '15%', width: '15%' }} src={teamInfo?.leader.avatar}></img>
+                            <img style={{ height: '15%', width: '15%' }} src={teamInfo?.leader.avatar} alt=""></img>
                             <span style={{ marginLeft: '7px' }}>{teamInfo?.leader.username}</span>
                         </Row>
                     </p>
