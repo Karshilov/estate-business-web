@@ -7,6 +7,7 @@ import DetailTabs from '../../components/DetailInfo/DetailTabs'
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons'
 import moment from 'moment'
 import RichAvatar from '../RichAvatar'
+import QRCode from '../../assets/qrcode.png'
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -140,7 +141,7 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
                 </Card>
               </div>
               <div style={{ width: '30%', display: 'flex', flexDirection: 'column', padding: 10 }}>
-                <div style={{ width: 80, height: 80, background: '#00896c', color: '#fff', padding: 10 }}>这里也许有个二维码</div>
+                <img src={QRCode} alt="" width="80px" height="80px"></img>
               </div>
             </div>
           </Card>

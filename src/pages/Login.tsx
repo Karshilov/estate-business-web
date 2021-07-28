@@ -9,6 +9,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import primaryIcon from '../assets/primary-icon.png';
 import { staticApi } from "../utils/api";
 import { useDispatch } from 'react-redux';
+import rightPic from '../assets/rightPic.png';
 declare let TMap: any;
 
 const Login = (props: { isPrepared?: boolean }) => {
@@ -86,14 +87,7 @@ const Login = (props: { isPrepared?: boolean }) => {
                 </div>
               </div>
               <div style={{ width: '55%', paddingLeft: '10%', paddingTop: 40 }}>
-                <h3 style={{
-                  height: '300px',
-                  color: '#fff',
-                  lineHeight: '300px',
-                  textAlign: 'center',
-                  background: '#5DAC81',
-                  fontSize: 32,
-                }}>这里应该有张图</h3>
+                <img src={rightPic} alt="" height="300px"></img>
               </div>
             </Container>
           </div>
