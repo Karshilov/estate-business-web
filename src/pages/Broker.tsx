@@ -3,7 +3,7 @@ import { Basement, Container } from '../components/BasicHTMLElement'
 import {
     Layout, Menu, Breadcrumb, Avatar, Button, Card, Divider, Input,
     message, Pagination, Select, Skeleton, Tag, Typography, Upload, Tooltip,
-    Col, Row, Descriptions, Form, Radio, Space, Modal, Collapse, Popconfirm, Drawer
+    Col, Row, Descriptions, Form, Radio, Space, Modal, Collapse, Popconfirm, Drawer, Table
 } from 'antd'
 import { useApi, usePostImg, staticApi } from '../utils/api'
 import ContentContainer from '../components/DetailInfo/ContentContainer'
@@ -89,7 +89,7 @@ const Broker = () => {
 
     const [createVisible, setCreateVisible] = useState(false);
     const [searchVisible, setSearchVisible] = useState(false);
-    const [myRequestVisible, setMyRequestVisible] = useState(false);
+    const [myApplyVisible, setMyApplyVisible] = useState(false);
     const [settingVisible, setSettingVisible] = useState(false)
 
     const onMouseOverAvatar = () => {
@@ -263,6 +263,11 @@ const Broker = () => {
         }
     }
 
+    const getMyApply = async () => {
+        const res = await api.get('/team/join');
+        console.log("myapp:",res)
+    }
+
     return <Basement style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Container style={{ width: '80%', marginTop: '1rem' }} hoverable={false}>
             <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: '20px' }}>
@@ -347,19 +352,18 @@ const Broker = () => {
                 }} hidden={false}>
                     您还未加入任何团队
                 </p>
-                <Button type="primary" onClick={() => setCreateVisible(true)}
-                    hidden={false} style={{ marginLeft: '10px' }}>
-                    创建团队
-                </Button>
-                <Button type="primary" style={{ marginLeft: '30px' }}
-                    onClick={() => setSearchVisible(true)} hidden={false}>
-                    加入团队
-                </Button>
-                {/*
-                <Button type="primary" style={{ marginLeft: '14px' }}
-                    onClick={() => setMyRequestVisible(true)} hidden={false}>
-                    我的申请
-                </Button>*/}
+                <Space>
+                    <Button type="primary" onClick={() => setCreateVisible(true)} hidden={false}>
+                        创建团队
+                    </Button>
+                    <Button type="primary" onClick={() => setSearchVisible(true)} hidden={false}>
+                        加入团队
+                    </Button>
+
+                    <Button type="primary" onClick={() => { setMyApplyVisible(true); getMyApply()}} hidden={false}>
+                        我的申请
+                    </Button>
+                </Space>
             </div>
             <div hidden={teamInfo == undefined}>
                 <Divider style={{ marginTop: '10px', marginBottom: 0 }}></Divider>
@@ -459,8 +463,8 @@ const Broker = () => {
         <Modal
             title="我的申请"
             centered
-            visible={myRequestVisible}
-            onCancel={() => { setMyRequestVisible(false); }}
+            visible={myApplyVisible}
+            onCancel={() => { setMyApplyVisible(false); }}
             width={800}
             maskClosable={false}
             footer={null}

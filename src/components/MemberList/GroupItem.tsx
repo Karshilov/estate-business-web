@@ -65,11 +65,9 @@ const GroupItem = (props: {
                     okText="是"
                     cancelText="否"
                 >
-                    <Tooltip title="申请加入" placement='right'>
-                        <a style={{ display: 'flex', alignItems: 'centers' }}>
-                            <PlusOutlined />
-                        </a>
-                    </Tooltip>
+                    <a style={{ display: 'flex', alignItems: 'centers', fontSize:'16px' }}>
+                        申请加入
+                    </a>
                 </Popconfirm>
             </Row>
         </p>

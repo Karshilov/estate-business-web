@@ -10,6 +10,7 @@ import HouseDesc from './Panels/HouseDesc'
 import HousePay from './Panels/HousePay'
 import HouseAround from './Panels/HouseAround'
 import HouseReco from './Panels/HouseReco'
+import HouseRate from './Panels/HouseRate'
 const { Text, Title, Paragraph } = Typography;
 
 const DetailTabs = (props: { data: RentDetailModel }) => {
@@ -41,6 +42,7 @@ const DetailTabs = (props: { data: RentDetailModel }) => {
     <HouseDesc data={data} />
     <HousePay data={data} />
     <HouseAround data={data} />
+    <HouseRate data={data} />
     <HouseReco />
   </div>
 }
