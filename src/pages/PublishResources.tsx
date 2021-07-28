@@ -22,6 +22,8 @@ import { convertTypeAcquisitionFromJson, transpileModule } from "typescript";
 
 
 declare let TMap: any;
+let mapIns: any = {};
+let markerLayer: any = {};
 
 
 const { CheckableTag } = Tag;
@@ -29,8 +31,6 @@ const { CheckableTag } = Tag;
 const PublishResources = () => {
   const history = useHistory();
   const [rentOrSell, setRentOrSell] = useState('rent');
-  let mapIns: any = {};
-  let markerLayer: any = {};
   const [price, setPrice] = useState(0);
   const ref = useRef(null);
   const api = useApi();
