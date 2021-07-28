@@ -219,7 +219,7 @@ const PublishResources = () => {
     const allValues = rentForm.getFieldsValue(true);
     console.log('got', allValues)
     let baseString = '';
-    if (allValues['neighbourhoodCity']) baseString += allValues['neighbourhoodCity'];
+    if (allValues['city']) baseString += allValues['city'];
     if (allValues['neighbourhood']) baseString += allValues['neighbourhood'];
     if (allValues['exactPosition']) baseString += allValues['exactPosition']['a'] + allValues['exactPosition']['b'] + allValues['exactPosition']['c']
     showPosition(baseString)
