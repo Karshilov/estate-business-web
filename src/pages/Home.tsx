@@ -64,7 +64,7 @@ const Home = () => {
           <div style={{ flexGrow: 3 }}></div>
           <div style={{ width: '100%', display: 'flex' }}>
             <div style={{ width: 'calc( 100px + 8% )' }}></div>
-            <img src={titleImg} alt="" width="30%" style={{ marginBlock: 40 }} />
+            <img src={titleImg} alt="" width="30%" style={{ marginTop: 40, marginBottom: 40 }} />
           </div>
           <div style={{ width: '100%', display: 'flex' }}>
             <div style={{ width: 'calc( 100px + 8% )' }}></div>
