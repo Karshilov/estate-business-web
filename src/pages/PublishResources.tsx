@@ -17,8 +17,6 @@ import WardrobeIcon from '../assets/equipments/wardrobe.svg'
 import WarmIcon from '../assets/equipments/warm.svg'
 import WaterHeaterIcon from '../assets/equipments/wheater.svg'
 import WifiIcon from '../assets/equipments/wifi.svg'
-import { count } from "yargs";
-import { convertTypeAcquisitionFromJson, transpileModule } from "typescript";
 
 
 declare let TMap: any;
