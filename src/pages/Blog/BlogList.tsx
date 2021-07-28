@@ -101,7 +101,7 @@ const BlogList = ((props: { match: any }) => {
     const hasMore = () => questionList.length <= totalNumber;
 
     return (
-        <Container style={{ width: '70%', marginTop: 50, marginLeft: '15%', marginRight: '15%' }} bodyStyle={{ width: '100%', paddingBlock: 35 }}>
+        <Container style={{ width: '70%', marginTop: 50, marginLeft: '15%', marginRight: '15%' }} bodyStyle={{ width: '100%', paddingTop: 35, paddingBottom: 35 }}>
             <Spin tip="正在全力加载中～" spinning={dataLoading}>
                 <Button style={{ marginBottom: '20px', marginLeft: 'calc((100% - 800px) / 2)'}} type="primary" onClick={() => {
                     history.push('/blog-publish')
@@ -112,7 +112,7 @@ const BlogList = ((props: { match: any }) => {
                             <Search style={{ width: '100%' }} placeholder="请输入搜索关键词" onSearch={(value: string) => {
                                 setSearchText(value);
                             }} enterButton></Search></Input.Group>
-                        <div style={{ width: '100%', display: 'flex', marginTop: 10, paddingBlock: 5, marginBottom: 10 }}>
+                        <div style={{ width: '100%', display: 'flex', marginTop: 10, paddingTop: 5, paddingBottom: 5, marginBottom: 10 }}>
                             <Text style={{ fontSize: '1rem', marginRight: 30 }} strong>排序方式</Text>
                             <Text style={{ fontSize: '1rem', color: '#00896c', marginRight: 20, cursor: 'pointer' }}
                                 strong>
@@ -136,12 +136,12 @@ const BlogList = ((props: { match: any }) => {
                                         history.push(`/blog-detail/${item.id}`);
                                     }}
                                 >
-                                    <div style={{ lineHeight: 1.618033, width: '100%', paddingBlock: 7, paddingInline: 20, boxSizing: 'border-box', display: 'flex' }}>
+                                    <div style={{ lineHeight: 1.618033, width: '100%', paddingTop: 7, paddingBottom: 7, paddingLeft: 20, paddingRight: 20, boxSizing: 'border-box', display: 'flex' }}>
                                         <div style={{ fontSize: '1rem', fontWeight: 550 }}>{item.title}</div>
                                         <div style={{ flexGrow: 1 }}></div>
                                         <div style={{ fontSize: '1rem', color: '#333' }}>{moment(item.create_time * 1000).format('YYYY/MM/DD')}</div>
                                     </div>
-                                    <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: 'more' }} style={{ paddingInline: 20, color: '#333' }}>
+                                    <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: 'more' }} style={{ paddingLeft: 20, paddingRight: 20, color: '#333' }}>
                                         {item.abstract}
                                     </Paragraph>
                                     <Divider />

@@ -80,7 +80,7 @@ const RentSearch = (props: { match: any }) => {
       </Input.Group>
       <div style={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: 40, marginLeft: 40, marginRight: 40 }}>
         <Text style={{ fontSize: '1.2rem' }} strong>设置筛选条件</Text>
-        <div style={{ width: '100%', display: 'flex', marginTop: 12, paddingBlock: 5 }}>
+        <div style={{ width: '100%', display: 'flex', marginTop: 12, paddingTop: 5, paddingBottom: 5 }}>
           <Text style={{ fontSize: '1rem', marginRight: 30 }} strong>租房方式</Text>
           <Text style={{ fontSize: '1rem', color: whole === 0 ? '#00896c' : 'black', marginRight: 20, cursor: 'pointer' }}
             strong={whole === 0} onClick={() => { setWhole(0) }}>不限</Text>
@@ -89,7 +89,7 @@ const RentSearch = (props: { match: any }) => {
           <Text style={{ fontSize: '1rem', color: whole === 2 ? '#00896c' : 'black', marginRight: 20, cursor: 'pointer' }}
             strong={whole === 2} onClick={() => { setWhole(2) }}>合租</Text>
         </div>
-        <div style={{ width: '100%', display: 'flex', marginTop: 10, paddingBlock: 5, marginBottom: 10 }}>
+        <div style={{ width: '100%', display: 'flex', marginTop: 10, paddingTop: 5, paddingBottom: 5, marginBottom: 10 }}>
           <Text style={{ fontSize: '1rem', marginRight: 30 }} strong>排序方式</Text>
           <Text style={{ fontSize: '1rem', color: orderBy === 'price' ? '#00896c' : 'black', marginRight: 20, cursor: 'pointer' }}
             strong={orderBy === 'price'} onClick={() => { setOrderBy('price') }}>
@@ -106,7 +106,7 @@ const RentSearch = (props: { match: any }) => {
               <CaretDownOutlined />}
           </Text>
         </div>
-        <div style={{ width: '100%', display: 'flex', paddingBlock: 5, marginBottom: 20 }}>
+        <div style={{ width: '100%', display: 'flex', paddingTop: 5, paddingBottom: 5, marginBottom: 20 }}>
           <Text style={{ fontSize: '1rem', marginRight: 30 }} strong>价格区间</Text>
           <Input
             style={{ marginRight: 5, width: 60, height: 26 }}
@@ -117,7 +117,7 @@ const RentSearch = (props: { match: any }) => {
             style={{ marginRight: 20, width: 60, height: 26 }}
             onChange={(e) => { setPriceUpper(parseInt(e.target.value)) }}
           />
-          <Button type="primary" style={{ height: 26, paddingBlock: 2 }} onClick={() => { setSelected(true)}}>确定</Button>
+          <Button type="primary" style={{ height: 26, paddingTop: 2, paddingBottom: 2 }} onClick={() => { setSelected(true)}}>确定</Button>
         </div>
       </div>
     </div>

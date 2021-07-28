@@ -68,7 +68,7 @@ const BlogDetail = (props: { match: any }) => {
         history.go(-1);
     }
 
-    return <Container style={{ width: '70%', marginTop: 50, marginLeft: '15%', marginRight: '15%' }} bodyStyle={{ width: '100%', paddingBlock: 35, paddingInline: 30 }}>
+    return <Container style={{ width: '70%', marginTop: 50, marginLeft: '15%', marginRight: '15%' }} bodyStyle={{ width: '100%', paddingTop: 35, paddingBottom: 35, paddingLeft: 30, paddingRight: 30 }}>
         {detail ? <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: 25 }}>{detail.title}</div>
             <div id="head-line" style={{ display: 'flex', alignItems: 'center' }} >
