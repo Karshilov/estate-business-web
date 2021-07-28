@@ -28,7 +28,7 @@ const DetailTabs = (props: { data: RentDetailModel }) => {
   }
 
   return <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 40 }}>
-    <div style={{ background: '#F3F4F6', display: 'flex', flexDirection: 'row', width: '100%', marginInline: '40px' }} ref={ref}>
+    <div style={{ background: '#F3F4F6', display: 'flex', flexDirection: 'row', width: '100%', marginLeft: '40px', marginRight: '40px' }} ref={ref}>
       {detailOptions.map((item) => <div
         key={item.key}
         style={{ display: 'flex', flexDirection: 'column' }}

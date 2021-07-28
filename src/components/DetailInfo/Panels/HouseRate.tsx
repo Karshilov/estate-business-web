@@ -20,7 +20,7 @@ const HousePay = (props: { data: RentDetailModel }) => {
 
     }
 
-    return <div style={{ width: '100%', marginInline: '40px', marginTop: '50px' }} id="house-rate">
+    return <div style={{ width: '100%', marginLeft: '40px', marginRight: '40px', marginTop: '50px' }} id="house-rate">
         <Row wrap={false}>
             <Text style={{ fontSize: '1.5rem' }} strong>评价打分</Text>
             <Rate style={{ marginLeft: '10px' }} allowClear={false} disabled={rate !== 0} onChange={(value) => { { setRate(value); sendRate(value) } }}></Rate>

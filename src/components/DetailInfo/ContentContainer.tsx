@@ -64,7 +64,8 @@ const ContentContainer = (props: { data: RentDetailModel }) => {
                   width: '16%',
                   objectFit: 'cover',
                   outline: index === active ? '3px solid #00896c' : 'none',
-                  marginInline: 'auto'
+                  marginLeft: 'auto',
+                  marginRight: 'auto'
                 }}
                 hidden={index > active + 4 || index < active - Math.max((active + 5 - data.photos.length), 0)}
                 alt=""

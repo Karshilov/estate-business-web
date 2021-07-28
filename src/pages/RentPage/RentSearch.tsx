@@ -78,7 +78,7 @@ const RentSearch = (props: { match: any }) => {
           defaultValue={searchText}
           />
       </Input.Group>
-      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: 40, marginInline: 40 }}>
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: 40, marginLeft: 40, marginRight: 40 }}>
         <Text style={{ fontSize: '1.2rem' }} strong>设置筛选条件</Text>
         <div style={{ width: '100%', display: 'flex', marginTop: 12, paddingBlock: 5 }}>
           <Text style={{ fontSize: '1rem', marginRight: 30 }} strong>租房方式</Text>

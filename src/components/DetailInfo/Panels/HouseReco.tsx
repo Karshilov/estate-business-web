@@ -36,7 +36,7 @@ const HouseReco = () => {
     getRecoList();
   }, [])
 
-  return <div style={{ width: '100%', marginInline: '40px', marginTop: 40 }} id="house-reco">
+  return <div style={{ width: '100%', marginLeft: '40px', marginRight: '40px', marginTop: 40 }} id="house-reco">
     <Text style={{ fontSize: '1.5rem' }} strong>推荐房源</Text>
     <div style={{ width: '100%', marginTop: 20 }}>
       <Row>

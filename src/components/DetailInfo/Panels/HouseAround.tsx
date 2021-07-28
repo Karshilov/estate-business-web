@@ -197,7 +197,7 @@ const HouseAround = (props: { data: RentDetailModel }) => {
   }, [pointList])
 
 
-  return <div style={{ width: '100%', marginInline: '40px', marginTop: '40px' }} id="around">
+  return <div style={{ width: '100%', marginLeft: '40px', marginRight: '40px', marginTop: '40px' }} id="around">
     <Text style={{ fontSize: '1.5rem' }} strong>位置周边</Text>
     <div style={{ position: 'relative', width: '100%', height: '70vh', marginTop: 30 }}>
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} ref={ref} id="house-around"></div>
@@ -207,7 +207,7 @@ const HouseAround = (props: { data: RentDetailModel }) => {
         <div style={{ display: 'flex', width: '100%', paddingInline: 25 }}>
           {poi.map((item) => <div
             key={item}
-            style={{ display: 'flex', flexDirection: 'column', paddingBlock: '0.25rem', marginInline: 10 }}
+            style={{ display: 'flex', flexDirection: 'column', paddingBlock: '0.25rem', marginLeft: 10, marginRight: 10 }}
             className="m-1" onClick={() => { setCategory(item) }}>
             <label style={{ fontSize: '0.9rem', fontWeight: 600 }}>{item}</label>
             <div style={{ height: 3, width: 'auto', background: '#00896c', borderRadius: 1, marginTop: 5 }} hidden={item !== category}></div>
@@ -216,14 +216,14 @@ const HouseAround = (props: { data: RentDetailModel }) => {
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', maxHeight: '50vh', overflow: 'scroll' }}>
           {pointList === [] ? null : pointList.map((item) => <div style={{ width: '90%' }} className="p-1" key={item.id} onClick={transformer(item)}>
             <div style={{ width: '100%', display: 'flex', flexDirection: 'column', paddingInline: 25 }}>
-              <div style={{ width: '100%', display: 'flex', marginBlock: 5 }}>
+              <div style={{ width: '100%', display: 'flex', marginTop: 5, marginBottom: 5 }}>
                 <span style={{ fontSize: '0.9rem', fontWeight: 500, color: item.title === currentSelected ? 'blue' : 'black' }}>{item.title}</span>
                 <div style={{ width: '30px'}}></div>
                 <span style={{ fontSize: '0.9rem', color: 'blue' }}>{item._distance}m</span>
               </div>
-              <div style={{ color: '#9CA3AF', fontSize: '0.7rem', marginBlock: 5 }}>{item.address}</div>
+              <div style={{ color: '#9CA3AF', fontSize: '0.7rem', marginTop: 5, marginBottom: 5 }}>{item.address}</div>
             </div>
-            <div style={{ width: '100%', height: 1, background: '#E5E7EB', marginInline: 25, marginBlock: 10 }}/>
+            <div style={{ width: '100%', height: 1, background: '#E5E7EB', marginLeft: 25, marginRight: 25, marginTop: 10, marginBottom: 10 }}/>
           </div>)}
         </div>
       </div>

@@ -12,7 +12,7 @@ const { Text, Title, Paragraph } = Typography;
 const HouseDesc = (props: { data: RentDetailModel }) => {
   const { data } = props;
 
-  return <div style={{ width: '100%', marginInline: '40px' }} id="house-desc">
+  return <div style={{ width: '100%', marginLeft: '40px', marginRight: '40px' }} id="house-desc">
     <Text style={{ fontSize: '1.5rem' }} strong>房屋介绍</Text>
     <div style={{ width: '100%', display: 'flex' }}>
       <Card.Meta

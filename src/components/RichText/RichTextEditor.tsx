@@ -59,7 +59,7 @@ const RichTextEditor = (props: { id?: string }) => {
   }, [])
 
   return <div style={{ width: '100%', minHeight: '80vh' }}>
-    <div style={{ display: 'flex', marginBlock: 20 }}>
+    <div style={{ display: 'flex', marginTop: 20, marginBottom: 20 }}>
       <span style={{ fontSize: '1.2rem', fontWeight: 550, width: '8rem' }}>博客标题：</span>
       <Input placeholder="输入标题" value={title} onChange={(e) => { setTitle(e.target.value); }} style={{ lineHeight: 1.618 }}></Input>
     </div>
